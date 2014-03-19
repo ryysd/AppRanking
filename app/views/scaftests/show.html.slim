@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @scaftest.name
+p
+  strong Int:
+  = @scaftest.int
+
+= link_to 'Edit', edit_scaftest_path(@scaftest)
+'|
+= link_to 'Back', scaftests_path

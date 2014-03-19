@@ -1,0 +1,21 @@
+h1 Listing scaftests
+
+table
+  tr
+    th Name
+    th Int
+    th
+    th
+    th
+
+  - @scaftests.each do |scaftest|
+    tr
+      td = scaftest.name
+      td = scaftest.int
+      td = link_to 'Show', scaftest
+      td = link_to 'Edit', edit_scaftest_path(scaftest)
+      td = link_to 'Destroy', scaftest, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Scaftest', new_scaftest_path
