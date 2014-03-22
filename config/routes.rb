@@ -1,7 +1,7 @@
 AppRanking::Application.routes.draw do
-  resources :scaftests
+  resources :rankings
 
-  root :to => 'scaftests#index'
+  root :to => 'rankings#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
