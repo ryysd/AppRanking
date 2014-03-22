@@ -111,6 +111,9 @@ gem 'hashie'
 group :development do
   # Converter erb => haml
   gem 'erb2haml'
+
+  # ER diagram generator
+  gem "rails-erd"
 end
 
 group :development, :test do
