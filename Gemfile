@@ -108,6 +108,9 @@ gem 'rack-mini-profiler'
 # Hash extensions
 gem 'hashie'
 
+# Google Play scraper
+gem 'market_bot'
+
 group :development do
   # Converter erb => haml
   gem 'erb2haml'

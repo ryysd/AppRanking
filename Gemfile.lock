@@ -68,6 +68,9 @@ GEM
     erb2haml (0.1.5)
       html2haml
     erubis (2.7.0)
+    ethon (0.6.3)
+      ffi (>= 1.3.0)
+      mime-types (~> 1.18)
     execjs (2.0.2)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -140,6 +143,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    market_bot (0.11.0)
+      nokogiri
+      typhoeus (>= 0.6.0)
     method_source (0.8.2)
     migrant (1.5.0)
       faker
@@ -285,6 +291,8 @@ GEM
       polyglot (>= 0.3.1)
     turbolinks (2.2.1)
       coffee-rails
+    typhoeus (0.6.7)
+      ethon (~> 0.6.2)
     tzinfo (0.3.39)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
@@ -317,6 +325,7 @@ DEPENDENCIES
   jquery-turbolinks
   kaminari
   less-rails
+  market_bot
   migrant
   mysql2
   newrelic_rpm
