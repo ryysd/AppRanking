@@ -111,6 +111,9 @@ gem 'hashie'
 # Google Play scraper
 gem 'market_bot'
 
+# Http Wrapper for Rest
+gem 'rest-client'
+
 group :development do
   # Converter erb => haml
   gem 'erb2haml'

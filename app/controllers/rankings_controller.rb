@@ -4,6 +4,7 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
+    debug
     @rankings = Ranking.all
   end
 
@@ -59,6 +60,12 @@ class RankingsController < ApplicationController
       format.html { redirect_to rankings_url }
       format.json { head :no_content }
     end
+  end
+
+  def debug
+      country = Country.find 13 
+      res = country.get_https_proxies
+      pp res
   end
 
   private
