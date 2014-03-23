@@ -42,8 +42,10 @@ class AppItem < ActiveRecord::Base
   end
 
   def load_google_play
+    # TODO: enable proxy
     detail = MarketBot::Android::App.new local_id
     detail.update
+    raise 'could not get application detail.' if detail.title.nil?
 
     self.name            = detail.title
     self.version         = detail.current_version
@@ -53,7 +55,6 @@ class AppItem < ActiveRecord::Base
     self.local_id        = detail.app_id
     self.iap             = false
     
-    # remove overlapped objects
     new_price = Price.new app_item_id: self.id, country_id: country.id, value: (detail.price * 100).to_i
     new_device = Device.find_by_name 'android'
     new_description = Description.new app_item_id: self.id, country_id: country.id, text: detail.description
