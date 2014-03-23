@@ -37,7 +37,7 @@ class Ranking < ActiveRecord::Base
 
     lb.results.first(3).each do |app|
       app_item = AppItem.new country: country, category: category, local_id: app[:market_id]
-      existing_app = AppItem.find :first, :include => [:category], :conditions => ['local_id = ? and market_id = ?', app_item.local_id, app_item.category.market_id]
+      existing_app = (AppItem.market_unique app_item.local_id, app_item.category.market_id).first
 
       if !existing_app.nil?
 	if options[:app_update?] || (existing_app.updatable? app_item)
@@ -55,9 +55,9 @@ class Ranking < ActiveRecord::Base
   # Return feed, country, category, market data for loading ranking data
   def make_load_params
     params = {
+      feed: (Feed.market_unique feed_code, market_code).first, 
       country: (Country.find_by_code country_code), 
       category: (Category.find_by_code category_code), 
-      feed: (Feed.find :first, {:include => :market, :conditions => 'feed.code = ? and market.code = ?'}, feed_code, market_code), 
     }
 
     raise "invalid code. feed_code: #{feed_code}, country_code: #{country_code}, category_code: #{category_code}, market_code: #{market_code}" if params.include? nil

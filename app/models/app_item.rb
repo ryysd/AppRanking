@@ -20,6 +20,8 @@ class AppItem < ActiveRecord::Base
   attr_writer :options
   before_save :load
 
+  scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id])}
+
   def options
     @options || {}
   end
@@ -51,14 +53,16 @@ class AppItem < ActiveRecord::Base
     
     # remove overlapped objects
     price = Price.new app_item_id: self.id, country_id: country.id, value: (detail.price * 100).to_i
+    device = Device.find_by_name 'android'
     description = Description.new app_item_id: self.id, country_id: country.id, text: detail.description
 
-    existing_price = prices.find {|p| p.app_item_id == self.id && p.country_id == country.id}
-    existing_desc = descriptions.find {|d| d.app_item_id == self.id && d.country_id == country.id}
+    existing_device = devices.find {|d| d.name == 'android'}
+    existing_price = prices.find {|p| p.country_id == country.id}
+    existing_desc = descriptions.find {|d| d.country_id == country.id}
 
+    if existing_device.nil? then self.devices << device else existing_device.update_attributes (existing_device.attributes.reject! {|k, v| v.nil?}) end
     if existing_price.nil? then self.prices << price else existing_price.update_attributes (existing_price.attributes.reject! {|k, v| v.nil?}) end
     if existing_desc.nil? then self.descriptions << description else existing_desc.update_attributes (existing_desc.attributes.reject! {|k, v| v.nil?}) end
-    self.devices      << (Device.find_by_name 'android')
 
     detail.rating_distribution.each{|key, value| self.rates << (Rate.new value: key, count: value)}
 
