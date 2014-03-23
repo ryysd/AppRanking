@@ -65,16 +65,21 @@ class RankingsController < ApplicationController
   def debug
     # ranking debug
     options = {:min_rank=>1, :max_rank=>24}
+    rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', options: options}
 
-    rank = Ranking.new country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', options: options
+    rank = Ranking.new rankings_params
     # rank.debug
-    rank.load 
+    # rank.load 
     rank.save
 
     # proxy debug
     # country = Country.find 13 
     # res = country.get_https_proxies
     # pp res
+  end
+
+  def rankings_params
+    params.require(:ranking).permit(:country_code, :market_code, :feed_code, :category_code, :options, app_items_attributes: [:local_id, :name, :icon, :version, :released_on, :last_updated_on, :size, :iap])
   end
 
   private

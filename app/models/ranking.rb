@@ -12,6 +12,8 @@ class Ranking < ActiveRecord::Base
 
   def load
     load_params = make_load_params
+    self.feed_id = load_params[:feed].id
+    self.country_id = load_params[:country].id
 
     case market_code
     when 'GP' then load_google_play load_params
@@ -33,7 +35,6 @@ class Ranking < ActiveRecord::Base
 
     lb.results.each do |app|
       app_item = AppItem.new country: country, category: category, source: app[:market_id]
-      app_item.load
       self.app_items << app_item
 
       # debug code

@@ -1,14 +1,15 @@
 require 'rubygems'
 require 'market_bot'
 
+# TODO: save association of publisher
 class AppItem < ActiveRecord::Base
   has_many :rates, :foreign_key => :app_item_id
   has_many :nationals, :foreign_key => :app_item_id
   belongs_to :category, :foreign_key => :category_id
-  belongs_to :publisher, :foreign_key => :publisher_id
+  # belongs_to :publisher, :foreign_key => :publisher_id
 
   accepts_nested_attributes_for :nationals
-  accepts_nested_attributes_for :publisher
+  # accepts_nested_attributes_for :publisher
   accepts_nested_attributes_for :rates
 
   attr_accessor :country, :source
@@ -32,6 +33,9 @@ class AppItem < ActiveRecord::Base
     self.size            = detail.size
     self.local_id        = detail.app_id
     self.iap             = false
+
+    # for debug
+    self.publisher_id = 0
     
     detail.rating_distribution do |key, value|
       rate = Rate.new value: key, count: value
@@ -42,8 +46,8 @@ class AppItem < ActiveRecord::Base
     self.nationals = [national]
 
     # TODO: avoid duplicationg of publisher
-    publisher = Publisher.new name: detail.developer
-    self.publisher = publisher
+    # publisher = Publisher.new name: detail.developer
+    # self.publisher = publisher
   end
 
   def load_itunes_connect
