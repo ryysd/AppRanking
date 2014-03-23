@@ -1,7 +1,7 @@
 class National < ActiveRecord::Base
   attr_accessor :description, :price
 
-  accepts_nested_attributes_for :app_item
+  accepts_nested_attributes_for :price, :description
   
   def before_save
     @description = Description.new text: description

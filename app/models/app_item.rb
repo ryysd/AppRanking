@@ -7,7 +7,9 @@ class AppItem < ActiveRecord::Base
   belongs_to :category, :foreign_key => :category_id
   belongs_to :publisher, :foreign_key => :publisher_id
 
-  accepts_nested_attributes_for :ranking
+  accepts_nested_attributes_for :nationals
+  accepts_nested_attributes_for :publisher
+  accepts_nested_attributes_for :rates
 
   attr_accessor :country, :source
   before_create :load

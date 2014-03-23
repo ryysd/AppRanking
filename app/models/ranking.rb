@@ -8,6 +8,8 @@ class Ranking < ActiveRecord::Base
 
   before_create :load
 
+  accepts_nested_attributes_for :app_items
+
   def load
     load_params = make_load_params
 
@@ -19,6 +21,7 @@ class Ranking < ActiveRecord::Base
   end
 
   def load_google_play (country:, feed:, category:)
+    # TODO: enable proxy
     lb = MarketBot::Android::Leaderboard.new(feed.code, category.code)
     lb.update options
 
