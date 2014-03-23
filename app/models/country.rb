@@ -17,12 +17,4 @@ class Country < ActiveRecord::Base
     # TODO: compare to country code of location of server
     @code == 'JP'
   end
-
-  def find_by_code (code)
-    country = Category.find :first,
-      :conditions => ['code = ?', country_code]
-
-    raise ActiveRecord::RecordNotFound, "could not get country. country_code: #{country_code}" if country.nil?
-    country
-  end
 end

@@ -64,8 +64,12 @@ class RankingsController < ApplicationController
 
   def debug
     # ranking debug
-    rank = Ranking.new
-    rank.load country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game'
+    options = {:min_rank=>1, :max_rank=>24}
+
+    rank = Ranking.new country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', options: options
+    # rank.debug
+    rank.load 
+    rank.save
 
     # proxy debug
     # country = Country.find 13 

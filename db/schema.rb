@@ -11,13 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323050525) do
+ActiveRecord::Schema.define(version: 20140323105816) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
     t.integer  "category_id",                                 null: false
     t.integer  "publisher_id",                                null: false
-    t.integer  "market_id",                                   null: false
     t.integer  "app_item_id"
     t.string   "name",            limit: 256,                 null: false
     t.string   "icon",            limit: 256
@@ -26,12 +25,12 @@ ActiveRecord::Schema.define(version: 20140323050525) do
     t.datetime "last_updated_on"
     t.integer  "size"
     t.boolean  "iap",                         default: false
+    t.string   "local_id",        limit: 128
   end
 
   add_index "app_items", ["app_item_id"], name: "fk_application_application1_idx", using: :btree
   add_index "app_items", ["category_id"], name: "fk_application_category1_idx", using: :btree
   add_index "app_items", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "app_items", ["market_id"], name: "fk_application_market1_idx", using: :btree
   add_index "app_items", ["publisher_id"], name: "fk_application_publisher1_idx", using: :btree
   add_index "app_items", ["ranking_id"], name: "fk_application_ranking_idx", using: :btree
 
@@ -133,18 +132,19 @@ ActiveRecord::Schema.define(version: 20140323050525) do
   add_index "publishers", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "rankings", force: true do |t|
-    t.integer  "feeds_id",        null: false
+    t.integer  "feed_id",         null: false
     t.integer  "country_id",      null: false
     t.datetime "last_updated_on", null: false
   end
 
   add_index "rankings", ["country_id"], name: "fk_ranking_country1_idx", using: :btree
-  add_index "rankings", ["feeds_id"], name: "fk_ranking_feed1_idx", using: :btree
+  add_index "rankings", ["feed_id"], name: "fk_ranking_feed1_idx", using: :btree
   add_index "rankings", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "rates", force: true do |t|
     t.integer "value",       null: false
     t.integer "app_item_id"
+    t.integer "count"
   end
 
   add_index "rates", ["id"], name: "id_UNIQUE", unique: true, using: :btree

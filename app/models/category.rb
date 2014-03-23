@@ -1,9 +1,4 @@
 class Category < ActiveRecord::Base
-  def find_by_code (code)
-    category = Category.find :first,
-      :conditions => ['code = ?', category_code]
-
-    raise ActiveRecord::RecordNotFound, "could not get category. category_code: #{category_code}" if category.nil?
-    category
-  end
+  has_many :app_items, :foreign_key => 'category_id'
+  belongs_to :market, :foreign_key => 'market_id'
 end
