@@ -4,7 +4,7 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
-    debug
+    self.debug
     @rankings = Ranking.all
   end
 
@@ -63,9 +63,14 @@ class RankingsController < ApplicationController
   end
 
   def debug
-      country = Country.find 13 
-      res = country.get_https_proxies
-      pp res
+    # ranking debug
+    rank = Ranking.new
+    rank.load country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game'
+
+    # proxy debug
+    # country = Country.find 13 
+    # res = country.get_https_proxies
+    # pp res
   end
 
   private

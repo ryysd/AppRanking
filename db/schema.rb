@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140322062147) do
+ActiveRecord::Schema.define(version: 20140323050525) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
@@ -37,8 +37,9 @@ ActiveRecord::Schema.define(version: 20140322062147) do
 
   create_table "categories", force: true do |t|
     t.integer "category_id"
-    t.integer "market_id",   null: false
-    t.string  "name",        null: false
+    t.integer "market_id",              null: false
+    t.string  "name",                   null: false
+    t.string  "code",        limit: 32, null: false
   end
 
   add_index "categories", ["category_id"], name: "fk_category_category1_idx", using: :btree
@@ -87,6 +88,7 @@ ActiveRecord::Schema.define(version: 20140322062147) do
   create_table "feeds", force: true do |t|
     t.integer "market_id",            null: false
     t.string  "name",      limit: 32, null: false
+    t.string  "code",      limit: 32, null: false
   end
 
   add_index "feeds", ["id"], name: "id_UNIQUE", unique: true, using: :btree
@@ -133,29 +135,18 @@ ActiveRecord::Schema.define(version: 20140322062147) do
   create_table "rankings", force: true do |t|
     t.integer  "feeds_id",        null: false
     t.integer  "country_id",      null: false
-    t.integer  "market_id",       null: false
     t.datetime "last_updated_on", null: false
   end
 
   add_index "rankings", ["country_id"], name: "fk_ranking_country1_idx", using: :btree
   add_index "rankings", ["feeds_id"], name: "fk_ranking_feed1_idx", using: :btree
   add_index "rankings", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "rankings", ["market_id"], name: "fk_ranking_market1_idx", using: :btree
 
   create_table "rates", force: true do |t|
-    t.integer "value", null: false
+    t.integer "value",       null: false
+    t.integer "app_item_id"
   end
 
   add_index "rates", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-
-  create_table "reviews", force: true do |t|
-    t.integer "national_id", null: false
-    t.integer "rate_id",     null: false
-    t.text    "comment",     null: false
-  end
-
-  add_index "reviews", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "reviews", ["national_id"], name: "fk_review_national1_idx", using: :btree
-  add_index "reviews", ["rate_id"], name: "fk_review_rate1_idx", using: :btree
 
 end
