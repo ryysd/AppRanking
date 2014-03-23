@@ -3,6 +3,8 @@ require 'market_bot'
 
 # TODO: save association of publisher
 class AppItem < ActiveRecord::Base
+  include MergeAttribute
+
   has_many :rates, :foreign_key => :app_item_id
   has_many :prices, :foreign_key => :app_item_id
   has_many :descriptions, :foreign_key => :app_item_id
@@ -52,19 +54,23 @@ class AppItem < ActiveRecord::Base
     self.iap             = false
     
     # remove overlapped objects
-    price = Price.new app_item_id: self.id, country_id: country.id, value: (detail.price * 100).to_i
-    device = Device.find_by_name 'android'
-    description = Description.new app_item_id: self.id, country_id: country.id, text: detail.description
+    new_price = Price.new app_item_id: self.id, country_id: country.id, value: (detail.price * 100).to_i
+    new_device = Device.find_by_name 'android'
+    new_description = Description.new app_item_id: self.id, country_id: country.id, text: detail.description
 
-    existing_device = devices.find {|d| d.name == 'android'}
-    existing_price = prices.find {|p| p.country_id == country.id}
-    existing_desc = descriptions.find {|d| d.country_id == country.id}
+    old_price = prices.find {|p| p.country_id == country.id}
+    old_device = devices.find {|d| d.name == 'android'}
+    old_description = descriptions.find {|d| d.country_id == country.id}
 
-    if existing_device.nil? then self.devices << device else existing_device.update_attributes (existing_device.attributes.reject! {|k, v| v.nil?}) end
-    if existing_price.nil? then self.prices << price else existing_price.update_attributes (existing_price.attributes.reject! {|k, v| v.nil?}) end
-    if existing_desc.nil? then self.descriptions << description else existing_desc.update_attributes (existing_desc.attributes.reject! {|k, v| v.nil?}) end
+    merge_attribute self.prices, old_price, new_price
+    merge_attribute self.devices, old_device, new_device
+    merge_attribute self.descriptions, old_description, new_description
 
-    detail.rating_distribution.each{|key, value| self.rates << (Rate.new value: key, count: value)}
+    detail.rating_distribution.each{|key, value| 
+      old_rate = rates.find {|r| r.value == key}
+      new_rate = Rate.new value: key, count: value
+      merge_attribute self.rates, old_rate, new_rate
+    }
 
     # for debug
     self.publisher_id = 0
