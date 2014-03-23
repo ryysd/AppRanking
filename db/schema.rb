@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323114854) do
+ActiveRecord::Schema.define(version: 20140323131517) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(version: 20140323114854) do
   add_index "app_items", ["id"], name: "id_UNIQUE", unique: true, using: :btree
   add_index "app_items", ["publisher_id"], name: "fk_application_publisher1_idx", using: :btree
   add_index "app_items", ["ranking_id"], name: "fk_application_ranking_idx", using: :btree
+
+  create_table "app_items_devices", force: true do |t|
+    t.integer "device_id",   null: false
+    t.integer "app_item_id", null: false
+  end
+
+  add_index "app_items_devices", ["app_item_id"], name: "fk_device_has_application_application1_idx", using: :btree
+  add_index "app_items_devices", ["device_id"], name: "fk_device_has_application_device1_idx", using: :btree
 
   create_table "categories", force: true do |t|
     t.integer "category_id"
@@ -63,20 +71,12 @@ ActiveRecord::Schema.define(version: 20140323114854) do
   add_index "currencies", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "descriptions", force: true do |t|
-    t.integer "national_id", null: false
     t.text    "text",        null: false
+    t.integer "app_item_id"
+    t.integer "country_id"
   end
 
   add_index "descriptions", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "descriptions", ["national_id"], name: "fk_description_national1_idx", using: :btree
-
-  create_table "device_has_app_items", force: true do |t|
-    t.integer "device_id",   null: false
-    t.integer "app_item_id", null: false
-  end
-
-  add_index "device_has_app_items", ["app_item_id"], name: "fk_device_has_application_application1_idx", using: :btree
-  add_index "device_has_app_items", ["device_id"], name: "fk_device_has_application_device1_idx", using: :btree
 
   create_table "devices", force: true do |t|
     t.string "name", null: false
@@ -108,22 +108,13 @@ ActiveRecord::Schema.define(version: 20140323114854) do
 
   add_index "markets", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
-  create_table "nationals", force: true do |t|
-    t.integer "app_item_id", null: false
-    t.integer "country_id",  null: false
-  end
-
-  add_index "nationals", ["app_item_id"], name: "fk_language_application1_idx", using: :btree
-  add_index "nationals", ["country_id"], name: "fk_national_language1_idx", using: :btree
-  add_index "nationals", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-
   create_table "prices", force: true do |t|
-    t.integer "national_id", null: false
     t.integer "value",       null: false
+    t.integer "app_item_id"
+    t.integer "country_id"
   end
 
   add_index "prices", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "prices", ["national_id"], name: "fk_price_national1_idx", using: :btree
 
   create_table "publishers", force: true do |t|
     t.string "name", limit: 64, null: false
