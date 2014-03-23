@@ -24,13 +24,15 @@ class AppItem < ActiveRecord::Base
 
   scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id])}
 
+  UPDATE_INTERVAL_MIN = 60
+
   def options
     @options || {}
   end
 
   def updatable? (new_app)
     (self.version != new_app.version ||
-     (new_app.last_updated_on - self.last_updated_on) * 24 * 60 >= 60)
+    (Time.now - self.updated_at) * 24 * 60 >= AppItem::UPDATE_INTERVAL_MIN)
   end
 
   private
