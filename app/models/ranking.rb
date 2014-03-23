@@ -2,7 +2,8 @@ require 'rubygems'
 require 'market_bot'
 
 class Ranking < ActiveRecord::Base
-  attr_accessor :country_code, :feed_code, :market_code, :category_code, :options, :load_params
+  attr_accessor :country_code, :feed_code, :market_code, :category_code, :load_params
+  attr_writer :options
 
   has_many :app_items, :foreign_key => :ranking_id
 
@@ -10,6 +11,11 @@ class Ranking < ActiveRecord::Base
 
   accepts_nested_attributes_for :app_items
 
+  def options
+    @options || {}
+  end
+
+  private
   def load
     load_params = make_load_params
     self.feed_id = load_params[:feed].id
@@ -29,16 +35,17 @@ class Ranking < ActiveRecord::Base
 
     raise "could not get ranking. country: #{country}, feed: #{feed}, category: #{category}" if lb.results.blank?
 
-    # debug code
-    debug_max_count = 3
-    debug_count = 0
+    lb.results.first(3).each do |app|
+      app_item = AppItem.new country: country, category: category, local_id: app[:market_id]
+      existing_app = AppItem.find :first, :include => [:category], :conditions => ['local_id = ? and market_id = ?', app_item.local_id, app_item.category.market_id]
 
-    lb.results.each do |app|
-      app_item = AppItem.new country: country, category: category, source: app[:market_id]
-      self.app_items << app_item
-
-      # debug code
-      if (debug_count+=1) == debug_max_count then break end
+      if !existing_app.nil?
+	if options[:app_update?] || (existing_app.updatable? app_item)
+	  existing_app.update_attributes country: country
+	end 
+      else
+        self.app_items << app_item
+      end
     end
   end
 

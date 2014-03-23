@@ -64,7 +64,7 @@ class RankingsController < ApplicationController
 
   def debug
     # ranking debug
-    options = {:min_rank=>1, :max_rank=>24}
+    options = {:min_rank=>1, :max_rank=>24, :app_update? => true}
     rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', options: options}
 
     rank = Ranking.new rankings_params
