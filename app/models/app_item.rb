@@ -12,6 +12,7 @@ class AppItem < ActiveRecord::Base
   has_many :screen_shots, :foreign_key => :app_item_id
   has_many :devices, :through => :app_items_devices
   belongs_to :category, :foreign_key => :category_id
+  belongs_to :publisher, :foreign_key => :publisher_id
   # belongs_to :publisher, :foreign_key => :publisher_id
 
   attr_accessor :country, :source
@@ -78,11 +79,17 @@ class AppItem < ActiveRecord::Base
       merge_attribute self.screen_shots, old_ss, new_ss
     }
 
-    # for debug
-    self.publisher_id = 0
-    # TODO: avoid duplicationg of publisher
-    # publisher = Publisher.new name: detail.developer
-    # self.publisher = publisher
+    # save parent model
+    old_publisher = (Publisher.market_unique detail.developer, category.market.id).first
+    new_publisher = Publisher.new name: detail.developer, market_id: category.market.id
+
+    self.publisher = old_publisher
+    if self.publisher.nil?
+      self.publisher = new_publisher
+      self.publisher.save
+    end
+
+    self.publisher_id = self.publisher.id
   end
 
   def load_itunes_connect
