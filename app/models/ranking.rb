@@ -5,11 +5,9 @@ class Ranking < ActiveRecord::Base
   attr_accessor :country_code, :feed_code, :market_code, :category_code, :load_params
   attr_writer :options
 
-  has_many :app_items, :foreign_key => :ranking_id
+  has_many :app_items, :foreign_key => :ranking_id, :autosave => true
 
   before_create :load
-
-  accepts_nested_attributes_for :app_items
 
   def options
     @options || {}
