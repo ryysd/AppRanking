@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140324042007) do
+ActiveRecord::Schema.define(version: 20140324101232) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false

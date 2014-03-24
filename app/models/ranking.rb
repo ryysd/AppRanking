@@ -34,12 +34,12 @@ class Ranking < ActiveRecord::Base
     raise "could not get ranking. country: #{country}, feed: #{feed}, category: #{category}" if lb.results.blank?
 
     lb.results.first(3).each do |app|
-      app_item = AppItem.new country: country, category: category, local_id: app[:market_id]
-      existing_app = (AppItem.market_unique app_item.local_id, app_item.category.market_id).first
+      app_item = AppItem.new country: country, market: category.market, local_id: app[:market_id]
+      existing_app = (AppItem.market_unique app_item.local_id, category.market.id).first
 
       if !existing_app.nil?
 	if options[:app_update?] || (existing_app.updatable? app_item)
-	  existing_app.update_attributes country: country
+	  existing_app.update_attributes country: country, market: category.market
 	end 
       else
         self.app_items << app_item

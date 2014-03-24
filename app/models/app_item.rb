@@ -15,7 +15,7 @@ class AppItem < ActiveRecord::Base
   belongs_to :publisher, foreign_key: :publisher_id
   # belongs_to :publisher, :foreign_key => :publisher_id
 
-  attr_accessor :country, :source
+  attr_accessor :country, :market, :source
   attr_writer :options
   before_save :load
 
@@ -34,7 +34,7 @@ class AppItem < ActiveRecord::Base
 
   private
   def load
-    case category.market.code
+    case market.code
     when 'GP' then load_google_play
     when 'ITC' then load_itunes_connect
     end
@@ -52,6 +52,9 @@ class AppItem < ActiveRecord::Base
     self.size            = detail.size
     self.local_id        = detail.app_id
     self.iap             = false
+    self.category        = (Category.market_unique_name detail.category, market.id).first
+
+    raise "undefined category name is found. category_name: #{detail.category}" if self.category.nil?
     
     new_price = Price.new app_item_id: self.id, country_id: country.id, value: (detail.price * 100).to_i
     new_device = Device.find_by_name 'android'
@@ -79,8 +82,8 @@ class AppItem < ActiveRecord::Base
     }
 
     # save parent model
-    old_publisher = (Publisher.market_unique_name detail.developer, category.market.id).first
-    new_publisher = Publisher.new name: detail.developer, market_id: category.market.id
+    old_publisher = (Publisher.market_unique_name detail.developer, market.id).first
+    new_publisher = Publisher.new name: detail.developer, market_id: market.id
 
     self.publisher = old_publisher
     if self.publisher.nil?
