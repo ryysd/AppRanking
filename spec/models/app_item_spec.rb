@@ -123,5 +123,34 @@ describe AppItem do
       end
     end
 
+    describe 'add_or_update_ratings' do
+      context 'with new ratings' do
+	it 'should add ratings correctly' do
+	  @app_jp_gp.send :add_or_update_ratings, {1 => 10, 2 => 20, 3 => 30, 4 => 40, 5 => 50}
+	  ratings = Hash[@app_jp_gp.rates.map{|r| [r.value, r.count]}]
+	  expect(ratings.length).to eq(5)
+	  expect(ratings).to include(1 => 10)
+	  expect(ratings).to include(2 => 20)
+	  expect(ratings).to include(3 => 30)
+	  expect(ratings).to include(4 => 40)
+	  expect(ratings).to include(5 => 50)
+	end
+      end
+
+      context 'with overlapped ratings' do
+	it 'should update ratings correctly' do
+	  @app_jp_gp.send :add_or_update_ratings, {1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5}
+	  @app_jp_gp.send :add_or_update_ratings, {1 => 10, 2 => 20, 3 => 30, 4 => 40, 5 => 50}
+	  ratings = Hash[@app_jp_gp.rates.map{|r| [r.value, r.count]}]
+	  expect(ratings.length).to eq(5)
+	  expect(ratings).to include(1 => 10)
+	  expect(ratings).to include(2 => 20)
+	  expect(ratings).to include(3 => 30)
+	  expect(ratings).to include(4 => 40)
+	  expect(ratings).to include(5 => 50)
+	end
+      end
+    end
+
   end
 end
