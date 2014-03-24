@@ -128,6 +128,8 @@ group :development, :test do
 
   gem 'spring-commands-rspec'
 
+  gem 'simplecov', :require=>false
+
   # Railsコンソールの多機能版
   gem 'pry-rails'
 
