@@ -5,6 +5,7 @@ describe AppItem do
 
   before do
     @market_gp = Market.find_by_code 'GP'
+    @market_itc = Market.find_by_code 'ITC'
     @country_ja = Country.find_by_code 'JP'
     @feed_topfree = Feed.find_by_code 'topselling_free'
     @category_game = Category.find_by_name 'Games'
@@ -24,6 +25,7 @@ describe AppItem do
   context 'when local_id is valid' do
     before do
       @app_jp_gp = AppItem.new country: @country_ja, market: @market_gp 
+      @app_jp_itc = AppItem.new country: @country_ja, market: @market_itc
     end
 
     describe 'assign_category()' do
@@ -84,5 +86,42 @@ describe AppItem do
 	end
       end
     end
+
+    describe 'add_or_update_device' do
+      context 'with new device' do
+	it 'should add device correctly' do
+	  @app_jp_gp.send :add_or_update_device, 'android'
+	  expect(@app_jp_gp.devices.length).to eq(1)
+	  expect(@app_jp_gp.devices.first.name).to eq('android')
+	end
+      end
+
+      context 'with overlapped device' do
+	it 'should update device correctly' do
+	  @app_jp_itc.send :add_or_update_device, 'iPhone'
+	  @app_jp_itc.send :add_or_update_device, 'iPhone'
+	  expect(@app_jp_itc.devices.length).to eq(1)
+	  expect(@app_jp_itc.devices.first.name).to eq('iPhone')
+	end
+      end
+
+      context 'with two different devices' do
+	it 'should add device correctly' do
+	  @app_jp_itc.send :add_or_update_device, 'iPhone'
+	  @app_jp_itc.send :add_or_update_device, 'iPad'
+	  expect(@app_jp_itc.devices.length).to eq(2)
+	  expect(@app_jp_itc.devices[0].name).to eq('iPhone')
+	  expect(@app_jp_itc.devices[1].name).to eq('iPad')
+	end
+      end
+
+      context 'with invalid device' do
+	it 'should raise error' do
+	  error_msg = 'There is no such device in market. device_name: iPad, market_name: Google Play'
+	  expect{@app_jp_gp.send :add_or_update_device, 'iPad'}.to raise_error(RuntimeError, error_msg)
+	end
+      end
+    end
+
   end
 end

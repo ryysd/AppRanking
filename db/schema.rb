@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140324101232) do
+ActiveRecord::Schema.define(version: 20140324143726) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
@@ -81,7 +81,8 @@ ActiveRecord::Schema.define(version: 20140324101232) do
   add_index "descriptions", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "devices", force: true do |t|
-    t.string "name", null: false
+    t.string  "name",      null: false
+    t.integer "market_id", null: false
   end
 
   add_index "devices", ["id"], name: "id_UNIQUE", unique: true, using: :btree

@@ -85,7 +85,7 @@ class AppItem < ActiveRecord::Base
   end
 
   def assign_category(category_name)
-    self.category = (Category.market_unique_name category_name, market.id).first
+    self.category = (Category.market_unique_name category_name, self.market.id).first
     raise "undefined category name is found. category_name: #{self.category}" if self.category.nil?
   end
 
@@ -103,8 +103,9 @@ class AppItem < ActiveRecord::Base
 
   def add_or_update_device(device_name)
     new_device = Device.find_by_name device_name
-    old_device = self.devices.find{|d| d.name == 'android'}
+    old_device = self.devices.find{|d| d.name == device_name}
     merge_attribute self.devices, old_device, new_device
+    raise "There is no such device in market. device_name: #{device_name}, market_name: #{self.market.name}" unless self.market.devices.map{|d| d.name}.include? device_name
   end
 
   def add_or_update_ratings(ratings)
@@ -125,8 +126,8 @@ class AppItem < ActiveRecord::Base
   end
 
   def new_or_update_publisher(publisher_name)
-    old_publisher = (Publisher.market_unique_name publisher_name, market.id).first
-    new_publisher = Publisher.new name: publisher_name, market_id: market.id
+    old_publisher = (Publisher.market_unique_name publisher_name, self.market.id).first
+    new_publisher = Publisher.new name: publisher_name, market_id: self.market.id
 
     self.publisher = old_publisher
     if self.publisher.nil?
