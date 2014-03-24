@@ -2,8 +2,8 @@ require 'rubygems'
 require 'rest_client'
 
 class Country < ActiveRecord::Base
-  def own_country?
+  def own?
     # TODO: compare to country code of location of server
-    @code == 'JP'
+    self.code == 'JP'
   end
 end

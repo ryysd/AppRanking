@@ -28,6 +28,49 @@ describe AppItem do
       @app_jp_itc = AppItem.new country: @country_ja, market: @market_itc
     end
 
+    describe 'load_google()' do
+      it 'should returns valid attributes (not enough)' do
+	@app_jp_gp.local_id = 'com.bluefroggaming.popdat'
+	attributes = @app_jp_gp.send :load_google_play
+	
+	# not enough
+	expect(attributes[:assignable__attributes][:name]).to eq('Pop Dat')
+	expect(attributes[:unassignable_attributes][:publisher_name]).to eq('Blue Frog Gaming')
+      end
+    end
+
+    describe 'load' do
+      it 'should load attributes correctly (not implemented)' do
+      end
+    end
+
+    describe 'add_or_update_attributes' do
+      it 'should assign attributes correctly (not implemented)' do
+	assignable_attributes = {
+	  name: 'Name',
+	  version: '1.0.0',
+	  last_updated_on: DateTime.now,
+	  icon: 'http://www.aaaaaaaaa.jpg',
+	  size: '10',
+	  local_id: '20',
+	  iap: false
+	}
+
+	unassignable_attributes = {
+	  price:             1.25,
+	  screen_shots_urls: %w(http://www.aaaaaaaaaa.jpg,, http://www.bbbbbbbbb.png),
+	  description:       'description',
+	  publisher_name:    'publisher',
+	  ratings:           [1 => 10, 2 => 20, 3 => 30, 4 => 40, 5 => 50],
+	  category_name:     'Games',
+	  device_name:       'android'
+	}
+
+	@app_jp_gp.send :add_or_update_attributes, {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+	# not implemented
+      end
+    end
+
     describe 'assign_category()' do
       context 'with valid google play category name' do
 	it 'should assign valid category' do
@@ -37,11 +80,13 @@ describe AppItem do
 	  end
 	end
       end
+
       context 'with valid itunes connect category name' do
 	it 'should assign valid category' do
 	  # not implemented
 	end
       end
+
       context 'with invalid category name' do
 	it 'raise error' do
 	  # not implemented
