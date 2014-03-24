@@ -52,6 +52,10 @@ RSpec.configure do |config|
   config.before :all do
     FactoryGirl.reload
   end
-  
+
+  config.before :suite do
+    require Rails.root.join("db", "seeds")
+  end
+
   config.include FactoryGirl::Syntax::Methods
 end

@@ -3,35 +3,65 @@ require 'spec_helper'
 describe AppItem do
   pending "add some examples to (or delete) #{__FILE__}"
 
-  before :each do
-    load "#{Rails.root}/db/seeds.rb" 
+  before do
+    @market_gp = Market.find_by_code 'GP'
+    @country_ja = Country.find_by_code 'JP'
+    @feed_topfree = Feed.find_by_code 'topselling_free'
+    @category_game = Category.find_by_name 'Games'
   end
 
   context 'when local_id is invalid' do
-    before do
-      @invalid_app = AppItem.new local_id: 'invalidinvalid'
-    end
-
-    describe 'save method' do
+    describe 'load_google_play()' do
       it 'raise error' do
-	expect {@invalid_app.save}.to raise_error(NoMethodError)
+      end
+    end
+    describe 'load_itunes_connect()' do
+      it 'raise error' do
       end
     end
   end
 
   context 'when local_id is valid' do
     before do
-      @ja_app = AppItem.new local_id: 'com.bluefroggaming.popdat'
+      @app_jp_gp = AppItem.new country: @country_ja, market: @market_gp 
     end
 
-    describe 'save method' do
-      it 'should have fields with correct value' do
-	@ja_app.save
+    describe 'assign_category()' do
+      context 'with valid google play category name' do
+	it 'should assign valid category' do
+	  Category.all.each do |category|
+	    @app_jp_gp.send :assign_category, category.name
+	    expect(@app_jp_gp.category.name).to eq(category.name)
+	  end
+	end
+      end
+      context 'with valid itunes connect category name' do
+	it 'should assign valid category' do
+	  # not implemented
+	end
+      end
+      context 'with invalid category name' do
+	it 'raise error' do
+	  # not implemented
+	end
+      end
+    end
 
-	expect(@ja_app.name).to eq('Pop Dat')
-	expect(@ja_app.publisher.name).to eq('Blue Frog Gaming')
-	expect(@ja_app.prices.country.code).to eq('JP')
-	# etc...
+    describe 'add_or_update_price()' do
+      context 'with new price' do
+	it 'should add price correctly' do
+          @app_jp_gp.send :add_or_update_price, 2.00
+	  expect(@app_jp_gp.prices.last.value).to eq(200)
+	end
+      end
+
+      context 'with overlapped price' do
+	it 'should update price correctly' do
+          @app_jp_gp.send :add_or_update_price, 2.00
+          @app_jp_gp.send :add_or_update_price, 5.00
+	  expect(@app_jp_gp.prices.length).to eq(1)
+	  expect(@app_jp_gp.prices.first.value).to eq(500)
+	end
       end
     end
   end

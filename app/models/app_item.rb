@@ -61,7 +61,7 @@ class AppItem < ActiveRecord::Base
 
     unassignable_attributes =
     {
-      price:             (detail.price * 100).to_i,
+      price:             detail.price,
       screen_shots_urls: detail.screenshot_urls,
       description:       detail.description,
       publisher_name:    detail.developer,
@@ -90,7 +90,7 @@ class AppItem < ActiveRecord::Base
   end
 
   def add_or_update_price(price)
-    new_price = Price.new country_id: country.id, value: price
+    new_price = Price.new country_id: country.id, value: (price * 100).to_i
     old_price = self.prices.find{|p| p.country_id == country.id}
     merge_attribute self.prices, old_price, new_price
   end

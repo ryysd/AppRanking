@@ -126,6 +126,8 @@ group :development, :test do
   # Rails application preloader
   gem 'spring'
 
+  gem 'spring-commands-rspec'
+
   # Railsコンソールの多機能版
   gem 'pry-rails'
 

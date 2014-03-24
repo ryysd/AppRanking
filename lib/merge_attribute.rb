@@ -3,7 +3,7 @@ module MergeAttribute
     if old.nil?
       attribute << new
     else
-      old.update_attributes (old.attributes.reject! {|k, v| v.nil?})
+      old.update_attributes (new.attributes.reject! {|k, v| v.nil?})
     end
   end
 end
