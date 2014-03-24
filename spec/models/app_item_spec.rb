@@ -51,7 +51,8 @@ describe AppItem do
       context 'with new price' do
 	it 'should add price correctly' do
           @app_jp_gp.send :add_or_update_price, 2.00
-	  expect(@app_jp_gp.prices.last.value).to eq(200)
+	  expect(@app_jp_gp.prices.length).to eq(1)
+	  expect(@app_jp_gp.prices.first.value).to eq(200)
 	end
       end
 
@@ -61,6 +62,25 @@ describe AppItem do
           @app_jp_gp.send :add_or_update_price, 5.00
 	  expect(@app_jp_gp.prices.length).to eq(1)
 	  expect(@app_jp_gp.prices.first.value).to eq(500)
+	end
+      end
+    end
+
+    describe 'add_or_update_description' do
+      context 'with new description' do
+	it 'should add description correctly' do
+	  @app_jp_gp.send :add_or_update_description, 'desc'
+	  expect(@app_jp_gp.descriptions.length).to eq(1)
+	  expect(@app_jp_gp.descriptions.first.text).to eq('desc')
+	end
+      end
+
+      context 'with overlapped description' do
+	it 'should update description correctly' do
+	  @app_jp_gp.send :add_or_update_description, 'desc_before'
+	  @app_jp_gp.send :add_or_update_description, 'desc_after'
+	  expect(@app_jp_gp.descriptions.length).to eq(1)
+	  expect(@app_jp_gp.descriptions.first.text).to eq('desc_after')
 	end
       end
     end
