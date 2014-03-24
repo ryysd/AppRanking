@@ -152,5 +152,23 @@ describe AppItem do
       end
     end
 
+    describe 'new_or_update_publisher' do
+      context 'with new publisher' do
+	it 'should save publisher correctly' do
+	  @app_jp_gp.send :new_or_update_publisher, 'Publisher'
+	  expect(Publisher.all.length).to eq(1)
+	  expect(Publisher.all.first.name).to eq('Publisher')
+	  expect(@app_jp_gp.publisher.name).to eq('Publisher')
+	end
+      end
+
+      context 'with overlapped publisher' do
+	it 'should associate publisher with app_item correctly' do
+	  @app_jp_gp.send :new_or_update_publisher, 'Publisher'
+	  @app_jp_gp.send :new_or_update_publisher, 'Publisher'
+	  expect(@app_jp_gp.publisher.name).to eq('Publisher')
+	end
+      end
+    end
   end
 end
