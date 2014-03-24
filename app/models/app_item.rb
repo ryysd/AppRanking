@@ -44,7 +44,6 @@ class AppItem < ActiveRecord::Base
     # TODO: enable proxy
     detail = MarketBot::Android::App.new local_id
     detail.update
-    raise 'could not get application detail.' if detail.title.nil?
 
     self.name            = detail.title
     self.version         = detail.current_version
@@ -58,9 +57,9 @@ class AppItem < ActiveRecord::Base
     new_device = Device.find_by_name 'android'
     new_description = Description.new app_item_id: self.id, country_id: country.id, text: detail.description
 
-    old_price = prices.find {|p| p.country_id == country.id}
-    old_device = devices.find {|d| d.name == 'android'}
-    old_description = descriptions.find {|d| d.country_id == country.id}
+    old_price = prices.find{|p| p.country_id == country.id}
+    old_device = devices.find{|d| d.name == 'android'}
+    old_description = descriptions.find{|d| d.country_id == country.id}
 
     merge_attribute self.prices, old_price, new_price
     merge_attribute self.devices, old_device, new_device
