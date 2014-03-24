@@ -26,7 +26,7 @@ class Ranking < ActiveRecord::Base
     else raise "invalid market code. market_code: #{market_code}"
     end
 
-    add_or_update_apps apps
+    add_or_update_apps apps.first(3)
   end
 
   def load_google_play(country:, feed:, category:)
@@ -40,16 +40,20 @@ class Ranking < ActiveRecord::Base
   end
 
   def add_or_update_apps(new_apps)
-    new_apps.first(3).each do |new_app|
-      old_app = (AppItem.market_unique new_app.local_id, new_app.market.id).first
+    new_apps.each do |new_app|
+      add_or_update_app new_app
+    end
+  end
 
-      if !old_app.nil?
-	if self.options[:app_update?] || (old_app.updatable? new_app)
-	  old_app.update_attributes country: new_app.country, market: new_app.market
-	end 
-      else
-	self.app_items << new_app
-      end
+  def add_or_update_app(new_app)
+    old_app = (AppItem.market_unique new_app.local_id, new_app.market.id).first
+
+    if !old_app.nil?
+      if self.options[:app_update?] || (old_app.updatable? new_app)
+	old_app.update_attributes country: new_app.country, market: new_app.market
+      end 
+    else
+      self.app_items << new_app
     end
   end
 
@@ -61,10 +65,12 @@ class Ranking < ActiveRecord::Base
     params = {
       feed: (Feed.market_unique_code feed_code, market_code).first, 
       country: (Country.find_by_code country_code), 
-      category: (Category.find_by_code category_code), 
+      category: (Category.find_by_code category_code)
     }
 
-    raise "invalid code. feed_code: #{feed_code}, country_code: #{country_code}, category_code: #{category_code}, market_code: #{market_code}" if params.include? nil
+    raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if params[:feed].nil?
+    raise "Invalid country_code. country_code: #{country_code}" if params[:country].nil?
+    raise "Invalid category_code. category_code: #{category_code}" if params[:category].nil?
 
     params
   end
