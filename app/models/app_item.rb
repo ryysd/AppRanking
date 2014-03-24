@@ -15,7 +15,7 @@ class AppItem < ActiveRecord::Base
   belongs_to :publisher, foreign_key: :publisher_id
   # belongs_to :publisher, :foreign_key => :publisher_id
 
-  attr_accessor :country, :source
+  attr_accessor :country, :market, :source
   attr_writer :options
   before_save :load
 
@@ -34,53 +34,99 @@ class AppItem < ActiveRecord::Base
 
   private
   def load
-    case category.market.code
-    when 'GP' then load_google_play
-    when 'ITC' then load_itunes_connect
-    end
+    attributes = 
+      case market.code
+      when 'GP' then load_google_play
+      when 'ITC' then load_itunes_connect
+      end
+
+    add_or_update_attributes attributes
   end
 
   def load_google_play
     # TODO: enable proxy
-    detail = MarketBot::Android::App.new local_id
+    detail = MarketBot::Android::App.new self.local_id
     detail.update
 
-    self.name            = detail.title
-    self.version         = detail.current_version
-    self.last_updated_on = detail.updated
-    self.icon            = detail.banner_icon_url
-    self.size            = detail.size
-    self.local_id        = detail.app_id
-    self.iap             = false
-    
-    new_price = Price.new app_item_id: self.id, country_id: country.id, value: (detail.price * 100).to_i
-    new_device = Device.find_by_name 'android'
-    new_description = Description.new app_item_id: self.id, country_id: country.id, text: detail.description
+    assignable__attributes =
+    {
+      name:              detail.title,
+      version:           detail.current_version,
+      last_updated_on:   detail.updated,
+      icon:              detail.banner_icon_url,
+      size:              detail.size,
+      local_id:          detail.app_id,
+      iap:               false,
+    }
 
-    old_price = prices.find{|p| p.country_id == country.id}
-    old_device = devices.find{|d| d.name == 'android'}
-    old_description = descriptions.find{|d| d.country_id == country.id}
+    unassignable_attributes =
+    {
+      price:             (detail.price * 100).to_i,
+      screen_shots_urls: detail.screenshot_urls,
+      description:       detail.description,
+      publisher_name:    detail.developer,
+      ratings:           detail.rating_distribution,
+      category_name:     detail.category,
+      device_name:       'android'
+    }
 
+    {assignable__attributes: assignable__attributes, unassignable_attributes: unassignable_attributes}
+  end
+
+  def add_or_update_attributes(assignable__attributes:, unassignable_attributes:)
+    self.assign_attributes assignable__attributes
+    assign_category unassignable_attributes[:category_name]
+    add_or_update_price unassignable_attributes[:price]
+    add_or_update_description unassignable_attributes[:description]
+    add_or_update_device unassignable_attributes[:device_name]
+    add_or_update_ratings unassignable_attributes[:ratings]
+    add_or_update_screenshot_urls unassignable_attributes[:screen_shots_urls]
+    new_or_update_publisher unassignable_attributes[:publisher_name]
+  end
+
+  def assign_category(category_name)
+    self.category = (Category.market_unique_name category_name, market.id).first
+    raise "undefined category name is found. category_name: #{self.category}" if self.category.nil?
+  end
+
+  def add_or_update_price(price)
+    new_price = Price.new country_id: country.id, value: price
+    old_price = self.prices.find{|p| p.country_id == country.id}
     merge_attribute self.prices, old_price, new_price
-    merge_attribute self.devices, old_device, new_device
-    merge_attribute self.descriptions, old_description, new_description
+  end
 
-    detail.rating_distribution.each {|key, value| 
+  def add_or_update_description(description)
+    new_description = Description.new country_id: country.id, text: description
+    old_description = self.descriptions.find{|d| d.country_id == country.id}
+    merge_attribute self.descriptions, old_description, new_description
+  end
+
+  def add_or_update_device(device_name)
+    new_device = Device.find_by_name device_name
+    old_device = self.devices.find{|d| d.name == 'android'}
+    merge_attribute self.devices, old_device, new_device
+  end
+
+  def add_or_update_ratings(ratings)
+    ratings.each {|key, value| 
       old_rate = self.rates.find {|r| r.value == key}
       new_rate = Rate.new value: key, count: value
       merge_attribute self.rates, old_rate, new_rate
     }
+  end
 
-    self.screen_shots.slice! 0, detail.screenshot_urls.length
-    detail.screenshot_urls.each_with_index {|url, idx|
+  def add_or_update_screenshot_urls(urls)
+    self.screen_shots.slice! 0, urls.length
+    urls.each_with_index {|url, idx|
       old_ss = self.screen_shots[idx]
       new_ss = ScreenShot.new url: url, order: idx + 1
       merge_attribute self.screen_shots, old_ss, new_ss
     }
+  end
 
-    # save parent model
-    old_publisher = (Publisher.market_unique detail.developer, category.market.id).first
-    new_publisher = Publisher.new name: detail.developer, market_id: category.market.id
+  def new_or_update_publisher(publisher_name)
+    old_publisher = (Publisher.market_unique_name publisher_name, market.id).first
+    new_publisher = Publisher.new name: publisher_name, market_id: market.id
 
     self.publisher = old_publisher
     if self.publisher.nil?
