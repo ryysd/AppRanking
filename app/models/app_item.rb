@@ -9,6 +9,7 @@ class AppItem < ActiveRecord::Base
   has_many :prices, :foreign_key => :app_item_id
   has_many :descriptions, :foreign_key => :app_item_id
   has_many :app_items_devices, :foreign_key => :app_item_id
+  has_many :screen_shots, :foreign_key => :app_item_id
   has_many :devices, :through => :app_items_devices
   belongs_to :category, :foreign_key => :category_id
   # belongs_to :publisher, :foreign_key => :publisher_id
@@ -69,10 +70,17 @@ class AppItem < ActiveRecord::Base
     merge_attribute self.devices, old_device, new_device
     merge_attribute self.descriptions, old_description, new_description
 
-    detail.rating_distribution.each{|key, value| 
-      old_rate = rates.find {|r| r.value == key}
+    detail.rating_distribution.each {|key, value| 
+      old_rate = self.rates.find {|r| r.value == key}
       new_rate = Rate.new value: key, count: value
       merge_attribute self.rates, old_rate, new_rate
+    }
+
+    self.screen_shots.slice! 0, detail.screenshot_urls.length
+    detail.screenshot_urls.each_with_index {|url, idx|
+      old_ss = self.screen_shots[idx]
+      new_ss = ScreenShot.new url: url, order: idx + 1
+      merge_attribute self.screen_shots, old_ss, new_ss
     }
 
     # for debug

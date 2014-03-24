@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323195310) do
+ActiveRecord::Schema.define(version: 20140324030448) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
@@ -142,5 +142,13 @@ ActiveRecord::Schema.define(version: 20140323195310) do
   end
 
   add_index "rates", ["id"], name: "id_UNIQUE", unique: true, using: :btree
+
+  create_table "screen_shots", force: true do |t|
+    t.integer "app_item_id",             null: false
+    t.integer "width"
+    t.integer "height"
+    t.string  "url",         limit: 128, null: false
+    t.integer "order"
+  end
 
 end
