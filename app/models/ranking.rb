@@ -19,30 +19,36 @@ class Ranking < ActiveRecord::Base
     self.feed_id = load_params[:feed].id
     self.country_id = load_params[:country].id
 
+    apps = 
     case market_code
     when 'GP' then load_google_play load_params
     when 'ITC' then load_itunes_connect load_params
     else raise "invalid market code. market_code: #{market_code}"
     end
+
+    add_or_update_apps apps
   end
 
-  def load_google_play (country:, feed:, category:)
+  def load_google_play(country:, feed:, category:)
     # TODO: enable proxy
-    lb = MarketBot::Android::Leaderboard.new(feed.code, category.code)
-    lb.update options
+    leader_boards = MarketBot::Android::Leaderboard.new(feed.code, category.code)
+    leader_boards.update options
 
-    raise "could not get ranking. country: #{country}, feed: #{feed}, category: #{category}" if lb.results.blank?
+    raise "could not get ranking. country: #{country}, feed: #{feed}, category: #{category}" if leader_boards.results.blank?
 
-    lb.results.first(3).each do |app|
-      app_item = AppItem.new country: country, market: category.market, local_id: app[:market_id]
-      existing_app = (AppItem.market_unique app_item.local_id, category.market.id).first
+    leader_boards.results.map{|lb| AppItem.new local_id: lb[:market_id], country: country, market: category.market}
+  end
 
-      if !existing_app.nil?
-	if options[:app_update?] || (existing_app.updatable? app_item)
-	  existing_app.update_attributes country: country, market: category.market
+  def add_or_update_apps(new_apps)
+    new_apps.first(3).each do |new_app|
+      old_app = (AppItem.market_unique new_app.local_id, new_app.market.id).first
+
+      if !old_app.nil?
+	if self.options[:app_update?] || (old_app.updatable? new_app)
+	  old_app.update_attributes country: country, market: category.market
 	end 
       else
-        self.app_items << app_item
+	self.app_items << new_app
       end
     end
   end
