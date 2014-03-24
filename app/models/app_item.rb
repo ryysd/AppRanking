@@ -5,14 +5,14 @@ require 'market_bot'
 class AppItem < ActiveRecord::Base
   include MergeAttribute
 
-  has_many :rates, :foreign_key => :app_item_id, :autosave => true
-  has_many :prices, :foreign_key => :app_item_id, :autosave => true
-  has_many :descriptions, :foreign_key => :app_item_id, :autosave => true
-  has_many :app_items_devices, :foreign_key => :app_item_id
-  has_many :screen_shots, :foreign_key => :app_item_id
-  has_many :devices, :through => :app_items_devices
-  belongs_to :category, :foreign_key => :category_id
-  belongs_to :publisher, :foreign_key => :publisher_id
+  has_many :rates            , foreign_key: :app_item_id, autosave: true
+  has_many :prices           , foreign_key: :app_item_id, autosave: true
+  has_many :descriptions     , foreign_key: :app_item_id, autosave: true
+  has_many :app_items_devices, foreign_key: :app_item_id
+  has_many :screen_shots     , foreign_key: :app_item_id
+  has_many :devices          , through: :app_items_devices
+  belongs_to :category , foreign_key: :category_id
+  belongs_to :publisher, foreign_key: :publisher_id
   # belongs_to :publisher, :foreign_key => :publisher_id
 
   attr_accessor :country, :source
