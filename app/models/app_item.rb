@@ -79,7 +79,7 @@ class AppItem < ActiveRecord::Base
     }
 
     # save parent model
-    old_publisher = (Publisher.market_unique detail.developer, category.market.id).first
+    old_publisher = (Publisher.market_unique_name detail.developer, category.market.id).first
     new_publisher = Publisher.new name: detail.developer, market_id: category.market.id
 
     self.publisher = old_publisher

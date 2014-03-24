@@ -53,7 +53,7 @@ class Ranking < ActiveRecord::Base
   # Return feed, country, category, market data for loading ranking data
   def make_load_params
     params = {
-      feed: (Feed.market_unique feed_code, market_code).first, 
+      feed: (Feed.market_unique_code feed_code, market_code).first, 
       country: (Country.find_by_code country_code), 
       category: (Category.find_by_code category_code), 
     }
