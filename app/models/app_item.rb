@@ -57,7 +57,6 @@ class AppItem < ActiveRecord::Base
       size:              detail.size,
       local_id:          detail.app_id,
       iap:               false,
-      category:          (Category.market_unique_name detail.category, market.id).first
     }
 
     unassignable_attributes =
@@ -67,21 +66,27 @@ class AppItem < ActiveRecord::Base
       description:       detail.description,
       publisher_name:    detail.developer,
       ratings:           detail.rating_distribution,
+      category_name:     detail.category,
       device_name:       'android'
     }
 
-    raise "undefined category name is found. category_name: #{detail.category}" if assignable__attributes[:category].nil?
     {assignable__attributes: assignable__attributes, unassignable_attributes: unassignable_attributes}
   end
 
   def add_or_update_attributes(assignable__attributes:, unassignable_attributes:)
     self.assign_attributes assignable__attributes
+    assign_category unassignable_attributes[:category_name]
     add_or_update_price unassignable_attributes[:price]
     add_or_update_description unassignable_attributes[:description]
     add_or_update_device unassignable_attributes[:device_name]
     add_or_update_ratings unassignable_attributes[:ratings]
     add_or_update_screenshot_urls unassignable_attributes[:screen_shots_urls]
     new_or_update_publisher unassignable_attributes[:publisher_name]
+  end
+
+  def assign_category(category_name)
+    self.category = (Category.market_unique_name category_name, market.id).first
+    raise "undefined category name is found. category_name: #{self.category}" if self.category.nil?
   end
 
   def add_or_update_price(price)

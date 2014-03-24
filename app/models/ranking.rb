@@ -45,7 +45,7 @@ class Ranking < ActiveRecord::Base
 
       if !old_app.nil?
 	if self.options[:app_update?] || (old_app.updatable? new_app)
-	  old_app.update_attributes country: country, market: category.market
+	  old_app.update_attributes country: new_app.country, market: new_app.market
 	end 
       else
 	self.app_items << new_app
