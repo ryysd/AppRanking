@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe National do
+describe ScreenShot do
   pending "add some examples to (or delete) #{__FILE__}"
 end

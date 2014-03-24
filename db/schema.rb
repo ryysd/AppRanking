@@ -11,13 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140322062147) do
+ActiveRecord::Schema.define(version: 20140324042007) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
     t.integer  "category_id",                                 null: false
     t.integer  "publisher_id",                                null: false
-    t.integer  "market_id",                                   null: false
     t.integer  "app_item_id"
     t.string   "name",            limit: 256,                 null: false
     t.string   "icon",            limit: 256
@@ -26,19 +25,30 @@ ActiveRecord::Schema.define(version: 20140322062147) do
     t.datetime "last_updated_on"
     t.integer  "size"
     t.boolean  "iap",                         default: false
+    t.string   "local_id",        limit: 128
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "app_items", ["app_item_id"], name: "fk_application_application1_idx", using: :btree
   add_index "app_items", ["category_id"], name: "fk_application_category1_idx", using: :btree
   add_index "app_items", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "app_items", ["market_id"], name: "fk_application_market1_idx", using: :btree
   add_index "app_items", ["publisher_id"], name: "fk_application_publisher1_idx", using: :btree
   add_index "app_items", ["ranking_id"], name: "fk_application_ranking_idx", using: :btree
 
+  create_table "app_items_devices", force: true do |t|
+    t.integer "device_id",   null: false
+    t.integer "app_item_id", null: false
+  end
+
+  add_index "app_items_devices", ["app_item_id"], name: "fk_device_has_application_application1_idx", using: :btree
+  add_index "app_items_devices", ["device_id"], name: "fk_device_has_application_device1_idx", using: :btree
+
   create_table "categories", force: true do |t|
     t.integer "category_id"
-    t.integer "market_id",   null: false
-    t.string  "name",        null: false
+    t.integer "market_id",              null: false
+    t.string  "name",                   null: false
+    t.string  "code",        limit: 32, null: false
   end
 
   add_index "categories", ["category_id"], name: "fk_category_category1_idx", using: :btree
@@ -63,20 +73,12 @@ ActiveRecord::Schema.define(version: 20140322062147) do
   add_index "currencies", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "descriptions", force: true do |t|
-    t.integer "national_id", null: false
     t.text    "text",        null: false
+    t.integer "app_item_id"
+    t.integer "country_id"
   end
 
   add_index "descriptions", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "descriptions", ["national_id"], name: "fk_description_national1_idx", using: :btree
-
-  create_table "device_has_app_items", force: true do |t|
-    t.integer "device_id",   null: false
-    t.integer "app_item_id", null: false
-  end
-
-  add_index "device_has_app_items", ["app_item_id"], name: "fk_device_has_application_application1_idx", using: :btree
-  add_index "device_has_app_items", ["device_id"], name: "fk_device_has_application_device1_idx", using: :btree
 
   create_table "devices", force: true do |t|
     t.string "name", null: false
@@ -87,6 +89,7 @@ ActiveRecord::Schema.define(version: 20140322062147) do
   create_table "feeds", force: true do |t|
     t.integer "market_id",            null: false
     t.string  "name",      limit: 32, null: false
+    t.string  "code",      limit: 32, null: false
   end
 
   add_index "feeds", ["id"], name: "id_UNIQUE", unique: true, using: :btree
@@ -107,55 +110,53 @@ ActiveRecord::Schema.define(version: 20140322062147) do
 
   add_index "markets", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
-  create_table "nationals", force: true do |t|
-    t.integer "app_item_id", null: false
-    t.integer "country_id",  null: false
-  end
-
-  add_index "nationals", ["app_item_id"], name: "fk_language_application1_idx", using: :btree
-  add_index "nationals", ["country_id"], name: "fk_national_language1_idx", using: :btree
-  add_index "nationals", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-
   create_table "prices", force: true do |t|
-    t.integer "national_id", null: false
     t.integer "value",       null: false
+    t.integer "app_item_id"
+    t.integer "country_id"
   end
 
   add_index "prices", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "prices", ["national_id"], name: "fk_price_national1_idx", using: :btree
+
+  create_table "proxies", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "country_id",            null: false
+    t.string   "ip_address", limit: 64, null: false
+  end
 
   create_table "publishers", force: true do |t|
-    t.string "name", limit: 64, null: false
+    t.string  "name",      limit: 64, null: false
+    t.integer "market_id"
   end
 
   add_index "publishers", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "rankings", force: true do |t|
-    t.integer  "feeds_id",        null: false
-    t.integer  "country_id",      null: false
-    t.integer  "market_id",       null: false
-    t.datetime "last_updated_on", null: false
+    t.integer  "feed_id",    null: false
+    t.integer  "country_id", null: false
+    t.datetime "updated_at"
+    t.datetime "created_at"
   end
 
   add_index "rankings", ["country_id"], name: "fk_ranking_country1_idx", using: :btree
-  add_index "rankings", ["feeds_id"], name: "fk_ranking_feed1_idx", using: :btree
+  add_index "rankings", ["feed_id"], name: "fk_ranking_feed1_idx", using: :btree
   add_index "rankings", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "rankings", ["market_id"], name: "fk_ranking_market1_idx", using: :btree
 
   create_table "rates", force: true do |t|
-    t.integer "value", null: false
+    t.integer "value",       null: false
+    t.integer "app_item_id"
+    t.integer "count"
   end
 
   add_index "rates", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
-  create_table "reviews", force: true do |t|
-    t.integer "national_id", null: false
-    t.integer "rate_id",     null: false
-    t.text    "comment",     null: false
+  create_table "screen_shots", force: true do |t|
+    t.integer "app_item_id",             null: false
+    t.integer "width"
+    t.integer "height"
+    t.string  "url",         limit: 128, null: false
+    t.integer "order"
   end
-
-  add_index "reviews", ["id"], name: "id_UNIQUE", unique: true, using: :btree
-  add_index "reviews", ["national_id"], name: "fk_review_national1_idx", using: :btree
-  add_index "reviews", ["rate_id"], name: "fk_review_rate1_idx", using: :btree
 
 end
