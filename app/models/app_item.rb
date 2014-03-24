@@ -81,24 +81,24 @@ class AppItem < ActiveRecord::Base
     add_or_update_device unassignable_attributes[:device_name]
     add_or_update_ratings unassignable_attributes[:ratings]
     add_or_update_screenshot_urls unassignable_attributes[:screen_shots_urls]
-    add_or_update_publisher unassignable_attributes[:publisher_name]
+    new_or_update_publisher unassignable_attributes[:publisher_name]
   end
 
   def add_or_update_price(price)
-    new_price = Price.new app_item_id: self.id, country_id: country.id, value: price
-    old_price = prices.find{|p| p.country_id == country.id}
+    new_price = Price.new country_id: country.id, value: price
+    old_price = self.prices.find{|p| p.country_id == country.id}
     merge_attribute self.prices, old_price, new_price
   end
 
   def add_or_update_description(description)
-    new_description = Description.new app_item_id: self.id, country_id: country.id, text: description
-    old_description = descriptions.find{|d| d.country_id == country.id}
+    new_description = Description.new country_id: country.id, text: description
+    old_description = self.descriptions.find{|d| d.country_id == country.id}
     merge_attribute self.descriptions, old_description, new_description
   end
 
   def add_or_update_device(device_name)
     new_device = Device.find_by_name device_name
-    old_device = devices.find{|d| d.name == 'android'}
+    old_device = self.devices.find{|d| d.name == 'android'}
     merge_attribute self.devices, old_device, new_device
   end
 
@@ -119,7 +119,7 @@ class AppItem < ActiveRecord::Base
     }
   end
 
-  def add_or_update_publisher(publisher_name)
+  def new_or_update_publisher(publisher_name)
     old_publisher = (Publisher.market_unique_name publisher_name, market.id).first
     new_publisher = Publisher.new name: publisher_name, market_id: market.id
 
