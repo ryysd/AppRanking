@@ -39,12 +39,12 @@ describe AppItem do
       end
     end
 
-    describe 'load' do
+    describe 'load()' do
       it 'should load attributes correctly (not implemented)' do
       end
     end
 
-    describe 'add_or_update_attributes' do
+    describe 'add_or_update_attributes()' do
       it 'should assign attributes correctly (not implemented)' do
 	assignable_attributes = {
 	  name: 'Name',
@@ -113,7 +113,7 @@ describe AppItem do
       end
     end
 
-    describe 'add_or_update_description' do
+    describe 'add_or_update_description()' do
       context 'with new description' do
 	it 'should add description correctly' do
 	  @app_jp_gp.send :add_or_update_description, 'desc'
@@ -132,7 +132,7 @@ describe AppItem do
       end
     end
 
-    describe 'add_or_update_device' do
+    describe 'add_or_update_device()' do
       context 'with new device' do
 	it 'should add device correctly' do
 	  @app_jp_gp.send :add_or_update_device, 'android'
@@ -168,7 +168,7 @@ describe AppItem do
       end
     end
 
-    describe 'add_or_update_ratings' do
+    describe 'add_or_update_ratings()' do
       context 'with new ratings' do
 	it 'should add ratings correctly' do
 	  @app_jp_gp.send :add_or_update_ratings, {1 => 10, 2 => 20, 3 => 30, 4 => 40, 5 => 50}
@@ -197,7 +197,7 @@ describe AppItem do
       end
     end
 
-    describe 'new_or_update_publisher' do
+    describe 'new_or_update_publisher()' do
       context 'with new publisher' do
 	it 'should save publisher correctly' do
 	  @app_jp_gp.send :new_or_update_publisher, 'Publisher'
@@ -212,6 +212,36 @@ describe AppItem do
 	  @app_jp_gp.send :new_or_update_publisher, 'Publisher'
 	  @app_jp_gp.send :new_or_update_publisher, 'Publisher'
 	  expect(@app_jp_gp.publisher.name).to eq('Publisher')
+	end
+      end
+    end
+
+    describe 'updatable?()' do
+      context 'with different version app' do
+	it 'should return true' do
+	  @app_jp_gp.version = '1.0.0'
+	  @app_jp_itc.version = '2.0.0'
+
+	  expect(@app_jp_gp.send :updatable?, @app_jp_itc).to eq(true)
+	end
+      end
+      context 'with same version new app (updated in 60min)' do
+	it 'should return true' do
+	  @app_jp_gp.version = '1.0.0'
+	  @app_jp_itc.version = '1.0.0'
+	  @app_jp_gp.updated_at = Time.now - 60 * 30
+
+	  expect(@app_jp_gp.send :updatable?, @app_jp_itc).to eq(false)
+	end
+      end
+
+      context 'with same version old app (not updated over 60min)' do
+	it 'should return false' do
+	  @app_jp_gp.version = '1.0.0'
+	  @app_jp_itc.version = '1.0.0'
+	  @app_jp_gp.updated_at = Time.now - 60 *  70
+
+	  expect(@app_jp_gp.send :updatable?, @app_jp_itc).to eq(true)
 	end
       end
     end

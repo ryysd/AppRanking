@@ -29,7 +29,7 @@ class AppItem < ActiveRecord::Base
 
   def updatable? (new_app)
     (self.version != new_app.version ||
-    (Time.now - self.updated_at) * 24 * 60 >= AppItem::UPDATE_INTERVAL_MIN)
+    (Time.now - self.updated_at) /  60 >= AppItem::UPDATE_INTERVAL_MIN)
   end
 
   private
