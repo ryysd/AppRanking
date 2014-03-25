@@ -17,7 +17,7 @@ class AppItem < ActiveRecord::Base
 
   attr_accessor :country, :market, :source
   attr_writer :options
-  before_save :load
+  before_save :set_detail_data
 
   scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id])}
 
@@ -33,17 +33,19 @@ class AppItem < ActiveRecord::Base
   end
 
   private
-  def load
-    attributes = 
-      case market.code
-      when 'GP' then load_google_play
-      when 'ITC' then load_itunes_connect
-      end
-
-    add_or_update_attributes attributes
+  def set_detail_data
+    detail = load_app_detail
+    add_or_update_attributes detail
   end
 
-  def load_google_play
+  def load_app_detail
+      case market.code
+      when 'GP' then load_app_detail_google_play
+      when 'ITC' then load_app_detail_itunes_connect
+      end
+  end
+
+  def load_app_detail_google_play
     # TODO: enable proxy
     detail = MarketBot::Android::App.new self.local_id
     detail.update
@@ -138,6 +140,6 @@ class AppItem < ActiveRecord::Base
     self.publisher_id = self.publisher.id
   end
 
-  def load_itunes_connect
+  def load_app_detail_itunes_connect
   end
 end
