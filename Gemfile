@@ -126,6 +126,10 @@ group :development, :test do
   # Rails application preloader
   gem 'spring'
 
+  gem 'spring-commands-rspec'
+
+  gem 'simplecov', :require=>false
+
   # Railsコンソールの多機能版
   gem 'pry-rails'
 

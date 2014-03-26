@@ -1,5 +1,5 @@
 class Feed < ActiveRecord::Base
-  belongs_to :market, foreign_key: :market_id
+  belongs_to :market
 
-  scope :market_unique_code, lambda {|feed_code, market_code| includes(:market).where("feeds.code = ? and markets.code = ?", feed_code, market_code)}
+  scope :market_unique_code, lambda {|feed_code, market_code| includes(:market).where("feeds.code = ? and markets.code = ?", feed_code, market_code).references(:market)}
 end

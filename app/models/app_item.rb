@@ -1,25 +1,24 @@
 require 'rubygems'
 require 'market_bot'
 
-# TODO: save association of publisher
 class AppItem < ActiveRecord::Base
   include MergeAttribute
 
-  has_many :rates            , foreign_key: :app_item_id, autosave: true
-  has_many :prices           , foreign_key: :app_item_id, autosave: true
-  has_many :descriptions     , foreign_key: :app_item_id, autosave: true
-  has_many :app_items_devices, foreign_key: :app_item_id
-  has_many :screen_shots     , foreign_key: :app_item_id
-  has_many :devices          , through: :app_items_devices
-  belongs_to :category , foreign_key: :category_id
-  belongs_to :publisher, foreign_key: :publisher_id
+  has_many :app_items_devices
+  has_many :screen_shots     
+  has_many :rates, autosave: true
+  has_many :prices, autosave: true
+  has_many :descriptions, autosave: true
+  has_many :devices , through: :app_items_devices
+  belongs_to :category 
+  belongs_to :publisher
   # belongs_to :publisher, :foreign_key => :publisher_id
 
   attr_accessor :country, :market, :source
   attr_writer :options
-  before_save :load
+  before_save :set_detail_data
 
-  scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id])}
+  scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id]).references(:category)}
 
   UPDATE_INTERVAL_MIN = 60
 
@@ -29,21 +28,23 @@ class AppItem < ActiveRecord::Base
 
   def updatable? (new_app)
     (self.version != new_app.version ||
-    (Time.now - self.updated_at) * 24 * 60 >= AppItem::UPDATE_INTERVAL_MIN)
+    (Time.now - self.updated_at) /  60 >= AppItem::UPDATE_INTERVAL_MIN)
   end
 
   private
-  def load
-    attributes = 
-      case market.code
-      when 'GP' then load_google_play
-      when 'ITC' then load_itunes_connect
-      end
-
-    add_or_update_attributes attributes
+  def set_detail_data
+    detail = load_app_detail
+    add_or_update_attributes detail
   end
 
-  def load_google_play
+  def load_app_detail
+      case market.code
+      when 'GP' then load_app_detail_google_play
+      when 'ITC' then load_app_detail_itunes_connect
+      end
+  end
+
+  def load_app_detail_google_play
     # TODO: enable proxy
     detail = MarketBot::Android::App.new self.local_id
     detail.update
@@ -61,7 +62,7 @@ class AppItem < ActiveRecord::Base
 
     unassignable_attributes =
     {
-      price:             (detail.price * 100).to_i,
+      price:             detail.price,
       screen_shots_urls: detail.screenshot_urls,
       description:       detail.description,
       publisher_name:    detail.developer,
@@ -85,12 +86,12 @@ class AppItem < ActiveRecord::Base
   end
 
   def assign_category(category_name)
-    self.category = (Category.market_unique_name category_name, market.id).first
+    self.category = (Category.market_unique_name category_name, self.market.id).first
     raise "undefined category name is found. category_name: #{self.category}" if self.category.nil?
   end
 
   def add_or_update_price(price)
-    new_price = Price.new country_id: country.id, value: price
+    new_price = Price.new country_id: country.id, value: (price * 100).to_i
     old_price = self.prices.find{|p| p.country_id == country.id}
     merge_attribute self.prices, old_price, new_price
   end
@@ -103,8 +104,9 @@ class AppItem < ActiveRecord::Base
 
   def add_or_update_device(device_name)
     new_device = Device.find_by_name device_name
-    old_device = self.devices.find{|d| d.name == 'android'}
+    old_device = self.devices.find{|d| d.name == device_name}
     merge_attribute self.devices, old_device, new_device
+    raise "There is no such device in market. device_name: #{device_name}, market_name: #{self.market.name}" unless self.market.devices.map{|d| d.name}.include? device_name
   end
 
   def add_or_update_ratings(ratings)
@@ -125,8 +127,8 @@ class AppItem < ActiveRecord::Base
   end
 
   def new_or_update_publisher(publisher_name)
-    old_publisher = (Publisher.market_unique_name publisher_name, market.id).first
-    new_publisher = Publisher.new name: publisher_name, market_id: market.id
+    old_publisher = (Publisher.market_unique_name publisher_name, self.market.id).first
+    new_publisher = Publisher.new name: publisher_name, market_id: self.market.id
 
     self.publisher = old_publisher
     if self.publisher.nil?
@@ -137,6 +139,6 @@ class AppItem < ActiveRecord::Base
     self.publisher_id = self.publisher.id
   end
 
-  def load_itunes_connect
+  def load_app_detail_itunes_connect
   end
 end

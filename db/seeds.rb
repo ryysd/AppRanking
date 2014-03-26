@@ -89,10 +89,10 @@ feeds = [
 create_all Feed, feeds
 
 devices = [
-    {:name => 'iPhone'},
-    {:name => 'iPad'},
-    {:name => 'mac'},
-    {:name => 'android'},
+    {:name => 'android', :market_id => '1'},
+    {:name => 'iPhone' , :market_id => '2'},
+    {:name => 'iPad'   , :market_id => '2'},
+    {:name => 'mac'    , :market_id => '2'},
 ]
 create_all Device, devices
 
