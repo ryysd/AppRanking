@@ -51,7 +51,7 @@ categories = [
     {:id => '27', :market_id => '1', :code => 'travel_and_local'   , :name => 'Travel & Local', :category_id => '2'},
     {:id => '28', :market_id => '1', :code => 'weather'            , :name => 'Weather', :category_id => '2'},
     {:id => '29', :market_id => '1', :code => 'widgets'            , :name => 'Widgets', :category_id => '2'},
-    # Google Play Ga1e >
+    # Google Play Games >
     {:id => '30', :market_id => '1', :code => '', :name => 'Games'         , :category_id => '3'},
     {:id => '31', :market_id => '1', :code => '', :name => 'Action'        , :category_id => '3'},
     {:id => '32', :market_id => '1', :code => '', :name => 'Adventure'     , :category_id => '3'},
@@ -74,6 +74,29 @@ categories = [
     {:id => '49', :market_id => '1', :code => '', :name => 'Widgets'       , :category_id => '3'},
     {:id => '50', :market_id => '1', :code => '', :name => 'Word'          , :category_id => '3'},
     # iOS Categories
+    {:id => '51', :market_id => '2', :code => '', :name => 'All'},
+    {:id => '52', :market_id => '2', :code => '6018', :name => 'Books'            , :category_id => '51'},
+    {:id => '53', :market_id => '2', :code => '6000', :name => 'Business'         , :category_id => '51'},
+    {:id => '54', :market_id => '2', :code => '6017', :name => 'Educations'       , :category_id => '51'},
+    {:id => '55', :market_id => '2', :code => '6016', :name => 'Entertainment'    , :category_id => '51'},
+    {:id => '56', :market_id => '2', :code => '6015', :name => 'Finance'          , :category_id => '51'},
+    {:id => '57', :market_id => '2', :code => '6023', :name => 'Food & Drink'     , :category_id => '51'},
+    {:id => '58', :market_id => '2', :code => '6014', :name => 'Games'            , :category_id => '51'},
+    {:id => '59', :market_id => '2', :code => '6013', :name => 'Health & Fitness' , :category_id => '51'},
+    {:id => '60', :market_id => '2', :code => '6012', :name => 'Lifestyle'        , :category_id => '51'},
+    {:id => '61', :market_id => '2', :code => '6020', :name => 'Medical'          , :category_id => '51'},
+    {:id => '62', :market_id => '2', :code => '6011', :name => 'Music'            , :category_id => '51'},
+    {:id => '63', :market_id => '2', :code => '6010', :name => 'Navigation'       , :category_id => '51'},
+    {:id => '64', :market_id => '2', :code => '6009', :name => 'News'             , :category_id => '51'},
+    {:id => '65', :market_id => '2', :code => '6021', :name => 'Newsstand'        , :category_id => '51'},
+    {:id => '66', :market_id => '2', :code => '6008', :name => 'Photo & Video'    , :category_id => '51'},
+    {:id => '67', :market_id => '2', :code => '6007', :name => 'Productively'     , :category_id => '51'},
+    {:id => '68', :market_id => '2', :code => '6006', :name => 'Reference'        , :category_id => '51'},
+    {:id => '69', :market_id => '2', :code => '6005', :name => 'Social Nwtworking', :category_id => '51'},
+    {:id => '70', :market_id => '2', :code => '6004', :name => 'Sports'           , :category_id => '51'},
+    {:id => '71', :market_id => '2', :code => '6003', :name => 'Travel'           , :category_id => '51'},
+    {:id => '72', :market_id => '2', :code => '6002', :name => 'Utilities'        , :category_id => '51'},
+    {:id => '73', :market_id => '2', :code => '6001', :name => 'Weather'          , :category_id => '51'},
 ]
 create_all Category, categories
 
@@ -85,6 +108,12 @@ feeds = [
     {:name => 'New Free', :code => 'topselling_new_free', :market_id => '1'},
     {:name => 'New Paid', :code => 'topselling_new_paid', :market_id => '1'},
     # iOS Feeds
+    {:name => 'Free'    , :code => 'topfreeapplications'    , :market_id => '2'},
+    {:name => 'Paid'    , :code => 'toppaidapplications'    , :market_id => '2'},
+    {:name => 'Grossing', :code => 'topgrossingapplications', :market_id => '2'},
+    {:name => 'New Free', :code => 'newfreeapplications'    , :market_id => '2'},
+    {:name => 'New Paid', :code => 'newpaidapplications'    , :market_id => '2'},
+
 ]
 create_all Feed, feeds
 
