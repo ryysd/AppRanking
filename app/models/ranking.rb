@@ -36,11 +36,14 @@ class Ranking < ActiveRecord::Base
   end
 
   def load_apps
-    case self.category.market.code
-    when 'GP' then load_apps_google_play
-    when 'ITC' then load_apps_itunes_connect
-    else raise "Invalid market code. market_code: #{self.category.market.code}"
-    end
+    app_keys = 
+      case self.category.market.code
+      when 'GP' then load_apps_google_play
+      when 'ITC' then load_apps_itunes_connect
+      else raise "Invalid market code. market_code: #{self.category.market.code}"
+      end
+
+    app_keys.map{|key| AppItem.new local_id: key, country: self.country, market: self.category.market}
   end
 
   def load_apps_google_play
@@ -50,7 +53,7 @@ class Ranking < ActiveRecord::Base
 
     raise "Could not get ranking. country: #{self.country}, feed: #{self.feed}, category: #{self.category}" if leader_boards.results.blank?
 
-    leader_boards.results.map{|lb| AppItem.new local_id: lb[:market_id], country: self.country, market: self.category.market}
+    leader_boards.results.map{|lb| lb[:market_id]}
   end
 
   def load_apps_itunes_connect

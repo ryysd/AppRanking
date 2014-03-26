@@ -49,7 +49,7 @@ class AppItem < ActiveRecord::Base
     detail = MarketBot::Android::App.new self.local_id
     detail.update
 
-    assignable__attributes =
+    assignable_attributes =
     {
       name:              detail.title,
       version:           detail.current_version,
@@ -71,7 +71,44 @@ class AppItem < ActiveRecord::Base
       device_name:       'android'
     }
 
-    {assignable__attributes: assignable__attributes, unassignable_attributes: unassignable_attributes}
+    {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+  end
+
+  def load_app_detail_itunes_connect
+    host = "https://itunes.apple.com"
+    query = "#{host}/#{self.country.code}/lookup?id=#{self.local_id}"
+
+    json = RestClient::Request.execute :method => :get, :url => query
+    parsed_json = JSON.parse json
+    detail = OpenStruct.new parsed_json['results'].first
+
+    assignable_attributes =
+    {
+      name:              detail.trackName,
+      version:           detail.version,
+      last_updated_on:   '',
+      released_on:       detail.releaseDate,
+      icon:              detail.artworkUrl512,
+      size:              (detail.fileSizeBytes.to_i / (1024 * 1024)),
+      local_id:          detail.trackId,
+      iap:               false,
+    }
+
+    unassignable_attributes =
+    {
+      price:             detail.price,
+      screen_shots_urls: detail.screenshotUrls,
+      description:       detail.description,
+      publisher_name:    detail.artistName,
+      ratings:           {},
+      category_name:     detail.primaryGenreName,
+      device_name:       'iPhone'
+    }
+
+    pp assignable_attributes
+    pp unassignable_attributes
+
+    {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
 
   def add_or_update_attributes(assignable__attributes:, unassignable_attributes:)
@@ -137,8 +174,5 @@ class AppItem < ActiveRecord::Base
     end
 
     self.publisher_id = self.publisher.id
-  end
-
-  def load_app_detail_itunes_connect
   end
 end
