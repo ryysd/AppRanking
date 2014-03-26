@@ -113,7 +113,9 @@ feeds = [
     {:name => 'Grossing', :code => 'topgrossingapplications', :market_id => '2'},
     {:name => 'New Free', :code => 'newfreeapplications'    , :market_id => '2'},
     {:name => 'New Paid', :code => 'newpaidapplications'    , :market_id => '2'},
-
+    {:name => 'Free'    , :code => 'topfreeipadapplications'    , :market_id => '2'},
+    {:name => 'Paid'    , :code => 'toppaidipadapplications'    , :market_id => '2'},
+    {:name => 'Grossing', :code => 'topgrossingipadapplications', :market_id => '2'},
 ]
 create_all Feed, feeds
 
