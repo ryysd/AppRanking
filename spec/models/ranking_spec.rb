@@ -8,10 +8,9 @@ describe Ranking do
   end
 
   context 'when country_code, feed_code and category_code are valid' do
-    describe 'load_google_play()' do
+    describe 'load_apps_google_play()' do
       it 'should return valid ranking data' do
-	params = @ranking_jp_gp_topfree_game.send :make_load_params
-	apps = @ranking_jp_gp_topfree_game.send :load_google_play, params
+	apps = @ranking_jp_gp_topfree_game.send :load_apps_google_play
 
 	expect(apps.length).to be > 0
       end
@@ -20,8 +19,7 @@ describe Ranking do
     describe 'add_or_update_apps()' do
       context 'with new app' do
 	it 'should add new app correctly' do
-	  params = @ranking_jp_gp_topfree_game.send :make_load_params
-	  apps = @ranking_jp_gp_topfree_game.send :load_google_play, params
+	  apps = @ranking_jp_gp_topfree_game.send :load_apps_google_play
 	  
 	  @ranking_jp_gp_topfree_game.send :add_or_update_app, apps.first
 	  
@@ -37,16 +35,6 @@ describe Ranking do
       context 'with overlapped old app (not updated over 60min)' do
 	it 'should update app correctly (not implemented)' do
 	end
-      end
-    end
-
-    describe 'make_load_params()' do
-      it 'should return valid feed, country and category data' do
-	params = @ranking_jp_gp_topfree_game.send :make_load_params
-
-	expect(params[:country].code).to eq('JP')
-	expect(params[:category].code).to eq('game')
-	expect(params[:feed].code).to eq('topselling_free')
       end
     end
   end

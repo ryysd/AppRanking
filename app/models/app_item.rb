@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'market_bot'
 
-# TODO: save association of publisher
 class AppItem < ActiveRecord::Base
   include MergeAttribute
 
@@ -19,7 +18,7 @@ class AppItem < ActiveRecord::Base
   attr_writer :options
   before_save :set_detail_data
 
-  scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id])}
+  scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id]).references(:category)}
 
   UPDATE_INTERVAL_MIN = 60
 

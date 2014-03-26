@@ -28,10 +28,10 @@ describe AppItem do
       @app_jp_itc = AppItem.new country: @country_ja, market: @market_itc
     end
 
-    describe 'load_google()' do
+    describe 'load_app_detail_google_play()' do
       it 'should returns valid attributes (not enough)' do
 	@app_jp_gp.local_id = 'com.bluefroggaming.popdat'
-	attributes = @app_jp_gp.send :load_google_play
+	attributes = @app_jp_gp.send :load_app_detail_google_play
 	
 	# not enough
 	expect(attributes[:assignable__attributes][:name]).to eq('Pop Dat')
