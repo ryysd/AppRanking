@@ -47,8 +47,9 @@ class Ranking < ActiveRecord::Base
   end
 
   def load_apps_google_play
+    # self.options[:request_opts] = {proxy: 'https://50.8.97.147:1080', proxy_type: 'socks4'}
     # TODO: enable proxy
-    leader_boards = MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code)
+    leader_boards = MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
     leader_boards.update self.options
 
     raise "Could not get ranking. country: #{self.country}, feed: #{self.feed}, category: #{self.category}" if leader_boards.results.blank?

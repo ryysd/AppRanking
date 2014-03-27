@@ -390,3 +390,9 @@ currencies = [
     # {:code => 'JPY', :symbol => '(J\(B', :name => 'Japanese Yen'        , :country_id => '2'}
 ]
 create_all Currency, currencies
+
+protocols = [
+  {:id => '1', :name => 'https'},
+  {:id => '2', :name => 'socks4'},
+  {:id => '3', :name => 'socks5'},
+]
