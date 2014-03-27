@@ -14,7 +14,7 @@ class AppItem < ActiveRecord::Base
   belongs_to :publisher
   # belongs_to :publisher, :foreign_key => :publisher_id
 
-  attr_accessor :country, :market, :source
+  attr_accessor :country, :market, :device, :source
   attr_writer :options
   before_save :set_detail_data
 
@@ -68,7 +68,7 @@ class AppItem < ActiveRecord::Base
       publisher_name:    detail.developer,
       ratings:           detail.rating_distribution,
       category_name:     detail.category,
-      device_name:       'android'
+      device_name:       self.device.name
     }
 
     {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
@@ -102,10 +102,9 @@ class AppItem < ActiveRecord::Base
       publisher_name:    detail.artistName,
       ratings:           {},
       category_name:     detail.primaryGenreName,
-      device_name:       'iPhone'
+      device_name:       self.device.name
     }
 
-    pp assignable_attributes
     pp unassignable_attributes
 
     {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}

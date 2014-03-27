@@ -21,7 +21,7 @@ class Ranking < ActiveRecord::Base
 	  options: options
 
     self.category = Category.find_by_code category_code
-    self.device = Device.market_unique_name device_name, market_code
+    self.device = (Device.market_unique_name device_name, feed.market.id).first
 
     raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if self.feed.nil?
     raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
@@ -43,7 +43,7 @@ class Ranking < ActiveRecord::Base
       else raise "Invalid market code. market_code: #{self.category.market.code}"
       end
 
-    app_keys.map{|key| AppItem.new local_id: key, country: self.country, market: self.category.market}
+    app_keys.map{|key| AppItem.new local_id: key, country: self.country, market: self.category.market, device: self.device}
   end
 
   def load_apps_google_play
