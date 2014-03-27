@@ -392,7 +392,9 @@ currencies = [
 create_all Currency, currencies
 
 protocols = [
-  {:id => '1', :name => 'https'},
-  {:id => '2', :name => 'socks4'},
-  {:id => '3', :name => 'socks5'},
+  {:id => '1', :name => 'http'},
+  {:id => '2', :name => 'https'},
+  {:id => '3', :name => 'socks4'},
+  {:id => '4', :name => 'socks5'},
 ]
+create_all Protocol, protocols

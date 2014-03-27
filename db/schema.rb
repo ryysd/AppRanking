@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140327133221) do
+ActiveRecord::Schema.define(version: 20140327141049) do
 
   create_table "app_items", force: true do |t|
     t.integer  "ranking_id",                                  null: false
@@ -128,8 +128,9 @@ ActiveRecord::Schema.define(version: 20140327133221) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "country_id",             null: false
-    t.string   "ip_address",  limit: 64, null: false
+    t.string   "host",        limit: 64, null: false
     t.integer  "protocol_id",            null: false
+    t.string   "port",        limit: 8,  null: false
   end
 
   create_table "publishers", force: true do |t|
