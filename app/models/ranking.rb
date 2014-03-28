@@ -11,6 +11,8 @@ class Ranking < ActiveRecord::Base
 
   before_create :set_apps
 
+  TIMEOUT = 5
+
   def options
     @options || {}
   end
@@ -49,6 +51,7 @@ class Ranking < ActiveRecord::Base
   def load_apps_google_play
     leader_boards = nil
 
+    # notice: 中国プロキシの場合、香港か台湾かそれ以外かで得られる結果が異なる
     if self.country.own?
       leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
       leader_boards.update self.options
@@ -57,7 +60,7 @@ class Ranking < ActiveRecord::Base
       raise "There are no valid proxies for #{self.country.name}." if valid_proxies.empty?
 
       valid_proxies.each{|proxy|
-	request_opts = {proxy: "https://#{proxy.host}:#{proxy.port}", timeout: 100}
+	request_opts = {proxy: "https://#{proxy.host}:#{proxy.port}", timeout: Ranking::TIMEOUT, connecttimeout: Ranking::TIMEOUT}
 	request_opts[:proxytype] = proxy.protocol.name if proxy.protocol.name != 'https' 
 	self.options[:request_opts] = request_opts
 	pp proxy

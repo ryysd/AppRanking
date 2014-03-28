@@ -13,7 +13,7 @@ class Proxy < ActiveRecord::Base
 
   validates :host, :uniqueness => { :scope => [:port, :protocol_id] }
 
-  TIMEOUT = 100
+  TIMEOUT = 10
 
   def self.create_ssl_proxies
     letushide_proxies = Proxy.get_ssl_proxies_from_letushide

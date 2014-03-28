@@ -66,7 +66,7 @@ class RankingsController < ApplicationController
     res = nil
     # ranking debug
     options = {:min_rank=>1, :max_rank=>24, :app_update? => true}
-    rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
+    rankings_params = {country_code: 'us', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
     rank = Ranking.new rankings_params
