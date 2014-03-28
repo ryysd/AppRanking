@@ -61,7 +61,10 @@ class Ranking < ActiveRecord::Base
 
       valid_proxies.each{|proxy|
 	request_opts = {proxy: "#{proxy.host}:#{proxy.port}", timeout: Ranking::TIMEOUT, connecttimeout: Ranking::TIMEOUT}
+
 	request_opts[:proxytype] = proxy.protocol.name if proxy.protocol.name != 'https' 
+	request_opts[:proxytype] = 'socks5' if proxy.protocol.name == 'socks4/5' 
+
 	self.options[:request_opts] = request_opts
 	pp proxy
 	pp request_opts

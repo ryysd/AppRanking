@@ -72,7 +72,8 @@ class RankingsController < ApplicationController
     # rank = Ranking.new rankings_params
     # rank.save
 
-    res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
+    # res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
+    # res = Proxy.get_ssl_proxies_from_nordvpn
 
     # Country.all.select{|c| c.is_popular}.each{|c| pp "#{c.name} #{c.proxies.length}"}
     # countries = Proxy.all.map{|proxy| proxy.country}.uniq

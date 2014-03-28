@@ -397,5 +397,6 @@ protocols = [
   {:id => '2', :name => 'https'},
   {:id => '3', :name => 'socks4'},
   {:id => '4', :name => 'socks5'},
+  {:id => '5', :name => 'socks4/5'},
 ]
 create_all Protocol, protocols

@@ -29,7 +29,8 @@ class Proxy < ActiveRecord::Base
   def self.create_ssl_proxies
     letushide_proxies = Proxy.get_ssl_proxies_from_letushide
     xroxy_proxies = Proxy.get_proxies_from_xroxy
-    proxies = letushide_proxies + xroxy_proxies
+    nordvpn_proxies = Proxy.get_ssl_proxies_from_nordvpn
+    proxies = letushide_proxies + xroxy_proxies + nordvpn_proxies
 
     proxies.map{|proxy| 
       args = {
@@ -53,10 +54,6 @@ class Proxy < ActiveRecord::Base
     }.flatten.compact
   end
 
-  def self.get_ssl_proxies_from_xroxy
-    Proxy.get_proxies_from_xroxy.select{|proxy| proxy[:protocol].downcase != 'http'}
-  end
-
   def self.get_proxies_from_letushide (api_key: '9cbcfed29b7659add44113b5', limit: '120', country_code:, protocol: , timeout: Proxy::TIMEOUT)
     json = RestClient::Request.execute :method => :get, 
       :url => "http://letushide.com/fpapi/?key=#{api_key}&num=#{limit}&cs=#{country_code}&ps=#{protocol}&format=json", 
@@ -74,6 +71,10 @@ class Proxy < ActiveRecord::Base
     }
   end
 
+  def self.get_ssl_proxies_from_xroxy
+    Proxy.get_proxies_from_xroxy.select{|proxy| proxy[:protocol].downcase != 'http'}
+  end
+
   def self.get_proxies_from_xroxy(timeout: Proxy::TIMEOUT)
     xml = RestClient::Request.execute :method => :get, 
       :url => "http://www.xroxy.com/proxyrss.xml", 
@@ -82,22 +83,70 @@ class Proxy < ActiveRecord::Base
 
     parsed_json = JSON.parse (Hash.from_xml xml).to_json
     parsed_json['rss']['channel']['item'].map{|item|
-      item['proxy'].map{|data|
-	next if data.class.to_s == 'Array'
+      proxies = item['proxy']
 
-	protocol = data['type']
-	if protocol != 'Socks4' && protocol != 'Socks5'
-	  protocol = (data['ssl'] == 'false') ? 'http' : 'https'
-	end
+      if !proxies.blank?
+	proxies.map{|data|
+	  next if data.class.to_s == 'Array'
 
-	{
-	  host: data['ip'],
-	  port: data['port'],
-	  protocol:protocol,
-	  country: data['country_code']
+	  protocol = data['type']
+	  if protocol != 'Socks4' && protocol != 'Socks5'
+	    protocol = (data['ssl'] == 'false') ? 'http' : 'https'
+	  end
+
+	  {
+	    host: data['ip'],
+	    port: data['port'],
+	    protocol:protocol,
+	    country: data['country_code']
+	  }
 	}
-      }
+      end
     }.flatten.compact
+  end
+
+  def self.get_ssl_proxies_from_nordvpn(maxpage: 100)
+    proxies = []
+    (1..maxpage).map{|page|
+      result = Proxy.get_proxies_from_nordvpn page: page
+
+      break if result.empty?
+      proxies << result
+    }
+
+    proxies.flatten
+  end
+
+  def self.get_proxies_from_nordvpn(page:)
+    host = "https://nordvpn.com/free-proxy-list"
+
+    # TODO: 引数でパラメータを渡せるようにする
+    params = {
+      allc: 'all',
+      allp: 'all',
+      sp: [3, 2, 1],
+      protocol: ['HTTPS', 'SOCKS4', 'SOCKS4/5', 'SOCKS5'],
+      ano: ['No', 'Low', 'Medium', 'High'],
+      sortby: 0,
+      way: 0,
+      pp: 3
+    }
+
+    request = Typhoeus::Request.new "#{host}/#{page}/", method: :get, params: params
+    response = request.run
+
+    doc = Nokogiri::HTML.parse response.body
+    rows = doc.css '.row'
+
+    rows.map{|row| 
+      data = row.css 'td'
+      {
+	host: data[0].text,
+	port: data[1].text,
+	country: (data[2].css '.code').text,
+	protocol: data[4].text
+      }
+    }
   end
 
   def self.check_ssl(host:, port:)
