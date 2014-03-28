@@ -1,19 +1,30 @@
 class Proxy < ActiveRecord::Base
   # TODO:
   # https://hidemyass.com/proxy-list/
+  # http://www.aliveproxy.com/
+  # http://www.sslproxies.org/
+  # http://proxyhttp.net/free-list/proxy-https-security-anonymous-proxy/
   # http://spys.ru/en/https-ssl-proxy/
   # http://proxy-list.org/english/index.php
   # http://tools.rosinstrument.com/proxy/
   # http://gatherproxy.com
   # http://www.idcloak.com/proxylist/ssl-proxy.html#sort
   # http://free-proxy-list.net/
+  #
+  # buy
+  # http://www.buyproxylist.com/
   
   belongs_to :protocol
   belongs_to :country
 
   validates :host, :uniqueness => { :scope => [:port, :protocol_id] }
 
-  TIMEOUT = 10
+  TIMEOUT = 10.freeze
+  SSL_TEST_TIMEOUT = 5.freeze
+
+  SSL_TEST_SITE_URLS = [
+      'https://ssltest23.bbtest.net/',
+  ].freeze
 
   def self.create_ssl_proxies
     letushide_proxies = Proxy.get_ssl_proxies_from_letushide
@@ -63,7 +74,7 @@ class Proxy < ActiveRecord::Base
     }
   end
 
-  def self.get_proxies_from_xroxy (timeout: Proxy::TIMEOUT)
+  def self.get_proxies_from_xroxy(timeout: Proxy::TIMEOUT)
     xml = RestClient::Request.execute :method => :get, 
       :url => "http://www.xroxy.com/proxyrss.xml", 
       :timeout => timeout, 
@@ -87,5 +98,11 @@ class Proxy < ActiveRecord::Base
 	}
       }
     }.flatten.compact
+  end
+
+  def self.check_ssl(host:, port:)
+    test_site = Proxy::SSL_TEST_SITE_URLS.sample
+    response = Typhoeus.get test_site, proxy: "#{host}:#{port}", timeout: Proxy::SSL_TEST_TIMEOUT, connecttimeout: Proxy::SSL_TEST_TIMEOUT
+    (!response.timed_out? && !response.body.empty?)
   end
 end
