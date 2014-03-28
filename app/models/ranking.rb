@@ -60,7 +60,7 @@ class Ranking < ActiveRecord::Base
       raise "There are no valid proxies for #{self.country.name}." if valid_proxies.empty?
 
       valid_proxies.each{|proxy|
-	request_opts = {proxy: "https://#{proxy.host}:#{proxy.port}", timeout: Ranking::TIMEOUT, connecttimeout: Ranking::TIMEOUT}
+	request_opts = {proxy: "#{proxy.host}:#{proxy.port}", timeout: Ranking::TIMEOUT, connecttimeout: Ranking::TIMEOUT}
 	request_opts[:proxytype] = proxy.protocol.name if proxy.protocol.name != 'https' 
 	self.options[:request_opts] = request_opts
 	pp proxy
