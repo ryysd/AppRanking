@@ -1,5 +1,6 @@
 class Proxy < ActiveRecord::Base
   # TODO:
+  # https://hidemyass.com/proxy-list/
   # http://spys.ru/en/https-ssl-proxy/
   # http://proxy-list.org/english/index.php
   # http://tools.rosinstrument.com/proxy/
@@ -9,6 +10,10 @@ class Proxy < ActiveRecord::Base
   
   belongs_to :protocol
   belongs_to :country
+
+  validates :host, :uniqueness => { :scope => [:port, :protocol_id] }
+
+  TIMEOUT = 100
 
   def self.create_ssl_proxies
     letushide_proxies = Proxy.get_ssl_proxies_from_letushide
@@ -23,8 +28,8 @@ class Proxy < ActiveRecord::Base
 	country: (Country.find_by_code proxy[:country])
       }
 
-      Proxy.new args
-    }
+      Proxy.new args if (args[:protocol].name != 'http' && args[:country].code != 'ZZ')
+    }.compact
   end
 
   def self.get_ssl_proxies_from_letushide
@@ -41,7 +46,7 @@ class Proxy < ActiveRecord::Base
     Proxy.get_proxies_from_xroxy.select{|proxy| proxy[:protocol].downcase != 'http'}
   end
 
-  def self.get_proxies_from_letushide (api_key: '9cbcfed29b7659add44113b5', limit: '120', country_code:, protocol: , timeout: 10)
+  def self.get_proxies_from_letushide (api_key: '9cbcfed29b7659add44113b5', limit: '120', country_code:, protocol: , timeout: Proxy::TIMEOUT)
     json = RestClient::Request.execute :method => :get, 
       :url => "http://letushide.com/fpapi/?key=#{api_key}&num=#{limit}&cs=#{country_code}&ps=#{protocol}&format=json", 
       :timeout => timeout, 
@@ -58,7 +63,7 @@ class Proxy < ActiveRecord::Base
     }
   end
 
-  def self.get_proxies_from_xroxy (timeout: 10)
+  def self.get_proxies_from_xroxy (timeout: Proxy::TIMEOUT)
     xml = RestClient::Request.execute :method => :get, 
       :url => "http://www.xroxy.com/proxyrss.xml", 
       :timeout => timeout, 

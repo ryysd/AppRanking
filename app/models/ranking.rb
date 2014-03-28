@@ -47,12 +47,31 @@ class Ranking < ActiveRecord::Base
   end
 
   def load_apps_google_play
-    # self.options[:request_opts] = {proxy: 'https://50.8.97.147:1080', proxy_type: 'socks4'}
-    # TODO: enable proxy
-    leader_boards = MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
-    leader_boards.update self.options
+    leader_boards = nil
 
-    raise "Could not get ranking. country: #{self.country}, feed: #{self.feed}, category: #{self.category}" if leader_boards.results.blank?
+    if self.country.own?
+      leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+      leader_boards.update self.options
+    else
+      valid_proxies = self.country.proxies.where(is_valid: 1).order('protocol_id ASC')
+      raise "There are no valid proxies for #{self.country.name}." if valid_proxies.empty?
+
+      valid_proxies.each{|proxy|
+	request_opts = {proxy: "https://#{proxy.host}:#{proxy.port}", timeout: 100}
+	request_opts[:proxytype] = proxy.protocol.name if proxy.protocol.name != 'https' 
+	self.options[:request_opts] = request_opts
+	pp proxy
+	pp request_opts
+
+	leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+	leader_boards.update self.options
+
+	break if !leader_boards.results.blank? 
+	proxy.update_attribute(:is_valid, 0)
+      }
+    end
+
+    raise "Could not get ranking. country: #{self.country.code}, feed: #{self.feed.code}, category: #{self.category.code}" if leader_boards.results.blank?
 
     leader_boards.results.map{|lb| lb[:market_id]}
   end

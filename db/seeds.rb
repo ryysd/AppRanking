@@ -376,6 +376,7 @@ countries = [
   {:id => '245', :is_popular => '0', :code => 'ZM', :name => 'Zambia'},
   {:id => '246', :is_popular => '0', :code => 'ZR', :name => 'Zaire'},
   {:id => '247', :is_popular => '0', :code => 'ZW', :name => 'Zimbabwe'},
+  {:id => '248', :is_popular => '0', :code => 'ZZ', :name => 'Unknown'}
 ]
 create_all Country, countries
 

@@ -69,14 +69,15 @@ class RankingsController < ApplicationController
     rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
-    # rank = Ranking.new rankings_params
-    # rank.save
+    rank = Ranking.new rankings_params
+    rank.save
 
-    countries = Proxy.all.map{|proxy| proxy.country}.uniq
-    countries.each{|c| pp c.name}
+    # Country.all.select{|c| c.is_popular}.each{|c| pp "#{c.name} #{c.proxies.length}"}
+    # countries = Proxy.all.map{|proxy| proxy.country}.uniq
+    # countries.each{|c| pp c.name}
     # proxy debug
     # proxies = Proxy.create_ssl_proxies
-    # proxies.each{|proxy| proxy.save}
+    # proxies.each{|proxy| proxy.save if proxy.valid?}
     pp res
   end
 
