@@ -5,7 +5,8 @@ class Ranking < ActiveRecord::Base
   attr_accessor :category, :device
   attr_writer :options
 
-  has_many :app_items, autosave: true
+  has_many :app_items_rankings
+  has_many :app_items, autosave: true, through: :app_items_rankings
   belongs_to :country
   belongs_to :feed
 

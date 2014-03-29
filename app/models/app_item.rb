@@ -9,7 +9,9 @@ class AppItem < ActiveRecord::Base
   has_many :rates, autosave: true
   has_many :prices, autosave: true
   has_many :descriptions, autosave: true
-  has_many :devices , through: :app_items_devices
+  has_many :devices, through: :app_items_devices
+  has_many :app_items_rankings
+  has_many :rankings, through: :app_items_rankings
   belongs_to :category 
   belongs_to :publisher
   # belongs_to :publisher, :foreign_key => :publisher_id
