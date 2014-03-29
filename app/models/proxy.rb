@@ -1,10 +1,10 @@
 class Proxy < ActiveRecord::Base
-  # TODO:
+  # プロキシ収集できそうなサイト
   # https://hidemyass.com/proxy-list/
   # http://www.aliveproxy.com/
   # http://www.sslproxies.org/
-  # http://proxyhttp.net/free-list/proxy-https-security-anonymous-proxy/
-  # http://spys.ru/en/https-ssl-proxy/
+  # http://proxyhttp.net/free-list/proxy-https-security-anonymous-proxy/ (スクレイピング対策されてる)
+  # http://spys.ru/en/https-ssl-proxy/ (スクレイピング対策されてる)
   # http://proxy-list.org/english/index.php
   # http://tools.rosinstrument.com/proxy/
   # http://gatherproxy.com
@@ -12,7 +12,11 @@ class Proxy < ActiveRecord::Base
   # http://free-proxy-list.net/
   #
   # buy
+  # http://ninjaproxies.com/
   # http://www.buyproxylist.com/
+  # http://proxyhub.ru/en/
+  #
+  # scan proxy using nmap
   
   belongs_to :protocol
   belongs_to :country
@@ -40,7 +44,7 @@ class Proxy < ActiveRecord::Base
 	country: (Country.find_by_code proxy[:country])
       }
 
-      Proxy.new args if (args[:protocol].name != 'http' && args[:country].code != 'ZZ')
+      Proxy.new args if (args[:protocol].name != 'http' && !args[:country].blank? && args[:country].code != 'ZZ')
     }.compact
   end
 
@@ -118,7 +122,7 @@ class Proxy < ActiveRecord::Base
   end
 
   def self.get_proxies_from_nordvpn(page:)
-    host = "https://nordvpn.com/free-proxy-list"
+    host = 'https://nordvpn.com/free-proxy-list'
 
     # TODO: 引数でパラメータを渡せるようにする
     params = {
