@@ -11,10 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140328051446) do
+ActiveRecord::Schema.define(version: 20140329063753) do
 
   create_table "app_items", force: true do |t|
-    t.integer  "ranking_id",                                  null: false
     t.integer  "category_id",                                 null: false
     t.integer  "publisher_id",                                null: false
     t.integer  "app_item_id"
@@ -34,7 +33,6 @@ ActiveRecord::Schema.define(version: 20140328051446) do
   add_index "app_items", ["category_id"], name: "fk_application_category1_idx", using: :btree
   add_index "app_items", ["id"], name: "id_UNIQUE", unique: true, using: :btree
   add_index "app_items", ["publisher_id"], name: "fk_application_publisher1_idx", using: :btree
-  add_index "app_items", ["ranking_id"], name: "fk_application_ranking_idx", using: :btree
 
   create_table "app_items_devices", force: true do |t|
     t.integer "device_id",   null: false
@@ -43,6 +41,11 @@ ActiveRecord::Schema.define(version: 20140328051446) do
 
   add_index "app_items_devices", ["app_item_id"], name: "fk_device_has_application_application1_idx", using: :btree
   add_index "app_items_devices", ["device_id"], name: "fk_device_has_application_device1_idx", using: :btree
+
+  create_table "app_items_rankings", force: true do |t|
+    t.integer "app_item_id", null: false
+    t.integer "ranking_id",  null: false
+  end
 
   create_table "categories", force: true do |t|
     t.integer "category_id"
