@@ -63,20 +63,25 @@ class RankingsController < ApplicationController
   end
 
   def debug
+    res = nil
     # ranking debug
     options = {:min_rank=>1, :max_rank=>24, :app_update? => true}
-    # rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
-    rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
+    rankings_params = {country_code: 'us', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
+    # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
-    rank = Ranking.new rankings_params
-    # rank.debug
-    # rank.load 
-    rank.save
+    # rank = Ranking.new rankings_params
+    # rank.save
 
+    # res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
+    res = Proxy.get_proxies_from_hidemyass
+
+    # Country.all.select{|c| c.is_popular}.each{|c| pp "#{c.name} #{c.proxies.length}"}
+    # countries = Proxy.all.map{|proxy| proxy.country}.uniq
+    # countries.each{|c| pp c.name}
     # proxy debug
-    # country = Country.find 13 
-    # res = country.get_https_proxies
-    # pp res
+    # proxies = Proxy.create_ssl_proxies
+    # proxies.each{|proxy| proxy.save if proxy.valid?}
+    pp res
   end
 
   def rankings_params

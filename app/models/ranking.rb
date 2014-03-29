@@ -11,6 +11,8 @@ class Ranking < ActiveRecord::Base
 
   before_create :set_apps
 
+  TIMEOUT = 5
+
   def options
     @options || {}
   end
@@ -47,11 +49,35 @@ class Ranking < ActiveRecord::Base
   end
 
   def load_apps_google_play
-    # TODO: enable proxy
-    leader_boards = MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code)
-    leader_boards.update self.options
+    leader_boards = nil
 
-    raise "Could not get ranking. country: #{self.country}, feed: #{self.feed}, category: #{self.category}" if leader_boards.results.blank?
+    # notice: 中国プロキシの場合、香港か台湾かそれ以外かで得られる結果が異なる
+    if self.country.own?
+      leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+      leader_boards.update self.options
+    else
+      valid_proxies = self.country.proxies.where(is_valid: 1).order('protocol_id ASC')
+      raise "There are no valid proxies for #{self.country.name}." if valid_proxies.empty?
+
+      valid_proxies.each{|proxy|
+	request_opts = {proxy: "#{proxy.host}:#{proxy.port}", timeout: Ranking::TIMEOUT, connecttimeout: Ranking::TIMEOUT}
+
+	request_opts[:proxytype] = proxy.protocol.name if proxy.protocol.name != 'https' 
+	request_opts[:proxytype] = 'socks5' if proxy.protocol.name == 'socks4/5' 
+
+	self.options[:request_opts] = request_opts
+	pp proxy
+	pp request_opts
+
+	leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+	leader_boards.update self.options
+
+	break if !leader_boards.results.blank? 
+	proxy.update_attribute(:is_valid, 0)
+      }
+    end
+
+    raise "Could not get ranking. country: #{self.country.code}, feed: #{self.feed.code}, category: #{self.category.code}" if leader_boards.results.blank?
 
     leader_boards.results.map{|lb| lb[:market_id]}
   end
@@ -81,7 +107,7 @@ class Ranking < ActiveRecord::Base
       self.app_items << new_app
     else
       if self.options[:app_update?] || (old_app.updatable? new_app)
-	old_app.update_attributes country: new_app.country, market: new_app.market
+	old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device
       end 
     end
   end
