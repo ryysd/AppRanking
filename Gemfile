@@ -116,6 +116,8 @@ gem 'market_bot'
 # Http Wrapper for Rest
 gem 'rest-client'
 
+gem 'bootstrap-sass', '3.0.2.0'
+
 group :development do
   # Converter erb => haml
   gem 'erb2haml'
