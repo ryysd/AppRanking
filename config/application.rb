@@ -52,5 +52,7 @@ module AppRanking
     # libファイルの自動読み込み
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
   end
 end

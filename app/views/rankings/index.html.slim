@@ -1,3 +1,30 @@
+- content_for :jumbotron_content do
+    #carousel.carousel.slide data-ride="carousel" 
+      /! Indicators
+      ol.carousel-indicators
+        li.active data-slide-to="0" data-target="#carousel" 
+        li data-slide-to="1" data-target="#carousel" 
+        li data-slide-to="2" data-target="#carousel" 
+      /! Wrapper for slides
+      .carousel-inner
+        .item.active
+          | text1
+          br
+          | text1
+          br
+          | text1
+          br
+          | text1
+        .item 
+          | text2
+        .item
+          | text3
+      a.left.carousel-control data-slide="prev" href="#carousel" 
+        span.glyphicon.glyphicon-chevron-left
+      a.right.carousel-control data-slide="next" href="#carousel" 
+        span.glyphicon.glyphicon-chevron-right
+
+== render 'layouts/jumbotron'
 h1 Listing rankings
 
 table
