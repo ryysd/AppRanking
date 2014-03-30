@@ -19,6 +19,8 @@ $navbar-inverse-link-active-color: $brand-green;
 $navbar-inverse-link-hover-bg: transparent;
 $navbar-inverse-link-hover-color: $brand-green;
 
+$navbar-inverse-border: transparent;
+
 $carousel-control-color: #fff;
 $carousel-caption-color: #fff;
 
@@ -34,6 +36,10 @@ body {
 
 .carousel-control {
   background-image: none !important;
+}
+
+.navbar-inverse {
+  opacity: 0.85;
 }
 
 html,
