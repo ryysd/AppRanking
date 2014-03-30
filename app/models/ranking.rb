@@ -61,7 +61,11 @@ class Ranking < ActiveRecord::Base
       raise "There are no valid proxies for #{self.country.name}." if valid_proxies.empty?
 
       valid_proxies.each{|proxy|
-	request_opts = {proxy: "#{proxy.host}:#{proxy.port}", timeout: Ranking::TIMEOUT, connecttimeout: Ranking::TIMEOUT}
+	request_opts = {
+	  proxy: "#{proxy.host}:#{proxy.port}", 
+	  timeout: Ranking::TIMEOUT, 
+	  connecttimeout: Ranking::TIMEOUT
+	}
 
 	request_opts[:proxytype] = proxy.protocol.name if proxy.protocol.name != 'https' 
 	request_opts[:proxytype] = 'socks5' if proxy.protocol.name == 'socks4/5' 
@@ -70,7 +74,7 @@ class Ranking < ActiveRecord::Base
 	pp proxy
 	pp request_opts
 
-	leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+	leader_boards =  MarketBot::Android::Leaderboard.new self.feed.code, self.category.code, self.options
 	leader_boards.update self.options
 
 	break if !leader_boards.results.blank? 
@@ -106,10 +110,8 @@ class Ranking < ActiveRecord::Base
 
     if old_app.nil?
       self.app_items << new_app
-    else
-      if self.options[:app_update?] || (old_app.updatable? new_app)
-	old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device
-      end 
+    elsif self.options[:app_update?] || (old_app.updatable? new_app)
+      old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device
     end
   end
 end
