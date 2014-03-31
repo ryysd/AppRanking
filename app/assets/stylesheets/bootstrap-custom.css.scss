@@ -1,11 +1,14 @@
 @import "bootswatch/variables";
 
 $gray-dark: #474e5d;
+$gray-light: #ECF0F0;
+$gray-lighter: #f6f8f8;
 
 $brand-green: #21be9e;
+$brand-green-light: #31C6A8;
 $brand-success: #21be9e;
 
-$jumbotron-bg: $brand-green;
+$jumbotron-bg: $brand-green-light;
 
 $navbar-inverse-bg: #fff;
 $navbar-inverse-color: $gray-dark;
@@ -24,24 +27,94 @@ $navbar-inverse-border: transparent;
 $carousel-control-color: #fff;
 $carousel-caption-color: #fff;
 
+$nav-tabs-active-link-hover-color: $brand-green;
+$nav-tabs-active-link-hover-bg: #fff;
+
+$container-tablet: ((720px + 72px + $grid-gutter-width));
+$container-desktop: ((940px + 94px + $grid-gutter-width));
+$container-large-desktop: ((1140px + 114px + $grid-gutter-width));
+
 body {
   padding-top: 45px;
 }
 
-.item {
-  color: #fff;
-  min-height: 200px;
-  text-align: center;
+// carousel
+.carousel {
+  .carousel-control {
+    background-image: none !important;
+  }
+  
+  .item {
+    color: white;
+    min-height: 200px;
+    text-align: center;
+  }
 }
 
-.carousel-control {
-  background-image: none !important;
+// tabs
+@mixin background-gray-lighter {
+  background-color: $gray-lighter !important; 
+}
+@mixin background-white {
+  background-color: white !important; 
 }
 
+.nav-tabs {
+  li:not(.active) {
+    @include background-gray-lighter;
+    a {
+      @include background-gray-lighter;
+    }
+  }
+}
+.nav-tabs {
+  border-bottom: none !important;
+  background-color: $gray-lighter !important;
+
+  .active {
+    @include background-white;
+    .a {
+      @include background-white;
+    }
+  }
+}
+
+// navbar
 .navbar-inverse {
   opacity: 0.85;
+  -moz-opacity:0.85;
+  -khtml-opacity: 0.85;
+  filter:alpha(opacity=85);
+
+  .navbar-nav {
+    li {
+      font-weight: 500;
+    }
+  }
+
+  .navbar-brand {
+    font-weight: bold;
+  }
 }
 
+// ranking
+#new-apps-container {
+  min-height: 350px;
+}
+
+#ranking-container {
+  background-color: $gray-light;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  min-height: 800px;
+}
+
+.ranking-content {
+  min-height: 700px;
+  background-color: #fff;
+}
+
+// footer
 html,
 body {
   height: 100%;
@@ -57,9 +130,9 @@ body {
 #footer {
   padding-top: 20px;
   text-align: center;
-  color: $gray-dark;
+  color: #fff;
   height: 60px;
-  background-color: #f5f5f5;
+  background-color: $brand-green-light;
 }
 
 /*

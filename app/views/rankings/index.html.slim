@@ -18,48 +18,37 @@
         span.glyphicon.glyphicon-chevron-right
 
 == render 'layouts/jumbotron'
-h1 Listing rankings
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
-br
 
-table
-  tr
-    th
-    th
-    th
+#new-apps-container
 
-  - @rankings.each do |ranking|
-    tr
-      td = link_to 'Show', ranking
-      td = link_to 'Edit', edit_ranking_path(ranking)
-      td = link_to 'Destroy', ranking, data: {:confirm => 'Are you sure?'}, :method => :delete
+#ranking-container
+  .container
+    ul.nav.nav-tabs
+      li.active
+        a data-toggle="tab" href="#home" menu1
+      li
+        a data-toggle="tab" href="#profile" menu2
+      li
+        a data-toggle="tab" href="#messages" menu3
+    .tab-content.ranking-content
+      #home.tab-pane.active aaaaaaaaaaaaaaaa
+      #profile.tab-pane bbbbbbbbbbbbbbbbbbbb 
+      #messages.tab-pane ccccccccccccccccc
 
-br
 
-= link_to 'New Ranking', new_ranking_path
+/ h1 Listing rankings
+/ table
+/   tr
+/     th
+/     th
+/     th
+/ 
+/   - @rankings.each do |ranking|
+/     tr
+/       td = link_to 'Show', ranking
+/       td = link_to 'Edit', edit_ranking_path(ranking)
+/       td = link_to 'Destroy', ranking, data: {:confirm => 'Are you sure?'}, :method => :delete
+/ 
+/ br
+
+/ = link_to 'New Ranking', new_ranking_path
