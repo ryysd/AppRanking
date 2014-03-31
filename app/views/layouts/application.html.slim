@@ -6,12 +6,13 @@ html lang="en"
     meta content="width=device-width, initial-scale=1" name="viewport" 
     title
       | AppRanking
-    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
-    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = stylesheet_link_tag    "application", media: "all"
+    = javascript_include_tag "application"
     = csrf_meta_tags
 
     script src='//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
   body
+    = include_gon
     #wrap
       = render 'layouts/navbar'
       = yield

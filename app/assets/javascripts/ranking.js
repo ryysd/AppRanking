@@ -14,4 +14,18 @@
 
   })();
 
+  $(document).on('ready page:load', function() {
+    var $active, code;
+    if (window.position != null) {
+      ($(document)).scrollTop(window.position);
+    }
+    code = gon.market_code.toLowerCase();
+    $active = $("\#tab-" + code);
+    return $active.addClass('active');
+  });
+
+  $(document).on('page:before-change', function() {
+    return window.position = ($(document)).scrollTop();
+  });
+
 }).call(this);

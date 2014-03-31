@@ -24,28 +24,10 @@
 #ranking-container
   .container
     ul.nav.nav-tabs
-      li.active
-        a data-toggle="tab" href="#tab-itc" iOS
-      li
-        a data-toggle="tab" href="#tab-gp" Google Play
+      li#tab-itc
+        a href=(country_market_category_rankings_url('jp', 'itc', 'games')) iOS
+      li#tab-gp
+        a href=(country_market_category_rankings_url('jp', 'gp', 'games')) Google Play
     .tab-content.ranking-content
       #tab-itc.tab-pane.active aaaaaaaaaaaaaaaa
       #tab-gp.tab-pane bbbbbbbbbbbbbbbbbbbb 
-
-
-/ h1 Listing rankings
-/ table
-/   tr
-/     th
-/     th
-/     th
-/ 
-/   - @rankings.each do |ranking|
-/     tr
-/       td = link_to 'Show', ranking
-/       td = link_to 'Edit', edit_ranking_path(ranking)
-/       td = link_to 'Destroy', ranking, data: {:confirm => 'Are you sure?'}, :method => :delete
-/ 
-/ br
-
-/ = link_to 'New Ranking', new_ranking_path

@@ -14,6 +14,8 @@ class RankingsController < ApplicationController
     rankings = ((Ranking.by_country_code @country.code).by_market_code @market.code).order :updated_at
     @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
 
+    gon.market_code = @market.code
+
     # self.debug
     # @rankings = Ranking.all
   end
