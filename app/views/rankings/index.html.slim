@@ -1,36 +1,36 @@
-/ - content_for :jumbotron_content do
-/     #carousel.carousel.slide data-ride="carousel" 
-/       /! Wrapper for slides
-/       .carousel-inner
-/         .item.active
-/           | text1
-/           br
-/           | text1
-/           br
-/           | text1
-/         .item 
-/           | text2
-/         .item
-/           | text3
-/       a.left.carousel-control data-slide="prev" href="#carousel" 
-/         span.glyphicon.glyphicon-chevron-left
-/       a.right.carousel-control data-slide="next" href="#carousel" 
-/         span.glyphicon.glyphicon-chevron-right
-/ 
-/ == render 'layouts/jumbotron'
-/ 
-/ #new-apps-container
-/ 
-/ #ranking-container
-/   .container
-/     ul.nav.nav-tabs
-/       li.active
-/         a data-toggle="tab" href="#tab-ios" iOS
-/       li
-/         a data-toggle="tab" href="#tab-google-play" Google Play
-/     .tab-content.ranking-content
-/       #ios.tab-pane.active aaaaaaaaaaaaaaaa
-/       #google-play.tab-pane bbbbbbbbbbbbbbbbbbbb 
+- content_for :jumbotron_content do
+    #carousel.carousel.slide data-ride="carousel" 
+      /! Wrapper for slides
+      .carousel-inner
+        .item.active
+          | text1
+          br
+          | text1
+          br
+          | text1
+        .item 
+          | text2
+        .item
+          | text3
+      a.left.carousel-control data-slide="prev" href="#carousel" 
+        span.glyphicon.glyphicon-chevron-left
+      a.right.carousel-control data-slide="next" href="#carousel" 
+        span.glyphicon.glyphicon-chevron-right
+
+== render 'layouts/jumbotron'
+
+#new-apps-container
+
+#ranking-container
+  .container
+    ul.nav.nav-tabs
+      li.active
+        a data-toggle="tab" href="#tab-itc" iOS
+      li
+        a data-toggle="tab" href="#tab-gp" Google Play
+    .tab-content.ranking-content
+      #tab-itc.tab-pane.active aaaaaaaaaaaaaaaa
+      #tab-gp.tab-pane bbbbbbbbbbbbbbbbbbbb 
 
 
 / h1 Listing rankings

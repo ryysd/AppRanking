@@ -21,6 +21,7 @@ class AppItem < ActiveRecord::Base
   before_save :set_detail_data
 
   scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id]).references(:category)}
+  scope :by_category_code, lambda {|category_code| includes([:category]).where(['categories.code = ?', category_code]).references(:category)}
 
   UPDATE_INTERVAL_MIN = 60
 

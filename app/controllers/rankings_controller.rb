@@ -7,8 +7,15 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
-    self.debug
-    @rankings = Ranking.all
+    @country = Country.find_by_code params[:country_id]
+    @category = Category.find_by_code params[:category_id]
+    @market = Market.find_by_code params[:market_id]
+
+    rankings = ((Ranking.by_country_code @country.code).by_market_code @market.code).order :updated_at
+    @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
+
+    # self.debug
+    # @rankings = Ranking.all
   end
 
   # GET /rankings/1

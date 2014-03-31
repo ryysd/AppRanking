@@ -54,5 +54,6 @@ module AppRanking
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+    config.assets.paths << "#{Rails}/app/assets/fonts"
   end
 end

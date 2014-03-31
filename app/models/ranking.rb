@@ -12,6 +12,10 @@ class Ranking < ActiveRecord::Base
 
   before_create :set_apps
 
+  scope :by_country_code, lambda {|country_code| includes(:country).where(['countries.code = ? ', country_code]).references(:countries)}
+  scope :by_market_code, lambda {|market_code| includes([feed: :market]).where(['markets.code = ? ', market_code]).references(:feeds).references(:markets)}
+  scope :by_feed_id, lambda {|feed_id| where(['feed_id = ? ', feed_id])}
+
   TIMEOUT = 5
 
   def options
@@ -30,6 +34,11 @@ class Ranking < ActiveRecord::Base
     raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
     raise "Invalid country_code. country_code: #{country_code}" if self.country.nil?
     raise "Invalid category_code. category_code: #{category_code}" if self.category.nil?
+  end
+
+  def self.get_latest_ranking_of_each_feed(rankings, feeds)
+    feed_rankings = feeds.map{|feed| {feed => (rankings.by_feed_id feed.id)}}
+    (feed_rankings.reduce Hash.new, :merge).map{|feed, each_feed_rankings| {feed => each_feed_rankings.last} unless each_feed_rankings.nil?}
   end
 
   private
