@@ -1,6 +1,9 @@
 class RankingsController < ApplicationController
   before_action :set_ranking, only: [:show, :edit, :update, :destroy]
 
+  def search
+  end
+
   # GET /rankings
   # GET /rankings.json
   def index
@@ -11,6 +14,7 @@ class RankingsController < ApplicationController
   # GET /rankings/1
   # GET /rankings/1.json
   def show
+    @ranking = Ranking.find_by_id params[:id]
   end
 
   # GET /rankings/new

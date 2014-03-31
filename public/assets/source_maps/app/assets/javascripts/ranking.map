@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "",
+  "sourceRoot": "",
+  "sources": [
+    "/assets/source_maps/app/assets/javascripts/ranking.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA;AAAA,EAAM,IAAC,CAAA;AACQ,IAAA,iBAAC,QAAD,GAAA;AACX,MAAA,IAAC,CAAA,OAAD,GAAW,CAAA,CAAE,QAAF,CAAX,CAAA;AAAA,MACA,CAAC,IAAC,CAAA,OAAO,CAAC,IAAT,CAAc,WAAd,CAAD,CAA2B,CAAC,IAA5B,CAAiC,OAAjC,EAA0C,IAAC,CAAA,YAA3C,CADA,CADW;IAAA,CAAb;;AAAA,sBAIA,YAAA,GAAc,SAAC,CAAD,GAAA;aACZ,OAAO,CAAC,GAAR,CAAY,CAAZ,EADY;IAAA,CAJd,CAAA;;mBAAA;;MADF,CAAA;AAAA"
+}
