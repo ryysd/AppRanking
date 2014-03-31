@@ -52,30 +52,17 @@ body {
 }
 
 // tabs
-@mixin background-gray-lighter {
-  background-color: $gray-lighter !important; 
-}
-@mixin background-white {
-  background-color: white !important; 
-}
-
 .nav-tabs {
-  li:not(.active) {
-    @include background-gray-lighter;
-    a {
-      @include background-gray-lighter;
-    }
+  li:not(.active), li:not(.active) > a {
+    background-color: $gray-lighter !important; 
   }
 }
 .nav-tabs {
   border-bottom: none !important;
   background-color: $gray-lighter !important;
 
-  .active {
-    @include background-white;
-    .a {
-      @include background-white;
-    }
+  .active, .active > a {
+    background-color: white !important; 
   }
 }
 
