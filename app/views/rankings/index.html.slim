@@ -27,8 +27,6 @@
 
 == render 'layouts/jumbotron'
 
-#new-apps-container
-
 #ranking-container
   .container
     ul.nav.nav-tabs
@@ -38,6 +36,15 @@
         a href=(country_market_category_rankings_url('jp', 'gp', 'games')) Google Play
     .tab-content.ranking-content
       #tab-itc-content.tab-pane 
-        .ranking-title iOS Apps Ranking
+        .ranking-header
+          .ranking-title iOS Apps Ranking
+          select.form-control
+            option value="one"  One
+            option value="two"  Two
+            option value="three"  Three
+            option value="four"  Four
+            option value="five"  Five
+
       #tab-gp-content.tab-pane 
-        .ranking-title GooglePlay Apps Ranking 
+        .ranking-header
+          .ranking-title GooglePlay Apps Ranking 

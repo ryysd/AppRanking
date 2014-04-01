@@ -9,12 +9,16 @@
       ($("\#tab-" + marketCode)).addClass('active');
     }
 
-    Ranking.prototype.is_updatable = function() {
+    Ranking.prototype.isRankingPage = function() {
+      return this.$activeContent != null;
+    };
+
+    Ranking.prototype.isUpdatable = function() {
       return true;
     };
 
     Ranking.prototype.loadRankingData = function(callback, options) {
-      if (this.is_updatable()) {
+      if (this.isUpdatable()) {
         return $.get("" + window.location.href + ".json", callback);
       } else {
 
@@ -92,10 +96,14 @@
   })();
 
   $(document).on('ready page:load', function() {
+    var ranking;
     if (window.position != null) {
       ($(document)).scrollTop(window.position);
     }
-    return window.ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
+    ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
+    if (ranking.isRankingPage()) {
+      return ranking.generateRanking();
+    }
   });
 
   $(document).on('page:before-change', function() {

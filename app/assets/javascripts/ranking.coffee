@@ -7,10 +7,11 @@ class @Ranking
     @$activeContent.addClass 'active'
     ($ "\#tab-#{marketCode}").addClass 'active'
 
-  is_updatable: () -> true
+  isRankingPage: () -> @$activeContent?
+  isUpdatable: () -> true
 
   loadRankingData: (callback, options) ->
-    if @is_updatable()
+    if @isUpdatable()
       # fetch data from server
       $.get "#{window.location.href}.json", callback
     else
@@ -62,7 +63,8 @@ class @Ranking
 
 $(document).on 'ready page:load', ->
   ($ document).scrollTop window.position if window.position?
-  window.ranking = new Ranking '.ranking-content', gon.market_code.toLowerCase()
+  ranking = new Ranking '.ranking-content', gon.market_code.toLowerCase()
+  ranking.generateRanking() if ranking.isRankingPage()
 
 $(document).on 'page:before-change', ->
   window.position = ($ document).scrollTop() 
