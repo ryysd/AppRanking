@@ -10,7 +10,8 @@ class Ranking < ActiveRecord::Base
   belongs_to :country
   belongs_to :feed
 
-  before_create :set_apps
+  # 時間かかってdbエラー出るので、callbackではなく自前で呼ぶ
+  # before_create :set_apps
 
   scope :by_country_code, lambda {|country_code| includes(:country).where(['countries.code = ? ', country_code]).references(:countries)}
   scope :by_market_code, lambda {|market_code| includes([feed: :market]).where(['markets.code = ? ', market_code]).references(:feeds).references(:markets)}
@@ -27,13 +28,14 @@ class Ranking < ActiveRecord::Base
           country: (Country.find_by_code country_code),
 	  options: options
 
+    raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if self.feed.nil?
+    raise "Invalid country_code. country_code: #{country_code}" if self.country.nil?
+
     self.category = Category.find_by_code category_code
     self.device = (Device.market_unique_name device_name, feed.market.id).first
 
-    raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if self.feed.nil?
-    raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
-    raise "Invalid country_code. country_code: #{country_code}" if self.country.nil?
     raise "Invalid category_code. category_code: #{category_code}" if self.category.nil?
+    raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
   end
 
   def self.get_latest_ranking_of_each_feed(rankings, feeds)
@@ -42,10 +44,9 @@ class Ranking < ActiveRecord::Base
     latest_rankings.reduce Hash.new, :merge
   end
 
-  private
   def set_apps
     apps = load_apps
-    add_or_update_apps apps.first(3)
+    add_or_update_apps apps.first(30)
   end
 
   def load_apps

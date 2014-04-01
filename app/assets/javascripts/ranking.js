@@ -3,19 +3,82 @@
   this.Ranking = (function() {
     function Ranking(selector, marketCode) {
       this.$target = $(selector);
-      this.activeContent = $("\#tab-" + marketCode + "-content");
-      this.activeContent.addClass('active');
+      this.$activeContent = $("\#tab-" + marketCode + "-content");
+      console.log(this.$activeContent);
+      this.$activeContent.addClass('active');
       ($("\#tab-" + marketCode)).addClass('active');
     }
 
-    Ranking.prototype.loadRankingData = function(start, end) {};
+    Ranking.prototype.is_updatable = function() {
+      return true;
+    };
+
+    Ranking.prototype.loadRankingData = function(callback, options) {
+      if (this.is_updatable()) {
+        return $.get("" + window.location.href + ".json", callback);
+      } else {
+
+      }
+    };
 
     Ranking.prototype.generateRanking = function() {
-      var $rankingTable, rankings;
-      rankings = this.rankings;
-      return $rankingTable = $('<table/>', {
-        "class": 'table table-hover'
-      });
+      var bootColWidth, callback,
+        _this = this;
+      bootColWidth = 12;
+      callback = function(data, status, xhr) {
+        var $div, $image, $table, $tbody, $tbodyTr, $td, $th, $thead, $theadTr, $title, app_item, colSize, idx, record, _i, _j, _k, _len, _len1;
+        $table = $('<table/>', {
+          "class": 'table table-hover table-striped table-bordered app-table'
+        });
+        $thead = $('<thead/>');
+        $theadTr = $('<tr/>');
+        colSize = parseInt((bootColWidth - 1) / data.length);
+        $theadTr.append($('<th/>', {
+          "class": 'col-md-1'
+        }));
+        for (_i = 0, _len = data.length; _i < _len; _i++) {
+          record = data[_i];
+          console.log(record);
+          $th = ($('<th/>', {
+            "class": "col-md-" + colSize + " feed-name"
+          })).text(record.feed.name);
+          $theadTr.append($th);
+        }
+        $tbody = $('<tbody/>');
+        for (idx = _j = 0; _j < 20; idx = ++_j) {
+          $tbodyTr = $('<tr/>');
+          $tbodyTr.append(($('<td/>')).text(idx));
+          for (_k = 0, _len1 = data.length; _k < _len1; _k++) {
+            record = data[_k];
+            if (record.ranking.app_items != null) {
+              app_item = record.ranking.app_items[idx];
+              if (app_item != null) {
+                $td = $('<td/>');
+                $div = $('<div/>', {
+                  "class": 'app-info'
+                });
+                $title = ($('<div/>', {
+                  "class": 'app-title'
+                })).text(app_item.name);
+                $image = $('<img/>', {
+                  "class": 'app-icon',
+                  src: app_item.icon
+                });
+                $div.append($image);
+                $div.append($title);
+                $td.append($div);
+                $tbodyTr.append($td);
+              }
+            }
+          }
+          $tbody.append($tbodyTr);
+        }
+        $thead.append($theadTr);
+        $table.append($thead);
+        $table.append($tbody);
+        return _this.$activeContent.append($table);
+      };
+      return this.loadRankingData(callback);
     };
 
     return Ranking;
@@ -23,11 +86,10 @@
   })();
 
   $(document).on('ready page:load', function() {
-    var ranking;
     if (window.position != null) {
       ($(document)).scrollTop(window.position);
     }
-    return ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
+    return window.ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
   });
 
   $(document).on('page:before-change', function() {

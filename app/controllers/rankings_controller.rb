@@ -17,6 +17,7 @@ class RankingsController < ApplicationController
       @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
     end
 
+    # debug
     gon.market_code = params[:market_id]
   end
 
@@ -79,11 +80,26 @@ class RankingsController < ApplicationController
     res = nil
     # ranking debug
     options = {:min_rank=>1, :max_rank=>24, :app_update? => true}
-    rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
+    jp_gp_game_topselling_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
+    jp_gp_game_topselling_paid = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_paid', category_code: 'game', device_name: 'android', options: options}
+    jp_gp_game_topselling_grossing = {country_code: 'jp', market_code: 'GP', feed_code: 'topgrossing', category_code: 'game', device_name: 'android', options: options}
+    jp_gp_game_topselling_new_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_new_free', category_code: 'game', device_name: 'android', options: options}
+    jp_gp_game_topselling_new_paid = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_new_paid', category_code: 'game', device_name: 'android', options: options}
+    parameters = [
+      jp_gp_game_topselling_free,
+      jp_gp_game_topselling_paid,
+      jp_gp_game_topselling_grossing,
+      jp_gp_game_topselling_new_free,
+      jp_gp_game_topselling_new_paid
+    ]
+
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
-    rank = Ranking.new rankings_params
-    rank.save
+    parameters.each{|param|
+      rank = Ranking.new param
+      rank.set_apps
+      rank.save
+    }
 
     # res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
     # res = Proxy.get_proxies_from_hidemyass

@@ -103,7 +103,7 @@ create_all Category, categories
 feeds = [
     # Google Play Feeds
     {:name => 'Free'    , :code => 'topselling_free'    , :market_id => '1'},
-    {:name => 'Paid'    , :code => 'topselling_new_paid', :market_id => '1'},
+    {:name => 'Paid'    , :code => 'topselling_paid'    , :market_id => '1'},
     {:name => 'Grossing', :code => 'topgrossing'        , :market_id => '1'},
     {:name => 'New Free', :code => 'topselling_new_free', :market_id => '1'},
     {:name => 'New Paid', :code => 'topselling_new_paid', :market_id => '1'},
