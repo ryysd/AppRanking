@@ -123,6 +123,7 @@ class Ranking < ActiveRecord::Base
       self.app_items << new_app
     elsif self.options[:app_update?] || (old_app.updatable? new_app)
       old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device
+      old_app.rankings << self unless old_app.rankings.include? self
     end
   end
 end
