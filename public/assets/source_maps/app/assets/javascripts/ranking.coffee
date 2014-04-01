@@ -6,6 +6,8 @@ class @Ranking
     @activeContent.addClass 'active'
     ($ "\#tab-#{marketCode}").addClass 'active'
 
+  loadRankingData: (start, end) ->
+
   generateRanking: () ->
     rankings = @rankings
     $rankingTable = $ '<table/>', {class: 'table table-hover'}

@@ -7,17 +7,17 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
-    @country = Country.find_by_code params[:country_id]
-    @category = Category.find_by_code params[:category_id]
-    @market = Market.find_by_code params[:market_id]
+    unless params[:format].blank?
+      @country = Country.find_by_code params[:country_id]
+      @category = Category.find_by_code params[:category_id]
+      @market = Market.find_by_code params[:market_id]
 
-    rankings = ((Ranking.by_country_code @country.code).by_market_code @market.code).order :updated_at
-    @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
+      # TODO: category filter
+      rankings = ((Ranking.by_country_code @country.code).by_market_code @market.code).order :updated_at
+      @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
+    end
 
-    gon.market_code = @market.code
-
-    # self.debug
-    # @rankings = Ranking.all
+    gon.market_code = params[:market_id]
   end
 
   # GET /rankings/1
@@ -82,8 +82,8 @@ class RankingsController < ApplicationController
     rankings_params = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
-    # rank = Ranking.new rankings_params
-    # rank.save
+    rank = Ranking.new rankings_params
+    rank.save
 
     # res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
     # res = Proxy.get_proxies_from_hidemyass

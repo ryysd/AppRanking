@@ -38,7 +38,8 @@ class Ranking < ActiveRecord::Base
 
   def self.get_latest_ranking_of_each_feed(rankings, feeds)
     feed_rankings = feeds.map{|feed| {feed => (rankings.by_feed_id feed.id)}}
-    (feed_rankings.reduce Hash.new, :merge).map{|feed, each_feed_rankings| {feed => each_feed_rankings.last} unless each_feed_rankings.nil?}
+    latest_rankings = (feed_rankings.reduce Hash.new, :merge).map{|feed, each_feed_rankings| {feed => each_feed_rankings.last} unless each_feed_rankings.nil?}
+    latest_rankings.reduce Hash.new, :merge
   end
 
   private
