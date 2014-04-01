@@ -108,8 +108,6 @@ class AppItem < ActiveRecord::Base
       device_name:       self.device.name
     }
 
-    pp unassignable_attributes
-
     {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
 
@@ -126,7 +124,7 @@ class AppItem < ActiveRecord::Base
 
   def assign_category(category_name)
     self.category = (Category.market_unique_name category_name, self.market.id).first
-    raise "undefined category name is found. category_name: #{self.category}" if self.category.nil?
+    raise "undefined category name is found. category_name: #{category_name}" if self.category.nil?
   end
 
   def add_or_update_price(price)
