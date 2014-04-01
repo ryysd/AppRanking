@@ -46,7 +46,7 @@ class Ranking < ActiveRecord::Base
 
   def set_apps
     apps = load_apps
-    add_or_update_apps apps.first(30)
+    add_or_update_apps apps.first(20)
   end
 
   def load_apps

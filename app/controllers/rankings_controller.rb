@@ -77,7 +77,6 @@ class RankingsController < ApplicationController
   end
 
   def debug
-    res = nil
     # ranking debug
     options = {:min_rank=>1, :max_rank=>24, :app_update? => true}
     jp_gp_game_topselling_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
@@ -96,6 +95,7 @@ class RankingsController < ApplicationController
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
     parameters.each{|param|
+      pp param[:feed_code]
       rank = Ranking.new param
       rank.set_apps
       rank.save
@@ -110,7 +110,7 @@ class RankingsController < ApplicationController
     # proxy debug
     # proxies = Proxy.create_ssl_proxies
     # proxies.each{|proxy| proxy.save if proxy.valid?}
-    pp res
+    # pp res
   end
 
   def rankings_params

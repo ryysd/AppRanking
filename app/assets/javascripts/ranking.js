@@ -26,7 +26,7 @@
         _this = this;
       bootColWidth = 12;
       callback = function(data, status, xhr) {
-        var $div, $image, $table, $tbody, $tbodyTr, $td, $th, $thead, $theadTr, $title, app_item, colSize, idx, record, _i, _j, _k, _len, _len1;
+        var $a, $div, $image, $table, $tbody, $tbodyTr, $td, $th, $thead, $theadTr, $title, app_item, colSize, idx, record, _i, _j, _k, _len, _len1;
         $table = $('<table/>', {
           "class": 'table table-hover table-striped table-bordered app-table'
         });
@@ -47,7 +47,9 @@
         $tbody = $('<tbody/>');
         for (idx = _j = 0; _j < 20; idx = ++_j) {
           $tbodyTr = $('<tr/>');
-          $tbodyTr.append(($('<td/>')).text(idx));
+          $tbodyTr.append(($('<td/>', {
+            "class": 'rank-index'
+          })).text(idx + 1));
           for (_k = 0, _len1 = data.length; _k < _len1; _k++) {
             record = data[_k];
             if (record.ranking.app_items != null) {
@@ -60,11 +62,15 @@
                 $title = ($('<div/>', {
                   "class": 'app-title'
                 })).text(app_item.name);
+                $a = $('<a/>', {
+                  href: "https://play.google.com/store/apps/details?id=" + app_item.local_id
+                });
                 $image = $('<img/>', {
                   "class": 'app-icon',
                   src: app_item.icon
                 });
-                $div.append($image);
+                $a.append($image);
+                $div.append($a);
                 $div.append($title);
                 $td.append($div);
                 $tbodyTr.append($td);
