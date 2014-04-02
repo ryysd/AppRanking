@@ -1,6 +1,14 @@
 AppRanking::Application.routes.draw do
   resources :rankings
 
+  resources :countries do
+    resources :markets do
+      resources :categories do
+	resources :rankings
+      end
+    end
+  end
+
   root :to => 'rankings#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

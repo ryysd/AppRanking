@@ -1,0 +1,11 @@
+- unless (yield :jumbotron_content).empty?
+  .jumbotron
+    .container
+      == yield :jumbotron_content
+
+//    - content_for :jumbotron_content do
+//        h1 Hello, world!
+//        p This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.
+//        p
+//          a.btn.btn-primary.btn-lg role="button" Learn more 損
+

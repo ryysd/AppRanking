@@ -10,7 +10,12 @@ class Ranking < ActiveRecord::Base
   belongs_to :country
   belongs_to :feed
 
-  before_create :set_apps
+  # 時間かかってdbエラー出るので、callbackではなく自前で呼ぶ
+  # before_create :set_apps
+
+  scope :by_country_code, lambda {|country_code| includes(:country).where(['countries.code = ? ', country_code]).references(:countries)}
+  scope :by_market_code, lambda {|market_code| includes([feed: :market]).where(['markets.code = ? ', market_code]).references(:feeds).references(:markets)}
+  scope :by_feed_id, lambda {|feed_id| where(['feed_id = ? ', feed_id])}
 
   TIMEOUT = 5
 
@@ -23,19 +28,25 @@ class Ranking < ActiveRecord::Base
           country: (Country.find_by_code country_code),
 	  options: options
 
+    raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if self.feed.nil?
+    raise "Invalid country_code. country_code: #{country_code}" if self.country.nil?
+
     self.category = Category.find_by_code category_code
     self.device = (Device.market_unique_name device_name, feed.market.id).first
 
-    raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if self.feed.nil?
-    raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
-    raise "Invalid country_code. country_code: #{country_code}" if self.country.nil?
     raise "Invalid category_code. category_code: #{category_code}" if self.category.nil?
+    raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
   end
 
-  private
+  def self.get_latest_ranking_of_each_feed(rankings, feeds)
+    feed_rankings = feeds.map{|feed| {feed => (rankings.by_feed_id feed.id)}}
+    latest_rankings = (feed_rankings.reduce Hash.new, :merge).map{|feed, each_feed_rankings| {feed => each_feed_rankings.last} unless each_feed_rankings.nil?}
+    latest_rankings.reduce Hash.new, :merge
+  end
+
   def set_apps
     apps = load_apps
-    add_or_update_apps apps.first(3)
+    add_or_update_apps apps.first(20)
   end
 
   def load_apps
@@ -112,6 +123,7 @@ class Ranking < ActiveRecord::Base
       self.app_items << new_app
     elsif self.options[:app_update?] || (old_app.updatable? new_app)
       old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device
+      old_app.rankings << self unless old_app.rankings.include? self
     end
   end
 end

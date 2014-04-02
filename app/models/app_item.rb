@@ -21,6 +21,7 @@ class AppItem < ActiveRecord::Base
   before_save :set_detail_data
 
   scope :market_unique, lambda {|local_id, market_id| includes([:category]).where(['local_id = ? and market_id = ?', local_id, market_id]).references(:category)}
+  scope :by_category_code, lambda {|category_code| includes([:category]).where(['categories.code = ?', category_code]).references(:category)}
 
   UPDATE_INTERVAL_MIN = 60
 
@@ -90,7 +91,7 @@ class AppItem < ActiveRecord::Base
       version:           detail.version,
       last_updated_on:   '',
       released_on:       detail.releaseDate,
-      icon:              detail.artworkUrl512,
+      icon:              detail.artworkUrl60,
       size:              (detail.fileSizeBytes.to_i / (1024 * 1024)),
       local_id:          detail.trackId,
       iap:               false,
@@ -106,8 +107,6 @@ class AppItem < ActiveRecord::Base
       category_name:     detail.primaryGenreName,
       device_name:       self.device.name
     }
-
-    pp unassignable_attributes
 
     {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
@@ -125,7 +124,7 @@ class AppItem < ActiveRecord::Base
 
   def assign_category(category_name)
     self.category = (Category.market_unique_name category_name, self.market.id).first
-    raise "undefined category name is found. category_name: #{self.category}" if self.category.nil?
+    raise "undefined category name is found. category_name: #{category_name}" if self.category.nil?
   end
 
   def add_or_update_price(price)

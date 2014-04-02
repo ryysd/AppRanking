@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+# gem "sprockets", "2.11.0"
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.4'
 
@@ -7,7 +9,7 @@ gem 'rails', '4.0.4'
 gem 'mysql2'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails', '~> 4.0.2'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -20,6 +22,10 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+
+gem "lazyload-rails"
+
+gem 'gon'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -52,7 +58,7 @@ gem 'jquery-turbolinks'
 
 # Source Map
 gem 'coffee-rails-source-maps'
-gem 'sass-rails-source-maps'
+# gem 'sass-rails-source-maps'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
@@ -113,6 +119,8 @@ gem 'market_bot'
 
 # Http Wrapper for Rest
 gem 'rest-client'
+
+gem 'bootstrap-sass', '3.0.2.0'
 
 group :development do
   # Converter erb => haml

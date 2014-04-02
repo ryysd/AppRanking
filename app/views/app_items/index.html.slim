@@ -1,0 +1,19 @@
+/ h1 Listing app_items
+/ 
+/ table
+/   thead
+/     tr
+/       th
+/       th
+/       th
+/ 
+/   tbody
+/     - @app_items.each do |app_item|
+/       tr
+/         td = link_to 'Show', app_item
+/         td = link_to 'Edit', edit_app_item_path(app_item)
+/         td = link_to 'Destroy', app_item, data: {:confirm => 'Are you sure?'}, :method => :delete
+/ 
+/ br
+/ 
+/ = link_to 'New App item', new_app_item_path

@@ -1,17 +1,37 @@
-h1 Listing rankings
+- content_for :jumbotron_content do
+    #carousel.carousel.slide data-ride="carousel" 
+      /! Wrapper for slides
+      .carousel-inner
+        .item.active
+          | News 1 
+          br
+          | text text text text text text text
+          br
+          | text text text text text text text
+        .item 
+          | News 2
+          br
+          | text text text text text text text
+          br
+          | text text text text text text text
+        .item
+          | News 3
+          br
+          | text text text text text text text
+          br
+          | text text text text text text text
+      a.left.carousel-control data-slide="prev" href="#carousel" 
+        span.glyphicon.glyphicon-chevron-left
+      a.right.carousel-control data-slide="next" href="#carousel" 
+        span.glyphicon.glyphicon-chevron-right
 
-table
-  tr
-    th
-    th
-    th
+== render 'layouts/jumbotron'
 
-  - @rankings.each do |ranking|
-    tr
-      td = link_to 'Show', ranking
-      td = link_to 'Edit', edit_ranking_path(ranking)
-      td = link_to 'Destroy', ranking, data: {:confirm => 'Are you sure?'}, :method => :delete
-
-br
-
-= link_to 'New Ranking', new_ranking_path
+#ranking-container
+  .container
+    ul.nav.nav-tabs
+      li#tab-itc
+        a href=(country_market_category_rankings_url('jp', 'itc', '6014')) iOS
+      li#tab-gp
+        a href=(country_market_category_rankings_url('jp', 'gp', 'game')) Google Play
+    .tab-content.ranking-content
