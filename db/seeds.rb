@@ -115,11 +115,17 @@ feeds = [
 ]
 create_all Feed, feeds
 
+os_types = [
+    {:id => '1', :name => 'android'},
+    {:id => '2', :name => 'iOS'},
+]
+create_all OsType, os_types
+
 devices = [
-    {:id => '1', :name => 'android', :market_id => '1'},
-    {:id => '2', :name => 'iPhone' , :market_id => '2'},
-    {:id => '3', :name => 'iPad'   , :market_id => '2'},
-    {:id => '4', :name => 'mac'    , :market_id => '2'},
+    {:id => '1', :name => 'android', :market_id => '1', :os_type_id => '1'},
+    {:id => '2', :name => 'iPhone' , :market_id => '2', :os_type_id => '2'},
+    {:id => '3', :name => 'iPad'   , :market_id => '2', :os_type_id => '2'},
+    {:id => '4', :name => 'mac'    , :market_id => '2', :os_type_id => '2'},
 ]
 create_all Device, devices
 
