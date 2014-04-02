@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140329063753) do
+ActiveRecord::Schema.define(version: 20140402161317) do
 
   create_table "app_items", force: true do |t|
     t.integer  "category_id",                                 null: false
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20140329063753) do
     t.string   "local_id",        limit: 128
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "website_url",     limit: 128
   end
 
   add_index "app_items", ["app_item_id"], name: "fk_application_application1_idx", using: :btree

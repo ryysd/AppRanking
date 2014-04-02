@@ -62,6 +62,7 @@ class Ranking < ActiveRecord::Base
     add_or_update_apps apps.first(20)
   end
 
+  private
   def load_apps
     app_keys = 
       case self.category.market.code

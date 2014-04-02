@@ -266,6 +266,7 @@ body {
 #country-selector, #category-selector {
   width: 200px;
   float: right;
+  font-weight: bold;
 }
 
 // footer
@@ -287,6 +288,19 @@ body {
   color: #fff;
   height: 60px;
   background-color: $brand-green-light;
+}
+
+// loading
+#loading {
+  width: 96px;
+  height: 96px;
+  padding: 20px;
+  background: #BABABA;
+  opacity: 0.5;
+  border-radius: 15px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
 }
 
 /*

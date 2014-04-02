@@ -29,8 +29,8 @@ class @Ranking
 
     @$target.append $header
 
-    countries = ({name: country.name, opts: {id: country.code}} for country in gon.countries)
-    categories = ({name: category.name, opts: {id: category.code}} for category in gon.categories)
+    countries = ({name: country.name, opts: {id: country.code, href: URLHelper.rankingUrl {country: country.code}}} for country in gon.countries)
+    categories = ({name: category.name, opts: {id: category.code, href: URLHelper.rankingUrl {category: category.code}}} for category in gon.categories)
     DropdownSelector.insert '#country-selector', countries
     DropdownSelector.insert '#category-selector', categories
 
@@ -64,7 +64,7 @@ class @Ranking
             if app_item?
               $div = ($ '<div/>', {class: 'app-info'})
               $title = ($ '<div/>', {class: 'app-title'}).text app_item.name
-              $a = $ '<a/>', {href: "https://play.google.com/store/apps/details?id=#{app_item.local_id}"}
+              $a = $ '<a/>', {href: app_item.website_url}
               $image = $ '<img/>', {class: 'app-icon lazy', 'data-original': app_item.icon, src: dummy}
               $image.lazyload(effect: 'fadeIn')
               $a.append $image
@@ -79,7 +79,12 @@ class @Ranking
       $table.append $thead
       $table.append $tbody
 
+      $table.hide()
       @$activeContent.append $table
+      $table.fadeIn 'slow'
+
+      # fire lazyload event
+      ($ document).scroll()
 
     @loadRankingData callback
 

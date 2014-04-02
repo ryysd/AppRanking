@@ -54,7 +54,10 @@
           _results.push({
             name: country.name,
             opts: {
-              id: country.code
+              id: country.code,
+              href: URLHelper.rankingUrl({
+                country: country.code
+              })
             }
           });
         }
@@ -69,7 +72,10 @@
           _results.push({
             name: category.name,
             opts: {
-              id: category.code
+              id: category.code,
+              href: URLHelper.rankingUrl({
+                category: category.code
+              })
             }
           });
         }
@@ -124,7 +130,7 @@
                   "class": 'app-title'
                 })).text(app_item.name);
                 $a = $('<a/>', {
-                  href: "https://play.google.com/store/apps/details?id=" + app_item.local_id
+                  href: app_item.website_url
                 });
                 $image = $('<img/>', {
                   "class": 'app-icon lazy',
@@ -147,7 +153,10 @@
         $thead.append($theadTr);
         $table.append($thead);
         $table.append($tbody);
-        return _this.$activeContent.append($table);
+        $table.hide();
+        _this.$activeContent.append($table);
+        $table.fadeIn('slow');
+        return ($(document)).scroll();
       };
       return this.loadRankingData(callback);
     };

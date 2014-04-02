@@ -8,7 +8,7 @@ class RankingsController < ApplicationController
   # GET /rankings.json
   def index
     # debug
-    
+   
     unless params[:format].blank?
       # TODO: category filter
       @rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id]
@@ -122,7 +122,7 @@ class RankingsController < ApplicationController
     #   rank.save
     # }
 
-    gp_parameters.each{|param|
+    itc_parameters.each{|param|
       rank = Ranking.new param
       rank.set_apps
       rank.save
