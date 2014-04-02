@@ -38,12 +38,34 @@
       #tab-itc-content.tab-pane 
         .ranking-header
           .ranking-title iOS Apps Ranking
-          select.form-control
+          select.selectpicker
             option value="one"  One
             option value="two"  Two
             option value="three"  Three
             option value="four"  Four
             option value="five"  Five
+
+          .dropdown.well
+            a.dropdown-toggle data-toggle="dropdown"
+              | Dropdown
+              b.caret
+            ul.dropdown-menu aria-labelledby="dropdownMenu" role="menu" 
+              li
+                a href="#" tabindex="-1"  a
+              li
+                a href="#" tabindex="-1"  b
+              li.dropdown-submenu
+                a href="#" tabindex="-1"  c
+                ul.dropdown-menu
+                  li
+                    a href="#" tabindex="-1"  d
+                  li
+                    a href="#" tabindex="-1"  e
+                  li
+                    a href="#" tabindex="-1"  f
+              li.divider
+              li
+                a href="#" tabindex="-1"  Log out
 
       #tab-gp-content.tab-pane 
         .ranking-header

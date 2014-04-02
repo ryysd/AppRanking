@@ -64,7 +64,7 @@ class @Ranking
 $(document).on 'ready page:load', ->
   ($ document).scrollTop window.position if window.position?
   ranking = new Ranking '.ranking-content', gon.market_code.toLowerCase()
-  ranking.generateRanking() if ranking.isRankingPage()
+  #ranking.generateRanking() if ranking.isRankingPage()
 
 $(document).on 'page:before-change', ->
   window.position = ($ document).scrollTop() 

@@ -100,10 +100,7 @@
     if (window.position != null) {
       ($(document)).scrollTop(window.position);
     }
-    ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
-    if (ranking.isRankingPage()) {
-      return ranking.generateRanking();
-    }
+    return ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
   });
 
   $(document).on('page:before-change', function() {
