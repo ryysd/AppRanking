@@ -29,9 +29,14 @@ class AppItem < ActiveRecord::Base
     @options || {}
   end
 
-  def updatable? (new_app)
+  def updatable?(new_app)
     (self.version != new_app.version ||
     (Time.now - self.updated_at) /  60 >= AppItem::UPDATE_INTERVAL_MIN)
+  end
+
+  def self.filter_by_category(app_items, category)
+    categories = category.childs
+    app_items.select{|app_item| categories.include? app_item.category}
   end
 
   private
@@ -60,6 +65,7 @@ class AppItem < ActiveRecord::Base
       icon:              detail.banner_icon_url,
       size:              detail.size,
       local_id:          detail.app_id,
+      website_url:       "https://play.google.com/store/apps/details?id=#{detail.app_id}",
       iap:               false,
     }
 
@@ -94,6 +100,7 @@ class AppItem < ActiveRecord::Base
       icon:              detail.artworkUrl60,
       size:              (detail.fileSizeBytes.to_i / (1024 * 1024)),
       local_id:          detail.trackId,
+      website_url:       detail.trackViewUrl,
       iap:               false,
     }
 

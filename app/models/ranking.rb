@@ -38,6 +38,19 @@ class Ranking < ActiveRecord::Base
     raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
   end
 
+  def self.get_latest_filtered_rankings(country_code:, market_code:, category_code:)
+    rankings = ((Ranking.by_country_code country_code).by_market_code market_code).order :updated_at
+    feed_rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code market_code)
+
+    latest_rankings = feed_rankings.map{|feed, ranking|
+      cloned_ranking = OpenStruct.new ranking.attributes
+      cloned_ranking.app_items = AppItem.filter_by_category ranking.app_items, (Category.find_by_code category_code)
+      [feed, cloned_ranking] 
+    }
+
+    Hash[*latest_rankings.flatten]
+  end
+
   def self.get_latest_ranking_of_each_feed(rankings, feeds)
     feed_rankings = feeds.map{|feed| {feed => (rankings.by_feed_id feed.id)}}
     latest_rankings = (feed_rankings.reduce Hash.new, :merge).map{|feed, each_feed_rankings| {feed => each_feed_rankings.last} unless each_feed_rankings.nil?}
@@ -49,6 +62,7 @@ class Ranking < ActiveRecord::Base
     add_or_update_apps apps.first(20)
   end
 
+  private
   def load_apps
     app_keys = 
       case self.category.market.code
@@ -63,9 +77,11 @@ class Ranking < ActiveRecord::Base
   def load_apps_google_play
     leader_boards = nil
 
+    category_code = (self.category.code == 'overall') ? nil : self.category.code
+
     # notice: 中国プロキシの場合、香港か台湾かそれ以外かで得られる結果が異なる
     if self.country.own?
-      leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+      leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, category_code, self.options)
       leader_boards.update self.options
     else
       valid_proxies = self.country.proxies.where(is_valid: 1).order('protocol_id ASC')
@@ -85,7 +101,7 @@ class Ranking < ActiveRecord::Base
 	pp proxy
 	pp request_opts
 
-	leader_boards =  MarketBot::Android::Leaderboard.new self.feed.code, self.category.code, self.options
+	leader_boards =  MarketBot::Android::Leaderboard.new self.feed.code, category.code, self.options
 	leader_boards.update self.options
 
 	break if !leader_boards.results.blank? 
@@ -101,7 +117,9 @@ class Ranking < ActiveRecord::Base
   def load_apps_itunes_connect
     limit = self.options[:limit] || 400
     host = 'https://itunes.apple.com'
-    query = "#{host}/#{self.country.code}/rss/#{self.feed.code}/limit=#{limit}/genre=#{self.category.code}/json"
+    query = "#{host}/#{self.country.code}/rss/#{self.feed.code}/limit=#{limit}"
+    query += "/genre=#{self.category.code}" if self.category.code != '0000'
+    query += "/json"
 
     json = RestClient::Request.execute :method => :get, :url => query
     parsed_json = JSON.parse json

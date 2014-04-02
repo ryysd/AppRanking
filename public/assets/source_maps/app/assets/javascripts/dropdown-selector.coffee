@@ -1,5 +1,5 @@
 class @DropdownSelector
-  @insert: (selector, data) ->
+  @insert: (selector, data, options) ->
     $target = $ selector
 
     $dropdown = $ '<div/>', {class: 'dropdown dropdown-selector'}
@@ -11,6 +11,7 @@ class @DropdownSelector
     onClicked = () ->
       $toggle = $target.find '.selected-text'
       $toggle.text @text
+      options.onClicked @ if options? && options.onClicked?
 
     createMenu = ($menuTarget, menuList) ->
       if menuList.length > 0
