@@ -60,8 +60,8 @@ class @Ranking
         for record in data
           if record.ranking.app_items?
             app_item = record.ranking.app_items[idx]
+            $td = $ '<td/>'
             if app_item?
-              $td = $ '<td/>'
               $div = ($ '<div/>', {class: 'app-info'})
               $title = ($ '<div/>', {class: 'app-title'}).text app_item.name
               $a = $ '<a/>', {href: "https://play.google.com/store/apps/details?id=#{app_item.local_id}"}
@@ -71,7 +71,7 @@ class @Ranking
               $div.append $a
               $div.append $title
               $td.append $div
-              $tbodyTr.append $td
+            $tbodyTr.append $td
 
         $tbody.append $tbodyTr
 

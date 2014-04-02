@@ -115,8 +115,8 @@
             record = data[_k];
             if (record.ranking.app_items != null) {
               app_item = record.ranking.app_items[idx];
+              $td = $('<td/>');
               if (app_item != null) {
-                $td = $('<td/>');
                 $div = $('<div/>', {
                   "class": 'app-info'
                 });
@@ -138,8 +138,8 @@
                 $div.append($a);
                 $div.append($title);
                 $td.append($div);
-                $tbodyTr.append($td);
               }
+              $tbodyTr.append($td);
             }
           }
           $tbody.append($tbodyTr);

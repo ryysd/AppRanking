@@ -85,32 +85,32 @@ class RankingsController < ApplicationController
   def debug
     # ranking debug
     options = {:min_rank=>1, :max_rank=>24, :app_update? => true}
-    jp_gp_game_topselling_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'game', device_name: 'android', options: options}
-    jp_gp_game_topselling_paid = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_paid', category_code: 'game', device_name: 'android', options: options}
-    jp_gp_game_topselling_grossing = {country_code: 'jp', market_code: 'GP', feed_code: 'topgrossing', category_code: 'game', device_name: 'android', options: options}
-    jp_gp_game_topselling_new_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_new_free', category_code: 'game', device_name: 'android', options: options}
-    jp_gp_game_topselling_new_paid = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_new_paid', category_code: 'game', device_name: 'android', options: options}
+    jp_gp_all_topselling_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_free', category_code: 'overall', device_name: 'android', options: options}
+    jp_gp_all_topselling_paid = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_paid', category_code: 'overall', device_name: 'android', options: options}
+    jp_gp_all_topselling_grossing = {country_code: 'jp', market_code: 'GP', feed_code: 'topgrossing', category_code: 'overall', device_name: 'android', options: options}
+    jp_gp_all_topselling_new_free = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_new_free', category_code: 'overall', device_name: 'android', options: options}
+    jp_gp_all_topselling_new_paid = {country_code: 'jp', market_code: 'GP', feed_code: 'topselling_new_paid', category_code: 'overall', device_name: 'android', options: options}
 
-    jp_itc_game_topselling_free = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
-    jp_itc_game_topselling_paid = {country_code: 'jp', market_code: 'ITC', feed_code: 'toppaidapplications', category_code: '6014', device_name: 'iPhone', options: options}
-    jp_itc_game_topselling_grossing = {country_code: 'jp', market_code: 'ITC', feed_code: 'topgrossingapplications', category_code: '6014', device_name: 'iPhone', options: options}
-    jp_itc_game_topselling_new_free = {country_code: 'jp', market_code: 'ITC', feed_code: 'newfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
-    jp_itc_game_topselling_new_paid = {country_code: 'jp', market_code: 'ITC', feed_code: 'newpaidapplications', category_code: '6014', device_name: 'iPhone', options: options}
+    jp_itc_all_topselling_free = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '0000', device_name: 'iPhone', options: options}
+    jp_itc_all_topselling_paid = {country_code: 'jp', market_code: 'ITC', feed_code: 'toppaidapplications', category_code: '0000', device_name: 'iPhone', options: options}
+    jp_itc_all_topselling_grossing = {country_code: 'jp', market_code: 'ITC', feed_code: 'topgrossingapplications', category_code: '0000', device_name: 'iPhone', options: options}
+    jp_itc_all_topselling_new_free = {country_code: 'jp', market_code: 'ITC', feed_code: 'newfreeapplications', category_code: '0000', device_name: 'iPhone', options: options}
+    jp_itc_all_topselling_new_paid = {country_code: 'jp', market_code: 'ITC', feed_code: 'newpaidapplications', category_code: '0000', device_name: 'iPhone', options: options}
 
     gp_parameters = [
-      jp_gp_game_topselling_free,
-      jp_gp_game_topselling_paid,
-      jp_gp_game_topselling_grossing,
-      jp_gp_game_topselling_new_free,
-      jp_gp_game_topselling_new_paid
+      jp_gp_all_topselling_free,
+      jp_gp_all_topselling_paid,
+      jp_gp_all_topselling_grossing,
+      jp_gp_all_topselling_new_free,
+      jp_gp_all_topselling_new_paid
     ]
 
     itc_parameters = [
-      jp_itc_game_topselling_free,
-      jp_itc_game_topselling_paid,
-      jp_itc_game_topselling_grossing,
-      jp_itc_game_topselling_new_free,
-      jp_itc_game_topselling_new_paid
+      jp_itc_all_topselling_free,
+      jp_itc_all_topselling_paid,
+      jp_itc_all_topselling_grossing,
+      jp_itc_all_topselling_new_free,
+      jp_itc_all_topselling_new_paid
     ]
 
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}

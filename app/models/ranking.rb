@@ -76,9 +76,11 @@ class Ranking < ActiveRecord::Base
   def load_apps_google_play
     leader_boards = nil
 
+    category_code = (self.category.code == 'overall') ? nil : self.category.code
+
     # notice: 中国プロキシの場合、香港か台湾かそれ以外かで得られる結果が異なる
     if self.country.own?
-      leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, self.category.code, self.options)
+      leader_boards =  MarketBot::Android::Leaderboard.new(self.feed.code, category_code, self.options)
       leader_boards.update self.options
     else
       valid_proxies = self.country.proxies.where(is_valid: 1).order('protocol_id ASC')
@@ -98,7 +100,7 @@ class Ranking < ActiveRecord::Base
 	pp proxy
 	pp request_opts
 
-	leader_boards =  MarketBot::Android::Leaderboard.new self.feed.code, self.category.code, self.options
+	leader_boards =  MarketBot::Android::Leaderboard.new self.feed.code, category.code, self.options
 	leader_boards.update self.options
 
 	break if !leader_boards.results.blank? 
@@ -114,7 +116,9 @@ class Ranking < ActiveRecord::Base
   def load_apps_itunes_connect
     limit = self.options[:limit] || 400
     host = 'https://itunes.apple.com'
-    query = "#{host}/#{self.country.code}/rss/#{self.feed.code}/limit=#{limit}/genre=#{self.category.code}/json"
+    query = "#{host}/#{self.country.code}/rss/#{self.feed.code}/limit=#{limit}"
+    query += "/genre=#{self.category.code}" if self.category.code != '0000'
+    query += "/json"
 
     json = RestClient::Request.execute :method => :get, :url => query
     parsed_json = JSON.parse json

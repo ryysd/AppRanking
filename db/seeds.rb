@@ -73,7 +73,7 @@ categories = [
     {:id => '49', :market_id => '1', :code => 'widgets'       , :name => 'Widgets'       , :category_id => '3'},
     {:id => '50', :market_id => '1', :code => 'word'          , :name => 'Word'          , :category_id => '3'},
     # iOS Categories
-    {:id => '51', :market_id => '2', :code => ''    , :name => 'All'},
+    {:id => '51', :market_id => '2', :code => '0000', :name => 'All'},
     {:id => '52', :market_id => '2', :code => '6018', :name => 'Book'             , :category_id => '51'},
     {:id => '53', :market_id => '2', :code => '6000', :name => 'Business'         , :category_id => '51'},
     {:id => '54', :market_id => '2', :code => '6017', :name => 'Education'        , :category_id => '51'},
@@ -91,7 +91,7 @@ categories = [
     {:id => '66', :market_id => '2', :code => '6008', :name => 'Photo & Video'    , :category_id => '51'},
     {:id => '67', :market_id => '2', :code => '6007', :name => 'Productivity'     , :category_id => '51'},
     {:id => '68', :market_id => '2', :code => '6006', :name => 'Reference'        , :category_id => '51'},
-    {:id => '69', :market_id => '2', :code => '6005', :name => 'Social Nwtworking', :category_id => '51'},
+    {:id => '69', :market_id => '2', :code => '6005', :name => 'Social Networking', :category_id => '51'},
     {:id => '70', :market_id => '2', :code => '6004', :name => 'Sports'           , :category_id => '51'},
     {:id => '71', :market_id => '2', :code => '6003', :name => 'Travel'           , :category_id => '51'},
     {:id => '72', :market_id => '2', :code => '6002', :name => 'Utilities'        , :category_id => '51'},

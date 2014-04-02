@@ -3,7 +3,7 @@
   this.DropdownSelector = (function() {
     function DropdownSelector() {}
 
-    DropdownSelector.insert = function(selector, data) {
+    DropdownSelector.insert = function(selector, data, options) {
       var $dropdown, $dropdownToggle, $menu, $target, createMenu, onClicked;
       $target = $(selector);
       $dropdown = $('<div/>', {
@@ -27,7 +27,10 @@
       onClicked = function() {
         var $toggle;
         $toggle = $target.find('.selected-text');
-        return $toggle.text(this.text);
+        $toggle.text(this.text);
+        if ((options != null) && (options.onClicked != null)) {
+          return options.onClicked(this);
+        }
       };
       createMenu = function($menuTarget, menuList) {
         var $a, $subMenu, $subUlMenu, menu, name, opts;
