@@ -64,6 +64,11 @@ body {
 
   li:not(.active), li:not(.active) > a {
     background-color: $gray-lighter !important; 
+    color: lighten($gray-dark, 50%) !important; 
+    
+    &:hover {
+      color: $gray-dark !important; 
+    }
   }
   .active, .active > a {
     background-color: white !important; 

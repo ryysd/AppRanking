@@ -39,6 +39,7 @@ class @Ranking
 
   generateRanking: () ->
     bootColWidth = 12
+    dummy = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC'
     callback = (data, status, xhr) =>
       $table = $ '<table/>', {class: 'table table-hover table-striped table-bordered app-table'}
       $thead = $ '<thead/>'
@@ -64,7 +65,8 @@ class @Ranking
               $div = ($ '<div/>', {class: 'app-info'})
               $title = ($ '<div/>', {class: 'app-title'}).text app_item.name
               $a = $ '<a/>', {href: "https://play.google.com/store/apps/details?id=#{app_item.local_id}"}
-              $image = $ '<img/>', {class: 'app-icon', src: app_item.icon}
+              $image = $ '<img/>', {class: 'app-icon lazy', 'data-original': app_item.icon, src: dummy}
+              $image.lazyload(effect: 'fadeIn')
               $a.append $image
               $div.append $a
               $div.append $title
@@ -83,7 +85,7 @@ class @Ranking
 
 $(document).on 'ready page:load', ->
   ($ document).scrollTop window.position if window.position?
-  window.ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
+  ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
   if ranking.isRankingPage()
     ranking.generateHeader "#{gon.market.name} Apps Ranking"
     ranking.generateRanking()

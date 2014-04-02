@@ -91,7 +91,7 @@ class AppItem < ActiveRecord::Base
       version:           detail.version,
       last_updated_on:   '',
       released_on:       detail.releaseDate,
-      icon:              detail.artworkUrl512,
+      icon:              detail.artworkUrl60,
       size:              (detail.fileSizeBytes.to_i / (1024 * 1024)),
       local_id:          detail.trackId,
       iap:               false,

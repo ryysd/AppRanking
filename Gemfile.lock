@@ -133,6 +133,8 @@ GEM
     kaminari (0.15.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    lazyload-rails (0.2.0)
+      nokogiri (~> 1.5)
     less (2.5.0)
       commonjs (~> 0.2.7)
     less-rails (2.5.0)
@@ -337,6 +339,7 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   kaminari
+  lazyload-rails
   less-rails
   market_bot
   migrant

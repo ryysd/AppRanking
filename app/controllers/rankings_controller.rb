@@ -7,6 +7,8 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
+    # debug
+    
     @market = Market.find_by_code params[:market_id]
     @country = Country.find_by_code params[:country_id]
     @category = Category.find_by_code params[:category_id]
@@ -20,7 +22,6 @@ class RankingsController < ApplicationController
       @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
     end
 
-    # debug
     gon.market = @market.to_json
     gon.country = @country.to_json
     gon.category = @category.to_json

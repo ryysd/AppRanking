@@ -82,9 +82,10 @@
     };
 
     Ranking.prototype.generateRanking = function() {
-      var bootColWidth, callback,
+      var bootColWidth, callback, dummy,
         _this = this;
       bootColWidth = 12;
+      dummy = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
       callback = function(data, status, xhr) {
         var $a, $div, $image, $table, $tbody, $tbodyTr, $td, $th, $thead, $theadTr, $title, app_item, colSize, idx, record, _i, _j, _k, _len, _len1;
         $table = $('<table/>', {
@@ -126,8 +127,12 @@
                   href: "https://play.google.com/store/apps/details?id=" + app_item.local_id
                 });
                 $image = $('<img/>', {
-                  "class": 'app-icon',
-                  src: app_item.icon
+                  "class": 'app-icon lazy',
+                  'data-original': app_item.icon,
+                  src: dummy
+                });
+                $image.lazyload({
+                  effect: 'fadeIn'
                 });
                 $a.append($image);
                 $div.append($a);
@@ -152,10 +157,11 @@
   })();
 
   $(document).on('ready page:load', function() {
+    var ranking;
     if (window.position != null) {
       ($(document)).scrollTop(window.position);
     }
-    window.ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
+    ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
     if (ranking.isRankingPage()) {
       ranking.generateHeader("" + gon.market.name + " Apps Ranking");
       return ranking.generateRanking();
