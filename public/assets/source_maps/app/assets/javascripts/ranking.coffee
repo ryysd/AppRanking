@@ -1,7 +1,7 @@
 class @Ranking
   constructor: (selector, marketCode) ->
     @$target = $ selector
-    @$activeContent = ($ "\#tab-#{marketCode}-content")
+    @$activeContent = @$target
     console.log @$activeContent
 
     @$activeContent.addClass 'active'
@@ -16,6 +16,26 @@ class @Ranking
       $.get "#{window.location.href}.json", callback
     else
       # load data from local strage
+
+  generateHeader: (title) ->
+    $header = $ '<div/>', {class: 'ranking-header'}
+    $title = ($ '<div/>', {class: 'ranking-title col-md-7'}).text title
+    $countrySelector = $ '<div/>', {class: 'col-md-2', id: 'country-selector'}
+    $categorySelector = $ '<div/>', {class: 'col-md-2', id: 'category-selector'}
+
+    $header.append $title
+    $header.append $categorySelector
+    $header.append $countrySelector
+
+    @$target.append $header
+
+    countries = ({name: country.name, opts: {id: country.code}} for country in gon.countries)
+    categories = ({name: category.name, opts: {id: category.code}} for category in gon.categories)
+    DropdownSelector.insert '#country-selector', countries
+    DropdownSelector.insert '#category-selector', categories
+
+    ($ "\##{gon.country.code}").click()
+    ($ "\##{gon.category.code}").click()
 
   generateRanking: () ->
     bootColWidth = 12
@@ -63,8 +83,10 @@ class @Ranking
 
 $(document).on 'ready page:load', ->
   ($ document).scrollTop window.position if window.position?
-  ranking = new Ranking '.ranking-content', gon.market_code.toLowerCase()
-  #ranking.generateRanking() if ranking.isRankingPage()
+  window.ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
+  if ranking.isRankingPage()
+    ranking.generateHeader "#{gon.market.name} Apps Ranking"
+    ranking.generateRanking()
 
 $(document).on 'page:before-change', ->
   window.position = ($ document).scrollTop() 

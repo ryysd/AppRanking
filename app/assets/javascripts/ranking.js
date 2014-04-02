@@ -3,7 +3,7 @@
   this.Ranking = (function() {
     function Ranking(selector, marketCode) {
       this.$target = $(selector);
-      this.$activeContent = $("\#tab-" + marketCode + "-content");
+      this.$activeContent = this.$target;
       console.log(this.$activeContent);
       this.$activeContent.addClass('active');
       ($("\#tab-" + marketCode)).addClass('active');
@@ -23,6 +23,62 @@
       } else {
 
       }
+    };
+
+    Ranking.prototype.generateHeader = function(title) {
+      var $categorySelector, $countrySelector, $header, $title, categories, category, countries, country;
+      $header = $('<div/>', {
+        "class": 'ranking-header'
+      });
+      $title = ($('<div/>', {
+        "class": 'ranking-title col-md-7'
+      })).text(title);
+      $countrySelector = $('<div/>', {
+        "class": 'col-md-2',
+        id: 'country-selector'
+      });
+      $categorySelector = $('<div/>', {
+        "class": 'col-md-2',
+        id: 'category-selector'
+      });
+      $header.append($title);
+      $header.append($categorySelector);
+      $header.append($countrySelector);
+      this.$target.append($header);
+      countries = (function() {
+        var _i, _len, _ref, _results;
+        _ref = gon.countries;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          country = _ref[_i];
+          _results.push({
+            name: country.name,
+            opts: {
+              id: country.code
+            }
+          });
+        }
+        return _results;
+      })();
+      categories = (function() {
+        var _i, _len, _ref, _results;
+        _ref = gon.categories;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          category = _ref[_i];
+          _results.push({
+            name: category.name,
+            opts: {
+              id: category.code
+            }
+          });
+        }
+        return _results;
+      })();
+      DropdownSelector.insert('#country-selector', countries);
+      DropdownSelector.insert('#category-selector', categories);
+      ($("\#" + gon.country.code)).click();
+      return ($("\#" + gon.category.code)).click();
     };
 
     Ranking.prototype.generateRanking = function() {
@@ -96,11 +152,14 @@
   })();
 
   $(document).on('ready page:load', function() {
-    var ranking;
     if (window.position != null) {
       ($(document)).scrollTop(window.position);
     }
-    return ranking = new Ranking('.ranking-content', gon.market_code.toLowerCase());
+    window.ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
+    if (ranking.isRankingPage()) {
+      ranking.generateHeader("" + gon.market.name + " Apps Ranking");
+      return ranking.generateRanking();
+    }
   });
 
   $(document).on('page:before-change', function() {

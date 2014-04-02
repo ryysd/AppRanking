@@ -13,9 +13,9 @@
         "class": 'dropdown-toggle',
         'data-toggle': 'dropdown'
       });
-      $dropdownToggle.append(($('<div/>', {
-        "class": 'selected-text'
-      })).text(data[0]));
+      $dropdownToggle.append($('<div/>', {
+        "class": 'selected-text col-md-11'
+      }));
       $dropdownToggle.append($('<b/>', {
         "class": 'caret'
       }));
@@ -30,30 +30,27 @@
         return $toggle.text(this.text);
       };
       createMenu = function($menuTarget, menuList) {
-        var $a, $subMenu, $subUlMenu, key, menu, _results;
+        var $a, $subMenu, $subUlMenu, menu, name, opts;
         if (menuList.length > 0) {
           menu = menuList.shift();
-          if ((typeof menu) === 'object') {
-            _results = [];
-            for (key in menu) {
-              $subMenu = $('<li/>', {
-                "class": 'dropdown-submenu'
-              });
-              $subMenu.append(($('<a/>', {
-                tabindex: -1
-              })).text(key));
-              $subUlMenu = $('<ul/>', {
-                "class": 'dropdown-menu'
-              });
-              createMenu($subUlMenu, menu[key]);
-              $subMenu.append($subUlMenu);
-              _results.push($menuTarget.append($subMenu));
-            }
-            return _results;
-          } else {
-            $a = ($('<a/>', {
+          if ((typeof menu) === 'object' && (menu.child != null)) {
+            $subMenu = $('<li/>', {
+              "class": 'dropdown-submenu'
+            });
+            $subMenu.append(($('<a/>', {
               tabindex: -1
-            })).text(menu);
+            })).text(menu.name));
+            $subUlMenu = $('<ul/>', {
+              "class": 'dropdown-menu'
+            });
+            createMenu($subUlMenu, menu.child);
+            $subMenu.append($subUlMenu);
+            return $menuTarget.append($subMenu);
+          } else {
+            name = menu.name || menu;
+            opts = menu.opts || {};
+            opts.tabindex = -1;
+            $a = ($('<a/>', opts)).text(name);
             $a.click(onClicked);
             $menuTarget.append(($('<li/>')).append($a));
             return createMenu($menuTarget, menuList);

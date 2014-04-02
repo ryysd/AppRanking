@@ -4,7 +4,7 @@ class @DropdownSelector
 
     $dropdown = $ '<div/>', {class: 'dropdown dropdown-selector'}
     $dropdownToggle = ($ '<div/>', {class: 'dropdown-toggle', 'data-toggle': 'dropdown'})
-    $dropdownToggle.append ($ '<div/>', {class: 'selected-text'}).text data[0]
+    $dropdownToggle.append ($ '<div/>', {class: 'selected-text col-md-11'})
     $dropdownToggle.append ($ '<b/>', {class: 'caret'})
     $menu = $ '<ul/>', {class: 'dropdown-menu', 'aria-labelledby': 'dropdownMenu', role: 'menu'}
 
@@ -16,21 +16,24 @@ class @DropdownSelector
       if menuList.length > 0
         menu = menuList.shift()
         
-        if (typeof menu) == 'object'
-          for key of menu
-            $subMenu = $ '<li/>', {class: 'dropdown-submenu'}
-            $subMenu.append ($ '<a/>', {tabindex: -1}).text key
-            $subUlMenu = $ '<ul/>', {class: 'dropdown-menu'}
-            createMenu $subUlMenu, menu[key]
-            $subMenu.append $subUlMenu
-            $menuTarget.append $subMenu
+        if (typeof menu) == 'object' && menu.child?
+          $subMenu = $ '<li/>', {class: 'dropdown-submenu'}
+          $subMenu.append ($ '<a/>', {tabindex: -1}).text menu.name
+          $subUlMenu = $ '<ul/>', {class: 'dropdown-menu'}
+          createMenu $subUlMenu, menu.child
+          $subMenu.append $subUlMenu
+          $menuTarget.append $subMenu
         else
-          $a = ($ '<a/>', {tabindex: -1}).text menu
+          name = menu.name || menu
+          opts = menu.opts || {}
+          opts.tabindex = -1
+          $a = ($ '<a/>', opts).text name
           $a.click onClicked
           $menuTarget.append (($ '<li/>', ).append $a)
           createMenu $menuTarget, menuList
 
     createMenu $menu, data
+
     $dropdown.append $dropdownToggle
     $dropdown.append $menu
 
