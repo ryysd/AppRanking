@@ -38,6 +38,19 @@ class Ranking < ActiveRecord::Base
     raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
   end
 
+  def self.get_latest_filtered_rankings(country_code:, market_code:, category_code:)
+    rankings = ((Ranking.by_country_code country_code).by_market_code market_code).order :updated_at
+    feed_rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code market_code)
+
+    latest_rankings = feed_rankings.map{|feed, ranking|
+      cloned_ranking = OpenStruct.new ranking.attributes
+      cloned_ranking.app_items = AppItem.filter_by_category ranking.app_items, (Category.find_by_code category_code)
+      [feed, cloned_ranking] 
+    }
+
+    Hash[*latest_rankings.flatten]
+  end
+
   def self.get_latest_ranking_of_each_feed(rankings, feeds)
     feed_rankings = feeds.map{|feed| {feed => (rankings.by_feed_id feed.id)}}
     latest_rankings = (feed_rankings.reduce Hash.new, :merge).map{|feed, each_feed_rankings| {feed => each_feed_rankings.last} unless each_feed_rankings.nil?}

@@ -29,9 +29,14 @@ class AppItem < ActiveRecord::Base
     @options || {}
   end
 
-  def updatable? (new_app)
+  def updatable?(new_app)
     (self.version != new_app.version ||
     (Time.now - self.updated_at) /  60 >= AppItem::UPDATE_INTERVAL_MIN)
+  end
+
+  def self.filter_by_category(app_items, category)
+    categories = category.childs
+    app_items.select{|app_item| categories.include? app_item.category}
   end
 
   private

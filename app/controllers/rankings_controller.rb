@@ -9,24 +9,22 @@ class RankingsController < ApplicationController
   def index
     # debug
     
-    @market = Market.find_by_code params[:market_id]
-    @country = Country.find_by_code params[:country_id]
-    @category = Category.find_by_code params[:category_id]
-    @countries = Country.popular
-    @categories = @market.categories
-
     unless params[:format].blank?
       # TODO: category filter
-      # pp (Ranking.by_market_code 'gp')
-      rankings = ((Ranking.by_country_code @country.code).by_market_code @market.code).order :updated_at
-      @rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code @market.code)
-    end
+      @rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id]
+    else
+      @market = Market.find_by_code params[:market_id]
+      @country = Country.find_by_code params[:country_id]
+      @category = Category.find_by_code params[:category_id]
+      @countries = Country.popular
+      @categories = @market.categories
 
-    gon.market = @market.to_json
-    gon.country = @country.to_json
-    gon.category = @category.to_json
-    gon.countries = @countries.map{|country| country.to_json}
-    gon.categories = @categories.map{|category| category.to_json}
+      gon.market = @market.to_json
+      gon.country = @country.to_json
+      gon.category = @category.to_json
+      gon.countries = @countries.map{|country| country.to_json}
+      gon.categories = @categories.map{|category| category.to_json}
+    end
   end
 
   # GET /rankings/1
@@ -124,7 +122,7 @@ class RankingsController < ApplicationController
     #   rank.save
     # }
 
-    itc_parameters.each{|param|
+    gp_parameters.each{|param|
       rank = Ranking.new param
       rank.set_apps
       rank.save
