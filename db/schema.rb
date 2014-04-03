@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140402183732) do
+ActiveRecord::Schema.define(version: 20140403104521) do
 
   create_table "app_items", force: true do |t|
     t.integer  "category_id",                                 null: false
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20140402183732) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "website_url",     limit: 128
+    t.string   "banner_url",      limit: 128
   end
 
   add_index "app_items", ["app_item_id"], name: "fk_application_application1_idx", using: :btree
@@ -48,11 +49,12 @@ ActiveRecord::Schema.define(version: 20140402183732) do
     t.integer "ranking_id",  null: false
   end
 
-  create_table "benefits", force: true do |t|
-    t.text     "description",             null: false
-    t.string   "image_url",   limit: 128, null: false
+  create_table "bonuses", force: true do |t|
+    t.text     "description",                null: false
+    t.string   "image_url",      limit: 128, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "reservation_id",             null: false
   end
 
   create_table "categories", force: true do |t|
