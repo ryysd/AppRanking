@@ -11,6 +11,7 @@ capybara-*.html
 rerun.txt
 pickle-email-*.html
 config/secrets.yml
+config/database.yml
 
 *.swp
 .DS_Store
