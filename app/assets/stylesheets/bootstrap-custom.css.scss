@@ -227,6 +227,7 @@ body {
 
 .ranking-header {
   height: 60px;
+  margin-bottom: 30px;
 }
 
 .app-table {
@@ -251,6 +252,10 @@ body {
   height: 60px;
 }
 
+.app-banner {
+  width: 300px;
+}
+
 .ranking-content {
   min-height: 700px;
   background-color: #fff;
@@ -263,10 +268,14 @@ body {
   font-size: 20px;
 }
 
-#country-selector, #category-selector {
-  width: 200px;
+#country-selector, #category-selector, #device-selector{
+  width: 100%;
   float: right;
   font-weight: bold;
+}
+
+.selector-title {
+  text: $gray-dark;
 }
 
 // footer

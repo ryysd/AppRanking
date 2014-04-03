@@ -138,7 +138,7 @@ class AppItem < ActiveRecord::Base
       local_id:          self.local_id,
       website_url:       detail.website_url,
       iap:               false,
-      banner_url:        self.options[:banner_img_url]
+      banner_url:        self.options[:banner_url]
     }
 
     unassignable_attributes =
@@ -219,8 +219,8 @@ class AppItem < ActiveRecord::Base
   end
 
   def add_or_update_reservation(reservation)
-    reserved = reservation[:reserved_num].gsub!(/\D/, "")
-    max_reserved = reservation[:max_reserved_num].gsub!(/\D/, "")
+    reserved = reservation[:reserved_num].gsub(/\D/, "")
+    max_reserved = reservation[:max_reserved_num].gsub(/\D/, "")
 
     params = {
       reserved_num: reserved, 

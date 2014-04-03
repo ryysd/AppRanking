@@ -40,13 +40,14 @@ class Ranking < ActiveRecord::Base
   end
 
   def self.get_latest_filtered_rankings(country_code:, market_code:, category_code:)
+    market = Market.find_by_code market_code
     rankings = ((Ranking.by_country_code country_code).by_market_code market_code).order :updated_at
     feed_rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code market_code)
 
     latest_rankings = feed_rankings.map{|feed, ranking|
       unless ranking.nil?
         cloned_ranking = OpenStruct.new ranking.attributes
-        cloned_ranking.app_items = AppItem.filter_by_category ranking.app_items, (Category.find_by_code category_code)
+	cloned_ranking.app_items = AppItem.filter_by_category ranking.app_items, (Category.market_unique_code category_code, market.id).first
         [feed, cloned_ranking] 
       end
     }.compact
@@ -62,7 +63,7 @@ class Ranking < ActiveRecord::Base
 
   def set_apps
     apps = load_apps
-    add_or_update_apps apps.first(3)
+    add_or_update_apps apps.first(20)
   end
 
   private
@@ -139,6 +140,7 @@ class Ranking < ActiveRecord::Base
   def load_apps_yoyaku_top10
     os_type = self.device.os_type.name.downcase
     ranking = YoyakutoptenScraper::Ranking.new os_type: os_type.to_sym, feed: self.feed.code.to_sym
+    pp ranking
     ranking.update
 
     raise "Could not get ranking. os_type: #{os_type}, country: #{self.country.code}, feed: #{self.feed.code}, category: #{self.category.code}" if ranking.results.blank?

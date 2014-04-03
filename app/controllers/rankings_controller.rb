@@ -7,7 +7,7 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
-    debug
+    # debug
    
     unless params[:format].blank?
       # TODO: category filter
@@ -18,12 +18,16 @@ class RankingsController < ApplicationController
       @category = Category.find_by_code params[:category_id]
       @countries = Country.popular
       @categories = @market.categories
+      @devices = Device.by_market_id @market.id
+      @device = Device.find_by_code params[:device_id]
 
       gon.market = @market.to_json
       gon.country = @country.to_json
       gon.category = @category.to_json
       gon.countries = @countries.map{|country| country.to_json}
       gon.categories = @categories.map{|category| category.to_json}
+      gon.devices = @devices.map{|device| device.to_json}
+      gon.device = @device.to_json
     end
   end
 
@@ -98,6 +102,8 @@ class RankingsController < ApplicationController
     jp_itc_all_topselling_new_paid = {country_code: 'jp', market_code: 'ITC', feed_code: 'newpaidapplications', category_code: '0000', device_name: 'iPhone', options: options}
 
     jp_rsv_all_daily = {country_code: 'jp', market_code: 'RSV', feed_code: 'daily', category_code: 'overall', device_name: 'iPhone', options: options}
+    jp_rsv_all_total = {country_code: 'jp', market_code: 'RSV', feed_code: 'total', category_code: 'overall', device_name: 'iPhone', options: options}
+    jp_rsv_all_new   = {country_code: 'jp', market_code: 'RSV', feed_code: 'new', category_code: 'overall', device_name: 'iPhone', options: options}
 
     gp_parameters = [
       jp_gp_all_topselling_free,
@@ -115,6 +121,12 @@ class RankingsController < ApplicationController
       jp_itc_all_topselling_new_paid
     ]
 
+    rsv_parameters = [
+      jp_rsv_all_daily,
+      jp_rsv_all_total,
+      jp_rsv_all_new,
+    ]
+
     # rankings_params = {country_code: 'jp', market_code: 'ITC', feed_code: 'topfreeapplications', category_code: '6014', device_name: 'iPhone', options: options}
 
     # gp_parameters.each{|param|
@@ -129,10 +141,12 @@ class RankingsController < ApplicationController
     #   rank.set_apps
     #   rank.save
     # }
-
-    rank = Ranking.new jp_rsv_all_daily
-    rank.set_apps
-    rank.save
+    
+    gp_parameters.each{|param|
+      rank = Ranking.new param
+      rank.set_apps
+      rank.save
+    }
 
     # res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
     # res = Proxy.get_proxies_from_hidemyass
