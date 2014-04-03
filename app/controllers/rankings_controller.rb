@@ -7,7 +7,7 @@ class RankingsController < ApplicationController
   # GET /rankings
   # GET /rankings.json
   def index
-    # debug
+    debug
    
     unless params[:format].blank?
       # TODO: category filter
@@ -97,6 +97,8 @@ class RankingsController < ApplicationController
     jp_itc_all_topselling_new_free = {country_code: 'jp', market_code: 'ITC', feed_code: 'newfreeapplications', category_code: '0000', device_name: 'iPhone', options: options}
     jp_itc_all_topselling_new_paid = {country_code: 'jp', market_code: 'ITC', feed_code: 'newpaidapplications', category_code: '0000', device_name: 'iPhone', options: options}
 
+    jp_rsv_all_daily = {country_code: 'jp', market_code: 'RSV', feed_code: 'daily', category_code: 'overall', device_name: 'iPhone', options: options}
+
     gp_parameters = [
       jp_gp_all_topselling_free,
       jp_gp_all_topselling_paid,
@@ -122,11 +124,15 @@ class RankingsController < ApplicationController
     #   rank.save
     # }
 
-    itc_parameters.each{|param|
-      rank = Ranking.new param
-      rank.set_apps
-      rank.save
-    }
+    # itc_parameters.each{|param|
+    #   rank = Ranking.new param
+    #   rank.set_apps
+    #   rank.save
+    # }
+
+    rank = Ranking.new jp_rsv_all_daily
+    rank.set_apps
+    rank.save
 
     # res = Proxy.check_ssl host:"177.124.60.91",port:"3128"
     # res = Proxy.get_proxies_from_hidemyass

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140402161317) do
+ActiveRecord::Schema.define(version: 20140403104521) do
 
   create_table "app_items", force: true do |t|
     t.integer  "category_id",                                 null: false
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20140402161317) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "website_url",     limit: 128
+    t.string   "banner_url",      limit: 128
   end
 
   add_index "app_items", ["app_item_id"], name: "fk_application_application1_idx", using: :btree
@@ -46,6 +47,14 @@ ActiveRecord::Schema.define(version: 20140402161317) do
   create_table "app_items_rankings", force: true do |t|
     t.integer "app_item_id", null: false
     t.integer "ranking_id",  null: false
+  end
+
+  create_table "bonuses", force: true do |t|
+    t.text     "description",                null: false
+    t.string   "image_url",      limit: 128, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "reservation_id",             null: false
   end
 
   create_table "categories", force: true do |t|
@@ -86,8 +95,9 @@ ActiveRecord::Schema.define(version: 20140402161317) do
   add_index "descriptions", ["id"], name: "id_UNIQUE", unique: true, using: :btree
 
   create_table "devices", force: true do |t|
-    t.string  "name",      null: false
-    t.integer "market_id", null: false
+    t.string  "name",       null: false
+    t.integer "market_id",  null: false
+    t.integer "os_type_id", null: false
   end
 
   add_index "devices", ["id"], name: "id_UNIQUE", unique: true, using: :btree
@@ -115,6 +125,10 @@ ActiveRecord::Schema.define(version: 20140402161317) do
   end
 
   add_index "markets", ["id"], name: "id_UNIQUE", unique: true, using: :btree
+
+  create_table "os_types", force: true do |t|
+    t.string "name", limit: 32, null: false
+  end
 
   create_table "prices", force: true do |t|
     t.integer "value",       null: false
@@ -163,6 +177,15 @@ ActiveRecord::Schema.define(version: 20140402161317) do
   end
 
   add_index "rates", ["id"], name: "id_UNIQUE", unique: true, using: :btree
+
+  create_table "reservations", force: true do |t|
+    t.date     "released_on",      null: false
+    t.integer  "reserved_num",     null: false
+    t.integer  "max_reserved_num", null: false
+    t.integer  "app_item_id",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "screen_shots", force: true do |t|
     t.integer "app_item_id",             null: false

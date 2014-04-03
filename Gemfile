@@ -122,6 +122,8 @@ gem 'rest-client'
 
 gem 'bootstrap-sass', '3.0.2.0'
 
+gem 'yoyakutopten_scraper'
+
 group :development do
   # Converter erb => haml
   gem 'erb2haml'

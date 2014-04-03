@@ -16,6 +16,7 @@ end
 markets = [
     {:id => '1', :code => 'GP' , :name => 'Google Play'},
     {:id => '2', :code => 'ITC', :name => 'iTunes Connect'},
+    {:id => '3', :code => 'RSV', :name => 'Reservation'},
 ]
 create_all Market, markets
 
@@ -96,6 +97,8 @@ categories = [
     {:id => '71', :market_id => '2', :code => '6003', :name => 'Travel'           , :category_id => '51'},
     {:id => '72', :market_id => '2', :code => '6002', :name => 'Utilities'        , :category_id => '51'},
     {:id => '73', :market_id => '2', :code => '6001', :name => 'Weather'          , :category_id => '51'},
+    # Reservation Categories
+    {:id => '74', :market_id => '3', :code => 'overall', :name => 'Overall'},
 ]
 create_all Category, categories
 
@@ -112,14 +115,27 @@ feeds = [
     {:id => '8',:name => 'Grossing', :code => 'topgrossingapplications', :market_id => '2'},
     {:id => '9',:name => 'New Free', :code => 'newfreeapplications'    , :market_id => '2'},
     {:id => '10',:name => 'New Paid', :code => 'newpaidapplications'    , :market_id => '2'},
+    # Reservation Feeds
+    {:id => '11',:name => 'Daily'    , :code => 'daily'    , :market_id => '3'},
+    {:id => '12',:name => 'Total'    , :code => 'total'    , :market_id => '3'},
+    {:id => '13',:name => 'New'      , :code => 'new'      , :market_id => '3'},
 ]
 create_all Feed, feeds
 
+os_types = [
+    {:id => '1', :name => 'android'},
+    {:id => '2', :name => 'iOS'},
+]
+create_all OsType, os_types
+
 devices = [
-    {:id => '1', :name => 'android', :market_id => '1'},
-    {:id => '2', :name => 'iPhone' , :market_id => '2'},
-    {:id => '3', :name => 'iPad'   , :market_id => '2'},
-    {:id => '4', :name => 'mac'    , :market_id => '2'},
+    {:id => '1', :name => 'android', :market_id => '1', :os_type_id => '1'},
+    {:id => '2', :name => 'iPhone' , :market_id => '2', :os_type_id => '2'},
+    {:id => '3', :name => 'iPad'   , :market_id => '2', :os_type_id => '2'},
+    {:id => '4', :name => 'mac'    , :market_id => '2', :os_type_id => '2'},
+    # debug
+    {:id => '5', :name => 'android' , :market_id => '3', :os_type_id => '1'},
+    {:id => '6', :name => 'iPhone'  , :market_id => '3', :os_type_id => '2'},
 ]
 create_all Device, devices
 

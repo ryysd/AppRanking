@@ -5,6 +5,7 @@ class Category < ActiveRecord::Base
   belongs_to :market
 
   scope :market_unique_name, lambda {|name, market_id| where(['name = ? and market_id = ?', name, market_id])}
+  scope :market_unique_code, lambda {|code, market_id| where(['code = ? and market_id = ?', code, market_id])}
 
   def to_json
     {code: self.code, name: self.name}

@@ -4,6 +4,7 @@ require 'market_bot'
 class AppItem < ActiveRecord::Base
   include MergeAttribute
 
+  has_one :reservation, autosave: true
   has_many :app_items_devices
   has_many :screen_shots     
   has_many :rates, autosave: true
@@ -45,10 +46,14 @@ class AppItem < ActiveRecord::Base
     add_or_update_attributes detail
   end
 
+  def set_reservation_data
+  end
+
   def load_app_detail
       case market.code
       when 'GP' then load_app_detail_google_play
       when 'ITC' then load_app_detail_itunes_connect
+      when 'RSV' then load_app_detail_yoyaku_top10
       end
   end
 
@@ -80,7 +85,7 @@ class AppItem < ActiveRecord::Base
       device_name:       self.device.name
     }
 
-    {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+    {assignable_attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
 
   def load_app_detail_itunes_connect
@@ -115,11 +120,52 @@ class AppItem < ActiveRecord::Base
       device_name:       self.device.name
     }
 
-    {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+    {assignable_attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
 
-  def add_or_update_attributes(assignable__attributes:, unassignable_attributes:)
-    self.assign_attributes assignable__attributes
+  def load_app_detail_yoyaku_top10
+    detail = YoyakutoptenScraper::App.new app_id: self.local_id, os_type: self.device.os_type.name.downcase.to_sym
+    detail.update
+
+    assignable_attributes =
+    {
+      name:              detail.title,
+      version:           '0.0.0',
+      last_updated_on:   '',
+      released_on:       DateTime.now,#detail.release,
+      icon:              detail.icon,
+      size:              0,
+      local_id:          self.local_id,
+      website_url:       detail.website_url,
+      iap:               false,
+      banner_url:        self.options[:banner_img_url]
+    }
+
+    unassignable_attributes =
+    {
+      price:             self.options[:price],
+      screen_shots_urls: detail.screenshot_urls,
+      description:       detail.description,
+      publisher_name:    detail.publisher,
+      ratings:           {},
+      category_name:     'Overall',
+      device_name:       self.device.name,
+      reservation:       {
+	released_on:      DateTime.now, 
+	reserved_num:     detail.current_reserved, 
+	max_reserved_num: detail.max_reserved,
+	bonus:            {
+	  id: detail.bonus_id,
+	  url: detail.bonus_url
+	}
+      }
+    }
+
+    {assignable_attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+  end
+
+  def add_or_update_attributes(assignable_attributes:, unassignable_attributes:)
+    self.assign_attributes assignable_attributes
     assign_category unassignable_attributes[:category_name]
     add_or_update_price unassignable_attributes[:price]
     add_or_update_description unassignable_attributes[:description]
@@ -127,6 +173,8 @@ class AppItem < ActiveRecord::Base
     add_or_update_ratings unassignable_attributes[:ratings]
     add_or_update_screenshot_urls unassignable_attributes[:screen_shots_urls]
     new_or_update_publisher unassignable_attributes[:publisher_name]
+
+    add_or_update_reservation unassignable_attributes[:reservation] if unassignable_attributes.has_key? :reservation
   end
 
   def assign_category(category_name)
@@ -168,6 +216,23 @@ class AppItem < ActiveRecord::Base
       new_ss = ScreenShot.new url: url, order: idx + 1
       merge_attribute self.screen_shots, old_ss, new_ss
     }
+  end
+
+  def add_or_update_reservation(reservation)
+    reserved = reservation[:reserved_num].gsub!(/\D/, "")
+    max_reserved = reservation[:max_reserved_num].gsub!(/\D/, "")
+
+    params = {
+      reserved_num: reserved, 
+      max_reserved_num: max_reserved, 
+      released_on: reservation[:released_on], 
+      bonus_id: reservation[:bonus][:id],
+      os_type: self.device.os_type.name
+    }
+
+    new_reservation = Reservation.new params
+    old_reservation = Reservation.find_by_app_item_id self.id
+    old_reservation.nil? ? self.reservation = new_reservation : (update_valid_attributes old_reservation, new_reservation)
   end
 
   def new_or_update_publisher(publisher_name)
