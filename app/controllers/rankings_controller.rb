@@ -10,8 +10,12 @@ class RankingsController < ApplicationController
     # debug
    
     unless params[:format].blank?
-      # TODO: category filter
-      @rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id]
+      # debug
+      if params[:format] == 'debug'
+	debug_crowling
+      else
+	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id]
+      end
     else
       @market = Market.find_by_code params[:market_id]
       @country = Country.find_by_code params[:country_id]
@@ -83,6 +87,17 @@ class RankingsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to rankings_url }
       format.json { head :no_content }
+    end
+  end
+
+  def debug_crowling
+    feeds = Feed.by_market_code params[:market_id]
+    device = Device.find_by_code params[:device_id]
+    feeds.each do |feed|
+      param = {country_code: params[:country_id], market_code: params[:market_id], feed_code: feed.code, category_code: params[:category_id], device_name: device.name}
+      rank = Ranking.new param
+      rank.set_apps
+      rank.save
     end
   end
 
