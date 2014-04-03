@@ -124,6 +124,8 @@ gem 'bootstrap-sass', '3.0.2.0'
 
 gem 'yoyakutopten_scraper'
 
+gem 'taps'
+
 group :development do
   # Converter erb => haml
   gem 'erb2haml'
