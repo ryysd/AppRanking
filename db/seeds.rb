@@ -129,13 +129,13 @@ os_types = [
 create_all OsType, os_types
 
 devices = [
-    {:id => '1', :name => 'android', :market_id => '1', :os_type_id => '1'},
-    {:id => '2', :name => 'iPhone' , :market_id => '2', :os_type_id => '2'},
-    {:id => '3', :name => 'iPad'   , :market_id => '2', :os_type_id => '2'},
-    {:id => '4', :name => 'mac'    , :market_id => '2', :os_type_id => '2'},
+    {:id => '1', :code => 'android', :name => 'android', :market_id => '1', :os_type_id => '1'},
+    {:id => '2', :code => 'iphone', :name => 'iPhone' , :market_id => '2', :os_type_id => '2'},
+    {:id => '3', :code => 'ipad', :name => 'iPad'   , :market_id => '2', :os_type_id => '2'},
+    {:id => '4', :code => 'mac', :name => 'mac'    , :market_id => '2', :os_type_id => '2'},
     # debug
-    {:id => '5', :name => 'android' , :market_id => '3', :os_type_id => '1'},
-    {:id => '6', :name => 'iPhone'  , :market_id => '3', :os_type_id => '2'},
+    {:id => '5', :code => 'rsv_android', :name => 'android' , :market_id => '3', :os_type_id => '1'},
+    {:id => '6', :code => 'rsv_iphone', :name => 'iPhone'  , :market_id => '3', :os_type_id => '2'},
 ]
 create_all Device, devices
 

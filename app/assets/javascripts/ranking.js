@@ -26,25 +26,58 @@
     };
 
     Ranking.prototype.generateHeader = function(title) {
-      var $categorySelector, $countrySelector, $header, $title, categories, category, countries, country;
+      var $categorySelector, $categorySelectorContainer, $categorySelectorTitle, $countrySelector, $countrySelectorContainer, $countrySelectorTitle, $deviceSelector, $deviceSelectorContainer, $deviceSelectorTitle, $header, $title, categories, category, countries, country, device, devices;
       $header = $('<div/>', {
         "class": 'ranking-header'
       });
       $title = ($('<div/>', {
-        "class": 'ranking-title col-md-7'
+        "class": 'ranking-title col-md-5'
       })).text(title);
+      $deviceSelectorContainer = $('<div/>', {
+        "class": 'col-md-2 selector-container'
+      });
+      $countrySelectorContainer = $('<div/>', {
+        "class": 'col-md-2 selector-container'
+      });
+      $categorySelectorContainer = $('<div/>', {
+        "class": 'col-md-2 selector-container'
+      });
+      $deviceSelectorTitle = ($('<div/>', {
+        "class": 'selector-title'
+      })).text('Device (don\'t work)');
+      $countrySelectorTitle = ($('<div/>', {
+        "class": 'selector-title'
+      })).text('Country (Japan Only)');
+      $categorySelectorTitle = ($('<div/>', {
+        "class": 'selector-title'
+      })).text('Category');
+      $deviceSelector = $('<div/>', {
+        "class": '',
+        id: 'device-selector'
+      });
       $countrySelector = $('<div/>', {
-        "class": 'col-md-2',
+        "class": '',
         id: 'country-selector'
       });
       $categorySelector = $('<div/>', {
-        "class": 'col-md-2',
+        "class": '',
         id: 'category-selector'
       });
-      $header.append($title);
-      $header.append($categorySelector);
-      $header.append($countrySelector);
-      this.$target.append($header);
+      devices = (function() {
+        var _i, _len, _ref, _results;
+        _ref = gon.devices;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          device = _ref[_i];
+          _results.push({
+            name: device.name,
+            opts: {
+              id: device.code
+            }
+          });
+        }
+        return _results;
+      })();
       countries = (function() {
         var _i, _len, _ref, _results;
         _ref = gon.countries;
@@ -81,76 +114,135 @@
         }
         return _results;
       })();
+      ($countrySelectorContainer.append($countrySelectorTitle)).append($countrySelector);
+      ($categorySelectorContainer.append($categorySelectorTitle)).append($categorySelector);
+      if (devices.length > 1) {
+        ($deviceSelectorContainer.append($deviceSelectorTitle)).append($deviceSelector);
+      }
+      $header.append($title);
+      $header.append($deviceSelectorContainer);
+      $header.append($categorySelectorContainer);
+      $header.append($countrySelectorContainer);
+      this.$target.append($header);
+      DropdownSelector.insert('#device-selector', devices);
       DropdownSelector.insert('#country-selector', countries);
       DropdownSelector.insert('#category-selector', categories);
+      ($("\#" + gon.device.code)).click();
       ($("\#" + gon.country.code)).click();
       return ($("\#" + gon.category.code)).click();
     };
 
-    Ranking.prototype.generateRanking = function() {
-      var bootColWidth, callback, dummy,
-        _this = this;
-      bootColWidth = 12;
+    Ranking.prototype.generateAppIconImage = function(app_item) {
+      var $image, dummy;
       dummy = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
+      $image = app_item.banner_url != null ? $('<img/>', {
+        "class": 'app-banner lazy',
+        'data-original': app_item.banner_url,
+        src: dummy
+      }) : $('<img/>', {
+        "class": 'app-icon lazy',
+        'data-original': app_item.icon,
+        src: dummy
+      });
+      return $image.lazyload({
+        effect: 'fadeIn'
+      });
+    };
+
+    Ranking.prototype.generateAppIcon = function(app_item) {
+      var $a;
+      $a = $('<a/>', {
+        href: app_item.website_url
+      });
+      return $a.append(this.generateAppIconImage(app_item));
+    };
+
+    Ranking.prototype.generateAppTitle = function(app_item) {
+      var $title;
+      return $title = ($('<div/>', {
+        "class": 'app-title'
+      })).text(app_item.name);
+    };
+
+    Ranking.prototype.generateRankingTd = function(app_item) {
+      var $div, $td;
+      $td = $('<td/>');
+      if (app_item != null) {
+        $div = $('<div/>', {
+          "class": 'app-info'
+        });
+        $div.append(this.generateAppIcon(app_item));
+        $div.append(this.generateAppTitle(app_item));
+        $td.append($div);
+      }
+      return $td;
+    };
+
+    Ranking.prototype.generateRankIndex = function(idx) {
+      return ($('<td/>', {
+        "class": 'rank-index'
+      })).text(idx);
+    };
+
+    Ranking.prototype.generateRankingTbody = function(data) {
+      var $tbody, $tbodyTr, app_item, idx, record, _i, _j, _len, _results;
+      $tbody = $('<tbody/>');
+      _results = [];
+      for (idx = _i = 0; _i < 20; idx = ++_i) {
+        $tbodyTr = ($('<tr/>')).append(this.generateRankIndex(idx + 1));
+        for (_j = 0, _len = data.length; _j < _len; _j++) {
+          record = data[_j];
+          if (record.ranking.app_items != null) {
+            app_item = record.ranking.app_items[idx];
+            $tbodyTr.append(this.generateRankingTd(app_item));
+          }
+        }
+        _results.push($tbody.append($tbodyTr));
+      }
+      return _results;
+    };
+
+    Ranking.prototype.generateFeedName = function(name, colSize) {
+      return ($('<th/>', {
+        "class": "col-md-" + colSize + " feed-name"
+      })).text(name);
+    };
+
+    Ranking.prototype.generateRankCol = function() {
+      return $('<th/>', {
+        "class": 'col-md-1'
+      });
+    };
+
+    Ranking.prototype.generateRankingTr = function(data) {
+      var $th, $theadTr, bootColWidth, colSize, record, _i, _len, _results;
+      bootColWidth = 12;
+      colSize = parseInt((bootColWidth - 1) / data.length);
+      $theadTr = $('<tr/>');
+      $theadTr.append(this.generateRankCol());
+      _results = [];
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        record = data[_i];
+        $th = this.generateFeedName(record.feed.name, colSize);
+        _results.push($theadTr.append($th));
+      }
+      return _results;
+    };
+
+    Ranking.prototype.generateRankingThead = function(data) {
+      return ($('<thead/>')).append(this.generateRankingTr(data));
+    };
+
+    Ranking.prototype.generateRanking = function() {
+      var callback,
+        _this = this;
       callback = function(data, status, xhr) {
-        var $a, $div, $image, $table, $tbody, $tbodyTr, $td, $th, $thead, $theadTr, $title, app_item, colSize, idx, record, _i, _j, _k, _len, _len1;
+        var $table, $tbody, $thead;
         $table = $('<table/>', {
           "class": 'table table-hover table-striped table-bordered app-table'
         });
-        $thead = $('<thead/>');
-        $theadTr = $('<tr/>');
-        colSize = parseInt((bootColWidth - 1) / data.length);
-        $theadTr.append($('<th/>', {
-          "class": 'col-md-1'
-        }));
-        for (_i = 0, _len = data.length; _i < _len; _i++) {
-          record = data[_i];
-          console.log(record);
-          $th = ($('<th/>', {
-            "class": "col-md-" + colSize + " feed-name"
-          })).text(record.feed.name);
-          $theadTr.append($th);
-        }
-        $tbody = $('<tbody/>');
-        for (idx = _j = 0; _j < 20; idx = ++_j) {
-          $tbodyTr = $('<tr/>');
-          $tbodyTr.append(($('<td/>', {
-            "class": 'rank-index'
-          })).text(idx + 1));
-          for (_k = 0, _len1 = data.length; _k < _len1; _k++) {
-            record = data[_k];
-            if (record.ranking.app_items != null) {
-              app_item = record.ranking.app_items[idx];
-              $td = $('<td/>');
-              if (app_item != null) {
-                $div = $('<div/>', {
-                  "class": 'app-info'
-                });
-                $title = ($('<div/>', {
-                  "class": 'app-title'
-                })).text(app_item.name);
-                $a = $('<a/>', {
-                  href: app_item.website_url
-                });
-                $image = $('<img/>', {
-                  "class": 'app-icon lazy',
-                  'data-original': app_item.icon,
-                  src: dummy
-                });
-                $image.lazyload({
-                  effect: 'fadeIn'
-                });
-                $a.append($image);
-                $div.append($a);
-                $div.append($title);
-                $td.append($div);
-              }
-              $tbodyTr.append($td);
-            }
-          }
-          $tbody.append($tbodyTr);
-        }
-        $thead.append($theadTr);
+        $thead = _this.generateRankingThead(data);
+        $tbody = _this.generateRankingTbody(data);
         $table.append($thead);
         $table.append($tbody);
         $table.hide();

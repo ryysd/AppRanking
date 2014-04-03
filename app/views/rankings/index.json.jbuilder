@@ -8,7 +8,7 @@ json.array!(@rankings) do |json, feeds_ranking|
   json.ranking do
     unless ranking.nil?
       json.extract! ranking, :id, :updated_at
-      json.app_items ranking.app_items, :id, :name, :local_id, :website_url, :icon
+      json.app_items ranking.app_items, :id, :name, :local_id, :website_url, :icon, :banner_url
     end
   end
 end

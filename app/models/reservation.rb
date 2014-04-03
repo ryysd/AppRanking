@@ -8,8 +8,10 @@ class Reservation < ActiveRecord::Base
 
   private
   def set_bonus
-    bonus = load_bonus
-    add_or_update_bonus bonus
+    unless self.bonus_id.empty?
+      bonus = load_bonus
+      add_or_update_bonus bonus
+    end
   end
 
   def load_bonus
