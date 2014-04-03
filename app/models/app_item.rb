@@ -49,6 +49,7 @@ class AppItem < ActiveRecord::Base
       case market.code
       when 'GP' then load_app_detail_google_play
       when 'ITC' then load_app_detail_itunes_connect
+      when 'RSV' then load_app_detail_yoyaku_top10
       end
   end
 
@@ -80,7 +81,7 @@ class AppItem < ActiveRecord::Base
       device_name:       self.device.name
     }
 
-    {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+    {assignable_attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
 
   def load_app_detail_itunes_connect
@@ -115,11 +116,42 @@ class AppItem < ActiveRecord::Base
       device_name:       self.device.name
     }
 
-    {assignable__attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+    {assignable_attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
   end
 
-  def add_or_update_attributes(assignable__attributes:, unassignable_attributes:)
-    self.assign_attributes assignable__attributes
+  def load_app_detail_yoyaku_top10
+    detail = YoyakutoptenScraper::App.new app_id: self.local_id, os_type: self.device.os_type.name.downcase.to_sym
+    detail.update
+
+    assignable_attributes =
+    {
+      name:              detail.title,
+      version:           '0.0.0',
+      last_updated_on:   '',
+      released_on:       DateTime.now,#detail.release,
+      icon:              detail.icon,
+      size:              0,
+      local_id:          self.local_id,
+      website_url:       detail.website_url,
+      iap:               false,
+    }
+
+    unassignable_attributes =
+    {
+      price:             self.options[:price],
+      screen_shots_urls: detail.screenshot_urls,
+      description:       detail.description,
+      publisher_name:    detail.publisher,
+      ratings:           {},
+      category_name:     'Overall',
+      device_name:       self.device.name
+    }
+
+    {assignable_attributes: assignable_attributes, unassignable_attributes: unassignable_attributes}
+  end
+
+  def add_or_update_attributes(assignable_attributes:, unassignable_attributes:)
+    self.assign_attributes assignable_attributes
     assign_category unassignable_attributes[:category_name]
     add_or_update_price unassignable_attributes[:price]
     add_or_update_description unassignable_attributes[:description]

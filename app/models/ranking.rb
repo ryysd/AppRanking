@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'market_bot'
+require 'yoyakutopten_scraper'
 
 class Ranking < ActiveRecord::Base
   attr_accessor :category, :device
@@ -31,7 +32,7 @@ class Ranking < ActiveRecord::Base
     raise "There is no such feed_code in market. feed_code: #{feed_code}, market_code: #{market_code}" if self.feed.nil?
     raise "Invalid country_code. country_code: #{country_code}" if self.country.nil?
 
-    self.category = Category.find_by_code category_code
+    self.category = (Category.market_unique_code category_code, feed.market.id).first
     self.device = (Device.market_unique_name device_name, feed.market.id).first
 
     raise "Invalid category_code. category_code: #{category_code}" if self.category.nil?
@@ -43,10 +44,12 @@ class Ranking < ActiveRecord::Base
     feed_rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code market_code)
 
     latest_rankings = feed_rankings.map{|feed, ranking|
-      cloned_ranking = OpenStruct.new ranking.attributes
-      cloned_ranking.app_items = AppItem.filter_by_category ranking.app_items, (Category.find_by_code category_code)
-      [feed, cloned_ranking] 
-    }
+      unless ranking.nil?
+        cloned_ranking = OpenStruct.new ranking.attributes
+        cloned_ranking.app_items = AppItem.filter_by_category ranking.app_items, (Category.find_by_code category_code)
+        [feed, cloned_ranking] 
+      end
+    }.compact
 
     Hash[*latest_rankings.flatten]
   end
@@ -59,7 +62,7 @@ class Ranking < ActiveRecord::Base
 
   def set_apps
     apps = load_apps
-    add_or_update_apps apps.first(20)
+    add_or_update_apps apps.first(3)
   end
 
   private
@@ -68,10 +71,15 @@ class Ranking < ActiveRecord::Base
       case self.category.market.code
       when 'GP' then load_apps_google_play
       when 'ITC' then load_apps_itunes_connect
+      when 'RSV' then load_apps_yoyaku_top10
       else raise "Invalid market code. market_code: #{self.category.market.code}"
       end
 
-    app_keys.map{|key| AppItem.new local_id: key, country: self.country, market: self.category.market, device: self.device}
+    app_keys.map do |key| 
+      app_id = (key.is_a? Hash) ? key[:app_id] : key
+      options = (key.is_a? Hash) ? key[:options] : nil
+      AppItem.new local_id: app_id, country: self.country, market: self.category.market, device: self.device, options: options
+    end
   end
 
   def load_apps_google_play
@@ -128,6 +136,23 @@ class Ranking < ActiveRecord::Base
     entries.map{|entry| entry['id']['attributes']['im:id'] }
   end
 
+  def load_apps_yoyaku_top10
+    os_type = self.device.os_type.name.downcase
+    ranking = YoyakutoptenScraper::Ranking.new os_type: os_type.to_sym, feed: self.feed.code.to_sym
+    ranking.update
+
+    raise "Could not get ranking. os_type: #{os_type}, country: #{self.country.code}, feed: #{self.feed.code}, category: #{self.category.code}" if ranking.results.blank?
+
+    ranking.results.map do |app| 
+      options = {
+	banner_url: app[:banner_img_url],
+	price:      app[:price]
+      }
+
+      {app_id: app[:app_id], options: options}
+    end
+  end
+
   def add_or_update_apps(new_apps)
     new_apps.each do |new_app|
       add_or_update_app new_app
@@ -140,7 +165,7 @@ class Ranking < ActiveRecord::Base
     if old_app.nil?
       self.app_items << new_app
     elsif self.options[:app_update?] || (old_app.updatable? new_app)
-      old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device
+      old_app.update_attributes country: new_app.country, market: new_app.market, device: new_app.device, options: new_app.options
       old_app.rankings << self unless old_app.rankings.include? self
     end
   end
