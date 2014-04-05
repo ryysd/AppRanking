@@ -14,7 +14,7 @@ class RankingsController < ApplicationController
       if params[:format] == 'debug'
 	debug_crowling
       else
-	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id]
+	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id], feed_code: params[:feed_id]
       end
     else
       @market = Market.find_by_code params[:market_id]
