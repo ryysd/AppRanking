@@ -6,7 +6,7 @@ class @Ranking
     @$activeContent.addClass 'active'
     ($ "\#tab-#{marketCode}").addClass 'active'
 
-  isRankingPage: () -> @$activeContent?
+  isRankingPage: () -> @$activeContent.length != 0
   isUpdatable: () -> true
 
   loadRankingData: (callback, options) ->
@@ -98,7 +98,7 @@ class @Ranking
     $image.lazyload(effect: 'fadeIn')
 
   generateAppIcon: (app_item) ->
-    $a = $ '<a/>', {href: app_item.website_url}
+    $a = $ '<a/>', {href: (URLHelper.appItemUrl app_item.id)}
     $a.append (@generateAppIconImage app_item)
 
   generateAppTitle: (app_item) -> $title = ($ '<div/>', {class: 'app-title'}).text app_item.name

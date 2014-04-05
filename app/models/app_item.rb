@@ -138,7 +138,8 @@ class AppItem < ActiveRecord::Base
       local_id:          self.local_id,
       website_url:       detail.website_url,
       iap:               false,
-      banner_url:        self.options[:banner_url]
+      banner_url:        self.options[:banner_url],
+      video_url:         detail.video_url
     }
 
     unassignable_attributes =

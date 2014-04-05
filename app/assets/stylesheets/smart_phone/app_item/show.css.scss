@@ -1,0 +1,65 @@
+.app-container {
+  padding: 10px;
+}
+.app-header {
+  background-color: $gray-light;
+  color: $gray-dark;
+  height: 80px;
+
+  .app-title {
+    font-weight: bold;
+  }
+
+  .app-release, .app-publisher, .app-reserved {
+    font-size: 10px;
+  }
+
+  .app-header-icon-container {
+    float: left;
+    width: 20%;
+    .app-icon {
+      max-width: 60px;
+    }
+  }
+
+  .app-info {
+    float: right;
+    width: 75%;
+  }
+}
+
+.app-ss-wrapper {
+  margin-top: 5px;
+  margin-bottom: 0px;
+
+  #effects {
+    margin-bottom: 15px;
+    height: 250px;
+  }
+
+  li {
+    background: transparent !important;
+    max-width: 250px;
+  }
+
+  .app-screen-shot {
+    height: 250px;
+  }
+}
+
+.app-video-container {
+  background-color: $gray-dark;
+  text-align: center;
+  padding: 10px;
+  iframe {
+   height: 225px;
+   width: 300px;
+  }
+}
+
+.app-description-container {
+  padding: 10px;
+  font-size: 12px;
+  background-color: $gray-dark;
+  color: white;
+}

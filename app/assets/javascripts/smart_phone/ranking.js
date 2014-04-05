@@ -9,7 +9,7 @@
     }
 
     Ranking.prototype.isRankingPage = function() {
-      return this.$activeContent != null;
+      return this.$activeContent.length !== 0;
     };
 
     Ranking.prototype.isUpdatable = function() {
@@ -90,7 +90,7 @@
     Ranking.prototype.generateAppIcon = function(app_item) {
       var $a;
       $a = $('<a/>', {
-        href: app_item.website_url
+        href: URLHelper.appItemUrl(app_item.id)
       });
       return $a.append(this.generateAppIconImage(app_item));
     };

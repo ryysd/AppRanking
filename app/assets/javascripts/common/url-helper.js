@@ -26,6 +26,10 @@
       };
     };
 
+    URLHelper.appItemUrl = function(id) {
+      return "/app_items/" + id;
+    };
+
     return URLHelper;
 
   })();

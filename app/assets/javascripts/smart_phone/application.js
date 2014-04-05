@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require ../common/url-helper
+//= require ../common/sly
 //= require_tree .
 
 //= require jquery
