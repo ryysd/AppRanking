@@ -16,7 +16,7 @@
 
     URLHelper.parseRankingUrl = function(url) {
       var match;
-      match = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings/.exec(url);
+      match = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z_]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings/.exec(url);
       return {
         country: match[1],
         market: match[2],

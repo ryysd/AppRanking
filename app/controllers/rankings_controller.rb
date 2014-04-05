@@ -13,7 +13,8 @@ class RankingsController < ApplicationController
       # debug
       if params[:format] == 'debug'
 	debug_crowling
-      else
+	redirect_to (country_market_feed_category_device_rankings_url params[:country_id], params[:market_id], params[:feed_id], params[:category_id], params[:device_id])
+      elsif params[:format] == 'json'
 	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id], feed_code: params[:feed_id]
       end
     else
