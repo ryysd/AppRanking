@@ -69,9 +69,13 @@
 
 .app-description-container {
   padding: 10px;
-  font-size: 12px;
+  font-size: 10px;
   background-color: $gray-dark;
   color: white;
+  overflow: hidden;
+  p {
+    word-wrap: break-word;
+  }
 }
 
 .check-bonus-btn {
