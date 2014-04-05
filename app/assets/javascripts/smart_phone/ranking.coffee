@@ -27,6 +27,22 @@ class @Ranking
 
    $wrapper.append $selector
    $wrapper.append $caret
+
+  generateFeedGroup: (feeds) ->
+    $groupWrapper = $ '<div/>', {class: 'btn-group btn-group-justified feed-group'}
+    width = 100 / feeds.length
+
+    for feed in feeds
+      $group = $ '<div/>', {class: 'btn-group', width: "#{width}%"}
+      url = URLHelper.rankingUrl {feed: feed.code}
+      $button = ($ '<button/>', {type: 'button', class: 'btn btn-default', id: "feed-#{feed.code}", onclick: "location.href = '#{url}'"}).text feed.name
+      $groupWrapper.append ($group.append $button)
+
+    $groupWrapper
+
+  activateFeed: (feed) ->
+    ($ "#feed-#{feed.code}").addClass 'selected'
+
   generateHeader: (title) ->
     #$header = $ '<div/>', {class: 'ranking-header'}
     #devices = ({name: device.name, opts: {id: device.code}} for device in gon.devices)
@@ -150,7 +166,7 @@ class @Ranking
           $tbodyTr.append (@generateRankingTd app_item, idx)
       $tbody.append $tbodyTr
 
-  generateFeedName: (name, colSize) -> ($ '<th/>', {class: "col-md-#{colSize} feed-name"}).text name
+  generateFeedName: (name, colSize) -> (($ '<th/>', {class: "col-md-#{colSize} feed-name"}).css 'display', 'none').text name
 
   generateRankCol: () -> $ '<th/>', {class: 'col-md-1'}
 
@@ -177,6 +193,8 @@ class @Ranking
       $table.append $tbody
 
       $table.hide()
+      @$activeContent.append (@generateFeedGroup gon.feeds)
+      @activateFeed gon.feed
       @$activeContent.append $table
       $table.fadeIn 'slow'
 

@@ -95,6 +95,18 @@
 
 .ranking-content {
   background-color: #fff;
+  .feed-group {
+    .btn {
+      width: 100%;
+      background: transparent;
+      color: $gray-dark;
+    }
+
+    .btn.selected {
+      background: $brand-green;
+      color: white;
+    }
+  }
 }
 
 .ranking-title {

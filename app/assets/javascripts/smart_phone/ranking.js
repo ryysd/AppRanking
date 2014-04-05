@@ -38,6 +38,36 @@
       return $wrapper.append($caret);
     };
 
+    Ranking.prototype.generateFeedGroup = function(feeds) {
+      var $button, $group, $groupWrapper, feed, url, width, _i, _len;
+      $groupWrapper = $('<div/>', {
+        "class": 'btn-group btn-group-justified feed-group'
+      });
+      width = 100 / feeds.length;
+      for (_i = 0, _len = feeds.length; _i < _len; _i++) {
+        feed = feeds[_i];
+        $group = $('<div/>', {
+          "class": 'btn-group',
+          width: "" + width + "%"
+        });
+        url = URLHelper.rankingUrl({
+          feed: feed.code
+        });
+        $button = ($('<button/>', {
+          type: 'button',
+          "class": 'btn btn-default',
+          id: "feed-" + feed.code,
+          onclick: "location.href = '" + url + "'"
+        })).text(feed.name);
+        $groupWrapper.append($group.append($button));
+      }
+      return $groupWrapper;
+    };
+
+    Ranking.prototype.activateFeed = function(feed) {
+      return ($("#feed-" + feed.code)).addClass('selected');
+    };
+
     Ranking.prototype.generateHeader = function(title) {};
 
     Ranking.prototype.generateAppIconImage = function(app_item) {
@@ -181,9 +211,9 @@
     };
 
     Ranking.prototype.generateFeedName = function(name, colSize) {
-      return ($('<th/>', {
+      return (($('<th/>', {
         "class": "col-md-" + colSize + " feed-name"
-      })).text(name);
+      })).css('display', 'none')).text(name);
     };
 
     Ranking.prototype.generateRankCol = function() {
@@ -224,6 +254,8 @@
         $table.append($thead);
         $table.append($tbody);
         $table.hide();
+        _this.$activeContent.append(_this.generateFeedGroup(gon.feeds));
+        _this.activateFeed(gon.feed);
         _this.$activeContent.append($table);
         $table.fadeIn('slow');
         return ($(document)).scroll();
