@@ -8,12 +8,19 @@ class RankingsController < ApplicationController
   # GET /rankings.json
   def index
     # debug
+
+    if !(params[:country_id] && params[:market_id] && params[:feed_id] && params[:category_id] && params[:device_id])
+      ua = request.env["HTTP_USER_AGENT"]
+      feed = (ua.include?('Mobile') || ua.include?('Android')) ? 'daily' : 'all'
+
+      return redirect_to (country_market_feed_category_device_rankings_url 'jp', 'rsv', feed, 'overall', 'iphone')
+    end
    
     unless params[:format].blank?
       # debug
       if params[:format] == 'debug'
 	debug_crowling
-	redirect_to (country_market_feed_category_device_rankings_url params[:country_id], params[:market_id], params[:feed_id], params[:category_id], params[:device_id])
+	return redirect_to (country_market_feed_category_device_rankings_url params[:country_id], params[:market_id], params[:feed_id], params[:category_id], params[:device_id])
       elsif params[:format] == 'json'
 	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id], feed_code: params[:feed_id]
       end
