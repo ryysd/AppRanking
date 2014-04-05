@@ -4,7 +4,6 @@
     function Ranking(selector, marketCode) {
       this.$target = $(selector);
       this.$activeContent = this.$target;
-      console.log(this.$activeContent);
       this.$activeContent.addClass('active');
       ($("\#tab-" + marketCode)).addClass('active');
     }
@@ -164,16 +163,86 @@
       })).text(app_item.name);
     };
 
-    Ranking.prototype.generateRankingTd = function(app_item) {
-      var $div, $td;
+    Ranking.prototype.generateAppRank = function(rank) {
+      var $div;
+      $div = $('<div/>', {
+        "class": 'app-rank'
+      });
+      return $div.text(rank);
+    };
+
+    Ranking.prototype.generateAppInfoHeader = function(app_item, rank) {
+      var $div;
+      $div = $('<div/>', {
+        "class": 'app-info-header'
+      });
+      $div.append(this.generateAppRank(rank));
+      return $div.append(this.generateAppTitle(app_item));
+    };
+
+    Ranking.prototype.generateAppDetail = function(app_item) {
+      return this.generateAppTitle(app_item);
+    };
+
+    Ranking.prototype.generateAppInfo = function(app_item, rank) {
+      var $div;
+      $div = $('<div/>', {
+        "class": 'app-info'
+      });
+      $div.append(this.generateAppIcon(app_item));
+      return $div.append(this.generateAppDetail(app_item));
+    };
+
+    Ranking.prototype.generateReleaseDate = function(app_item) {
+      var $div;
+      $div = $('<div/>', {
+        "class": 'app-release-date'
+      });
+      return $div.text('Release: xx月yy日 上旬頃');
+    };
+
+    Ranking.prototype.generateBonusInfo = function(app_item) {
+      var $div, bonus;
+      $div = $('<div/>', {
+        "class": 'app-bonus'
+      });
+      bonus = app_item.reservation.bonus;
+      if ((Object.keys(bonus)).length !== 0) {
+        $div.addClass('btn btn-bonus');
+        return $div.text('予約特典あり');
+      }
+    };
+
+    Ranking.prototype.generateOverlapInfoArea = function(app_item) {
+      var $div;
+      $div = $('<div/>', {
+        "class": 'overlap-app-info'
+      });
+      $div.append(this.generateReleaseDate(app_item));
+      return $div.append(this.generateBonusInfo(app_item));
+    };
+
+    Ranking.prototype.generateAppInfoLarge = function(app_item, rank) {
+      var $div;
+      $div = $('<div/>', {
+        "class": 'app-info'
+      });
+      $div.append(this.generateAppInfoHeader(app_item, rank));
+      $div.append(this.generateAppIcon(app_item));
+      return $div.append(this.generateOverlapInfoArea(app_item));
+    };
+
+    Ranking.prototype.generateRankingTd = function(app_item, idx) {
+      var $td;
       $td = $('<td/>');
       if (app_item != null) {
-        $div = $('<div/>', {
-          "class": 'app-info'
-        });
-        $div.append(this.generateAppIcon(app_item));
-        $div.append(this.generateAppTitle(app_item));
-        $td.append($div);
+        if (app_item.banner_url == null) {
+          $td.addClass('app-data');
+          $td.append(this.generateAppInfo(app_item, idx + 1));
+        } else {
+          $td.addClass('app-data-large');
+          $td.append(this.generateAppInfoLarge(app_item, idx + 1));
+        }
       }
       return $td;
     };
@@ -189,12 +258,12 @@
       $tbody = $('<tbody/>');
       _results = [];
       for (idx = _i = 0; _i < 20; idx = ++_i) {
-        $tbodyTr = ($('<tr/>')).append(this.generateRankIndex(idx + 1));
+        $tbodyTr = $('<tr/>');
         for (_j = 0, _len = data.length; _j < _len; _j++) {
           record = data[_j];
           if (record.ranking.app_items != null) {
             app_item = record.ranking.app_items[idx];
-            $tbodyTr.append(this.generateRankingTd(app_item));
+            $tbodyTr.append(this.generateRankingTd(app_item, idx));
           }
         }
         _results.push($tbody.append($tbodyTr));
@@ -219,7 +288,6 @@
       bootColWidth = 12;
       colSize = parseInt((bootColWidth - 1) / data.length);
       $theadTr = $('<tr/>');
-      $theadTr.append(this.generateRankCol());
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         record = data[_i];
@@ -238,6 +306,7 @@
         _this = this;
       callback = function(data, status, xhr) {
         var $table, $tbody, $thead;
+        console.log(data);
         $table = $('<table/>', {
           "class": 'table table-hover table-striped table-bordered app-table'
         });
@@ -264,7 +333,6 @@
     }
     ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
     if (ranking.isRankingPage()) {
-      ranking.generateHeader("" + gon.market.name + " Apps Ranking");
       return ranking.generateRanking();
     }
   });

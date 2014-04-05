@@ -2,7 +2,6 @@ class @Ranking
   constructor: (selector, marketCode) ->
     @$target = $ selector
     @$activeContent = @$target
-    console.log @$activeContent
 
     @$activeContent.addClass 'active'
     ($ "\#tab-#{marketCode}").addClass 'active'
@@ -72,13 +71,55 @@ class @Ranking
 
   generateAppTitle: (app_item) -> $title = ($ '<div/>', {class: 'app-title'}).text app_item.name
 
-  generateRankingTd: (app_item) ->
+  generateAppRank: (rank) ->
+    $div = ($ '<div/>', {class: 'app-rank'})
+    $div.text rank
+
+  generateAppInfoHeader: (app_item, rank) ->
+    $div = ($ '<div/>', {class: 'app-info-header'})
+    $div.append @generateAppRank rank
+    $div.append @generateAppTitle app_item
+
+  generateAppDetail: (app_item) ->
+    @generateAppTitle app_item
+
+  generateAppInfo: (app_item, rank) ->
+    $div = ($ '<div/>', {class: 'app-info'})
+    $div.append (@generateAppIcon app_item)
+    $div.append (@generateAppDetail app_item)
+
+  generateReleaseDate: (app_item) ->
+    $div = ($ '<div/>', {class: 'app-release-date'})
+    $div.text 'Release: xx月yy日 上旬頃'
+
+  generateBonusInfo: (app_item) ->
+    $div = ($ '<div/>', {class: 'app-bonus'})
+    bonus = app_item.reservation.bonus
+
+    if (Object.keys bonus).length != 0
+      $div.addClass 'btn btn-bonus'
+      $div.text '予約特典あり'
+    
+  generateOverlapInfoArea: (app_item) ->
+    $div = ($ '<div/>', {class: 'overlap-app-info'})
+    $div.append (@generateReleaseDate app_item)
+    $div.append (@generateBonusInfo app_item)
+
+  generateAppInfoLarge: (app_item, rank) ->
+    $div = ($ '<div/>', {class: 'app-info'})
+    $div.append (@generateAppInfoHeader app_item, rank)
+    $div.append (@generateAppIcon app_item)
+    $div.append (@generateOverlapInfoArea app_item)
+
+  generateRankingTd: (app_item, idx) ->
     $td = $ '<td/>'
     if app_item?
-      $div = ($ '<div/>', {class: 'app-info'})
-      $div.append (@generateAppIcon app_item)
-      $div.append (@generateAppTitle app_item)
-      $td.append $div
+      if !app_item.banner_url?
+        $td.addClass 'app-data'
+        $td.append (@generateAppInfo app_item, idx+1)
+      else
+        $td.addClass 'app-data-large'
+        $td.append (@generateAppInfoLarge app_item, idx+1)
     $td
 
   generateRankIndex: (idx) -> ($ '<td/>', {class: 'rank-index'}).text (idx)
@@ -86,11 +127,11 @@ class @Ranking
   generateRankingTbody: (data) ->
     $tbody = $ '<tbody/>'
     for idx in [0...20]
-      $tbodyTr = ($ '<tr/>').append (@generateRankIndex (idx + 1))
+      $tbodyTr = ($ '<tr/>')
       for record in data
         if record.ranking.app_items?
           app_item = record.ranking.app_items[idx]
-          $tbodyTr.append @generateRankingTd app_item
+          $tbodyTr.append (@generateRankingTd app_item, idx)
       $tbody.append $tbodyTr
 
   generateFeedName: (name, colSize) -> ($ '<th/>', {class: "col-md-#{colSize} feed-name"}).text name
@@ -101,7 +142,6 @@ class @Ranking
     colSize = parseInt ((bootColWidth - 1) / data.length)
 
     $theadTr = $ '<tr/>'
-    $theadTr.append @generateRankCol()
     for record in data
       $th = @generateFeedName record.feed.name, colSize
       $theadTr.append $th
@@ -110,6 +150,7 @@ class @Ranking
 
   generateRanking: () ->
     callback = (data, status, xhr) =>
+      console.log data
       $table = $ '<table/>', {class: 'table table-hover table-striped table-bordered app-table'}
 
       $thead = @generateRankingThead data
@@ -131,7 +172,7 @@ $(document).on 'ready page:load', ->
   ($ document).scrollTop window.position if window.position?
   ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
   if ranking.isRankingPage()
-    ranking.generateHeader "#{gon.market.name} Apps Ranking"
+    # ranking.generateHeader "#{gon.market.name} Apps Ranking"
     ranking.generateRanking()
 
 $(document).on 'page:before-change', ->
