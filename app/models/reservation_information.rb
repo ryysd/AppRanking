@@ -1,4 +1,4 @@
-class Reservation < ActiveRecord::Base
+class ReservationInformation < ActiveRecord::Base
   include MergeAttribute
 
   has_one :bonus, autosave: true

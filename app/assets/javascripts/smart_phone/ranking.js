@@ -145,7 +145,7 @@
       $div = $('<div/>', {
         "class": 'app-bonus'
       });
-      bonus = app_item.reservation.bonus;
+      bonus = app_item.reservation_information.bonus;
       if ((Object.keys(bonus)).length !== 0) {
         $div.addClass('btn btn-bonus');
         return $div.text('予約特典あり');
