@@ -3,6 +3,10 @@
   this.URLHelper = (function() {
     function URLHelper() {}
 
+    URLHelper.rankingUrlRegExp = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z_]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings(\?.*)?/;
+
+    URLHelper.appUrlRegExp = /.*\/app_items\/(\d+)(\?.*)?/;
+
     URLHelper.rankingUrl = function(args) {
       var category, country, device, feed, market, urlParam;
       urlParam = URLHelper.parseRankingUrl(window.location);
@@ -16,7 +20,7 @@
 
     URLHelper.parseRankingUrl = function(url) {
       var match;
-      match = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z_]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings/.exec(url);
+      match = URLHelper.rankingUrlRegExp.exec(url);
       return {
         country: match[1],
         market: match[2],
@@ -28,6 +32,14 @@
 
     URLHelper.appItemUrl = function(id) {
       return "/app_items/" + id;
+    };
+
+    URLHelper.isRankingUrl = function(url) {
+      return (URLHelper.rankingUrlRegExp.exec(url)) != null;
+    };
+
+    URLHelper.isAppUrl = function(url) {
+      return (URLHelper.appUrlRegExp.exec(url)) != null;
     };
 
     return URLHelper;

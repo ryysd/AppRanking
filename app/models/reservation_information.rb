@@ -2,13 +2,13 @@ class ReservationInformation < ActiveRecord::Base
   include MergeAttribute
 
   has_one :bonus, autosave: true
-  before_create :set_bonus
+  before_save :set_bonus
 
   attr_accessor :bonus_id, :os_type
 
   private
   def set_bonus
-    unless self.bonus_id.empty?
+    if (!self.bonus_id.nil? && !self.bonus_id.empty?)
       bonus = load_bonus
       add_or_update_bonus bonus
     end

@@ -269,11 +269,11 @@
 
   $(document).on('ready page:load', function() {
     var ranking;
-    if (window.position != null) {
-      ($(document)).scrollTop(window.position);
-    }
-    ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
-    if (ranking.isRankingPage()) {
+    if (URLHelper.isRankingUrl(location.href)) {
+      if (window.position != null) {
+        ($(document)).scrollTop(window.position);
+      }
+      ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
       return ranking.generateRanking();
     }
   });

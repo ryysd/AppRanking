@@ -204,10 +204,9 @@ class @Ranking
     @loadRankingData callback
 
 $(document).on 'ready page:load', ->
-  ($ document).scrollTop window.position if window.position?
-  ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
-  if ranking.isRankingPage()
-    # ranking.generateHeader "#{gon.market.name} Apps Ranking"
+  if (URLHelper.isRankingUrl location.href)
+    ($ document).scrollTop window.position if window.position?
+    ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
     ranking.generateRanking()
 
 $(document).on 'page:before-change', ->

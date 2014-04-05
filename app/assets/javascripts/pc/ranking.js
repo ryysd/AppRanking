@@ -262,8 +262,8 @@
     if (window.position != null) {
       ($(document)).scrollTop(window.position);
     }
-    ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
-    if (ranking.isRankingPage()) {
+    if (URLHelper.isRankingUrl(location.href)) {
+      ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
       ranking.generateHeader("" + gon.market.name + " Apps Ranking");
       return ranking.generateRanking();
     }
