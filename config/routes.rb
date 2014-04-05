@@ -3,9 +3,11 @@ AppRanking::Application.routes.draw do
 
   resources :countries do
     resources :markets do
-      resources :categories do
-	resources :devices do
-	  resources :rankings
+      resources :feeds do
+	resources :categories do
+	  resources :devices do
+	    resources :rankings
+	  end
 	end
       end
     end

@@ -4,23 +4,25 @@
     function URLHelper() {}
 
     URLHelper.rankingUrl = function(args) {
-      var category, country, device, market, urlParam;
+      var category, country, device, feed, market, urlParam;
       urlParam = URLHelper.parseRankingUrl(window.location);
       country = (args.country || urlParam.country).toLowerCase();
       market = (args.market || urlParam.market).toLowerCase();
       category = (args.category || urlParam.category).toLowerCase();
       device = (args.device || urlParam.device).toLowerCase();
-      return "/countries/" + country + "/markets/" + market + "/categories/" + category + "/devices/" + device + "/rankings";
+      feed = (args.feed || urlParam.feed).toLowerCase();
+      return "/countries/" + country + "/markets/" + market + "/feeds/" + feed + "/categories/" + category + "/devices/" + device + "/rankings";
     };
 
     URLHelper.parseRankingUrl = function(url) {
       var match;
-      match = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings/.exec(url);
+      match = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings/.exec(url);
       return {
         country: match[1],
         market: match[2],
-        category: match[3],
-        device: match[4]
+        feed: match[3],
+        category: match[4],
+        device: match[5]
       };
     };
 

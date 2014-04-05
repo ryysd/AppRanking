@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require ../common/url-helper
 //= require_tree .
 
 //= require jquery
