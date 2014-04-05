@@ -1,4 +1,6 @@
 AppRanking::Application.routes.draw do
+  get "sessions/create"
+  get "sessions/destroy"
   resources :rankings
 
   resources :countries do
@@ -14,6 +16,9 @@ AppRanking::Application.routes.draw do
   end
 
   resources :app_items
+
+  get "/auth/:provider/callback" => "sessions#create"
+  get "/signout" => "sessions#destroy"
 
   root :to => 'rankings#index'
 
