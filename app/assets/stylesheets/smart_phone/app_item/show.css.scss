@@ -8,6 +8,15 @@
   }
 }
 
+@mixin abbreviation {
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  -webkit-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  width: 100%;
+  white-space: nowrap;
+}
+
 .app-container {
   padding: 10px;
 }
@@ -18,10 +27,12 @@
 
   .app-title {
     font-weight: bold;
+    @include abbreviation;
   }
 
   .app-release, .app-publisher, .app-reserved {
     font-size: 10px;
+    @include abbreviation;
   }
 
   .app-header-icon-container {

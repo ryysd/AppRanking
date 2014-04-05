@@ -6,8 +6,9 @@
       = @app_item.name
     .app-publisher
       = @app_item.publisher.name
-    .app-release
-      = "リリース予定日: #{@app_item.released_on.strftime '%Y年%m月%d日'}"
+    -unless @app_item.released_on.nil?
+      .app-release
+        = "リリース予定日: #{@app_item.released_on.strftime '%Y年%m月%d日'}"
     - unless @app_item.reservation_information.nil?
       .app-reserved
         = "現在の予約数: #{@app_item.reservation_information.reserved_num} / #{@app_item.reservation_information.max_reserved_num}"
@@ -33,9 +34,10 @@
     .handle style=("-webkit-transform: translateZ(0px) translateX(94px); width: 232px;") 
       .mousearea
 
-.reservation-info-container
-  .btn.reservation-btn
-    | 予約する
+- unless @app_item.reservation_information.nil?
+  .reservation-info-container
+    .btn.reservation-btn
+      | 予約する
 
 - if !@app_item.video_url.nil?
   .app-video-container
