@@ -105,14 +105,14 @@ create_all Category, categories
 
 feeds = [
     # Google Play Feeds
-    {:id => '1', :name => 'Free'    , :code => 'topselling_free'    , :market_id => '1'},
-    {:id => '2', :name => 'Paid'    , :code => 'topselling_paid'    , :market_id => '1'},
+    {:id => '1', :name => 'Paid'    , :code => 'topselling_paid'    , :market_id => '1'},
+    {:id => '2', :name => 'Free'    , :code => 'topselling_free'    , :market_id => '1'},
     {:id => '3', :name => 'Grossing', :code => 'topgrossing'        , :market_id => '1'},
     #{:id => '4', :name => 'New Free', :code => 'topselling_new_free', :market_id => '1'},
     #{:id => '5', :name => 'New Paid', :code => 'topselling_new_paid', :market_id => '1'},
     # iOS Feeds
-    {:id => '6',:name => 'Free'    , :code => 'topfreeapplications'    , :market_id => '2'},
-    {:id => '7',:name => 'Paid'    , :code => 'toppaidapplications'    , :market_id => '2'},
+    {:id => '6',:name => 'Paid'    , :code => 'toppaidapplications'    , :market_id => '2'},
+    {:id => '7',:name => 'Free'    , :code => 'topfreeapplications'    , :market_id => '2'},
     {:id => '8',:name => 'Grossing', :code => 'topgrossingapplications', :market_id => '2'},
     #{:id => '9',:name => 'New Free', :code => 'newfreeapplications'    , :market_id => '2'},
     #{:id => '10',:name => 'New Paid', :code => 'newpaidapplications'    , :market_id => '2'},
