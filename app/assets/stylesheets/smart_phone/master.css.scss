@@ -1,7 +1,8 @@
 @import "bootswatch/variables";
 @import 'variables';
 @import 'bootstrap-custom';
-@import 'ranking';
+@import './ranking/index';
+@import './app_item/show';
 @import 'footer';
 @import "bootswatch/bootswatch";
 @import "bootstrap";

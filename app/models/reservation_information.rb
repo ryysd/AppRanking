@@ -26,7 +26,7 @@ class ReservationInformation < ActiveRecord::Base
 
   def add_or_update_bonus(bonus)
     new_bonus = Bonus.new bonus
-    old_bonus = Bonus.find_by_reservation_id self.id
+    old_bonus = Bonus.find_by_reservation_information_id self.id
 
     old_bonus.nil? ? self.bonus = new_bonus : (update_valid_attributes old_bonus, new_bonus)
   end

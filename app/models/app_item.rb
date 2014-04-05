@@ -232,7 +232,7 @@ class AppItem < ActiveRecord::Base
 
     new_reservation_information = ReservationInformation.new params
     old_reservation_information = ReservationInformation.find_by_app_item_id self.id
-    old_reservation_information.nil? ? self.reservation_informations = new_reservation_information : (update_valid_attributes old_reservation_information, new_reservation_information)
+    old_reservation_information.nil? ? self.reservation_information = new_reservation_information : (update_valid_attributes old_reservation_information, new_reservation_information)
   end
 
   def new_or_update_publisher(publisher_name)
