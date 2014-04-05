@@ -7,17 +7,16 @@ html lang="en"
     title
       | AppRanking
     = stylesheet_link_tag    "smart_phone/application", media: "all"
-    = javascript_include_tag "application"
+    = javascript_include_tag "smart_phone/application"
     = csrf_meta_tags
 
     script src='//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
   body
     = include_gon
     #wrap
-      | mobile
       = render 'layouts/navbar'
       = yield
 
     #footer
-      .container
+      .container-fluid
         | Copyright &copy; 2014 CompanyName All Rights Reserved.
