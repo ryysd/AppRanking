@@ -15,6 +15,7 @@
 //= require turbolinks
 //= require ../common/url-helper
 //= require ../common/sly
+//= require ../common/bootbox.min
 //= require_tree .
 
 //= require jquery
