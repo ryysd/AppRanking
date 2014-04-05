@@ -1,0 +1,39 @@
+$gray-dark: #474e5d;
+$gray-light: #ECF0F0;
+$gray-lighter: #f6f8f8;
+
+$brand-green: #21be9e;
+$brand-green-light: #31C6A8;
+$brand-success: $brand-green-light;
+
+$jumbotron-bg: $brand-green-light;
+
+$navbar-inverse-bg: #fff;
+$navbar-inverse-color: $gray-dark;
+$navbar-inverse-link-color: $gray-dark;
+$navbar-inverse-brand-color: $gray-dark;
+$navbar-inverse-brand-hover-color: $brand-green;
+
+$navbar-inverse-link-active-bg: transparent;
+$navbar-inverse-link-active-color: $brand-green;
+
+$navbar-inverse-link-hover-bg: transparent;
+$navbar-inverse-link-hover-color: $brand-green;
+
+$navbar-inverse-border: transparent;
+
+$carousel-control-color: #fff;
+$carousel-caption-color: #fff;
+
+$nav-tabs-active-link-hover-color: $brand-green;
+$nav-tabs-active-link-hover-bg: #fff;
+
+$container-tablet: ((720px + 72px + $grid-gutter-width));
+$container-desktop: ((940px + 94px + $grid-gutter-width));
+$container-large-desktop: ((1140px + 114px + $grid-gutter-width));
+
+@font-face {
+  font-family: 'Glyphicons Halflings' !important;
+  src: url('/assets/glyphicons-halflings-regular.eot') !important;
+  src: url('/assets/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/assets/glyphicons-halflings-regular.woff') format('woff'), url('/assets/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg') !important;
+}

@@ -380,6 +380,7 @@ DEPENDENCIES
   slim-rails
   spring
   spring-commands-rspec
+  sprockets (= 2.11.0)
   taps
   therubyracer
   turbolinks

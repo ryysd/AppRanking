@@ -1,0 +1,63 @@
+// ranking
+#new-apps-container {
+  min-height: 350px;
+}
+
+#ranking-container {
+  background-color: $gray-light;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  min-height: 800px;
+}
+
+.ranking-header {
+  height: 60px;
+  margin-bottom: 30px;
+}
+
+.app-table {
+  .app-info {
+    text-align: center;
+  }
+
+  .feed-name {
+    text-align: center;
+  }
+
+  .rank-index {
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+  }
+}
+
+.app-icon {
+  width: 100%;
+}
+
+.app-banner {
+  width: 100%;
+}
+
+.ranking-content {
+  min-height: 700px;
+  background-color: #fff;
+  padding: 20px 20px 20px 20px;
+}
+
+.ranking-title {
+  font-weight: bold;
+  color: $gray-dark;
+  font-size: 20px;
+}
+
+#country-selector, #category-selector, #device-selector{
+  width: 100%;
+  float: right;
+  font-weight: bold;
+}
+
+.selector-title {
+  text: $gray-dark;
+}
