@@ -9,6 +9,9 @@ class AppItemsController < ApplicationController
   # GET /app_items/1
   # GET /app_items/1.json
   def show
+    # lang = params[:lang_id]
+    country = Country.find_by_code 'JP'
+    @description = @app_item.descriptions.find_by_country_id country.id
   end
 
   # GET /app_items/new

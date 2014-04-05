@@ -12,11 +12,11 @@ json.array!(@rankings) do |json, feeds_ranking|
       json.app_items ranking.app_items do |app_json, app_item|
 	app_json.extract! app_item, :id, :name, :local_id, :website_url, :icon, :banner_url
 
-	app_json.reservation do |reservation_json|
-	  unless app_item.reservation.nil?
-	    reservation_json.extract! app_item.reservation, :released_on
-	    reservation_json.bonus do |bonus_json|
-	      bonus_json.extract! app_item.reservation.bonus, :image_url, :description unless app_item.reservation.bonus.nil?
+	app_json.reservation_information do |reservation_information_json|
+	  unless app_item.reservation_information.nil?
+	    reservation_information_json.extract! app_item.reservation_information, :released_on
+	    reservation_information_json.bonus do |bonus_json|
+	      bonus_json.extract! app_item.reservation_information.bonus, :image_url, :description unless app_item.reservation_information.bonus.nil?
 	    end
 	  end
 	end

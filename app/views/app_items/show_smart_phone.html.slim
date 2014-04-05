@@ -1,0 +1,45 @@
+.app-container.app-header
+  .app-header-icon-container
+    img.app-icon src=@app_item.icon
+  .app-info
+    .app-title
+      = @app_item.name
+    .app-publisher
+      = @app_item.publisher.name
+    .app-release
+      = "リリース予定日: #{@app_item.released_on.strftime '%Y年%m月%d日'}"
+    - unless @app_item.reservation_information.nil?
+      .app-reserved
+        = "現在の予約数: #{@app_item.reservation_information.reserved_num} / #{@app_item.reservation_information.max_reserved_num}"
+- if !@app_item.reservation_information.nil? && !@app_item.reservation_information.bonus.nil?
+  .bonus-info
+      .bonus-rest-container
+        .bonus-rest-text
+          | 予約特典残り
+        .bonus-rest-num
+          = @app_item.reservation_information.max_reserved_num - @app_item.reservation_information.reserved_num
+        .bonus-rest-text
+          | 個！
+      a.btn.check-bonus-btn href=@app_item.reservation_information.bonus.image_url
+        | 予約特典を確認
+
+.wrap.app-ss-wrapper
+  #effects.frame.effects style=("overflow: hidden;") 
+    ul.clearfix.dragged style=("-webkit-transform: translateZ(0px) translateX(-84px); width: 5610px;") 
+      - for ss in @app_item.screen_shots
+          li
+            img.app-screen-shot src=ss.url
+  .scrollbar
+    .handle style=("-webkit-transform: translateZ(0px) translateX(94px); width: 232px;") 
+      .mousearea
+
+.reservation-info-container
+  .btn.reservation-btn
+    | 予約する
+
+- if !@app_item.video_url.nil?
+  .app-video-container
+    iframe allowfullscreen="" frameborder="0" src=@app_item.video_url 
+
+.app-description-container
+  == @description.text

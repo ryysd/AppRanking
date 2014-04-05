@@ -1,4 +1,7 @@
 class @URLHelper
+  @rankingUrlRegExp = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z_]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings(\?.*)?/
+  @appUrlRegExp = /.*\/app_items\/(\d+)(\?.*)?/
+
   @rankingUrl: (args) ->
     urlParam = URLHelper.parseRankingUrl window.location
 
@@ -11,5 +14,11 @@ class @URLHelper
     "/countries/#{country}/markets/#{market}/feeds/#{feed}/categories/#{category}/devices/#{device}/rankings"
 
   @parseRankingUrl: (url) ->
-    match = /.*\/countries\/([a-z]+)\/markets\/([a-z]+)\/feeds\/([a-z_]+)\/categories\/(\w+)\/devices\/(\w+)\/rankings/.exec url
+    match = URLHelper.rankingUrlRegExp.exec url
     {country: match[1], market: match[2], feed: match[3], category: match[4], device: match[5]}
+
+  @appItemUrl: (id) ->
+    "/app_items/#{id}"
+
+  @isRankingUrl: (url) -> (URLHelper.rankingUrlRegExp.exec url)?
+  @isAppUrl: (url) -> (URLHelper.appUrlRegExp.exec url)?

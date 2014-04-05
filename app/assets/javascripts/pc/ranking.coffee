@@ -129,8 +129,9 @@ class @Ranking
 
 $(document).on 'ready page:load', ->
   ($ document).scrollTop window.position if window.position?
-  ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
-  if ranking.isRankingPage()
+
+  if (URLHelper.isRankingUrl location.href)
+    ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
     ranking.generateHeader "#{gon.market.name} Apps Ranking"
     ranking.generateRanking()
 

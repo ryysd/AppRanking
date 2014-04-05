@@ -4,7 +4,7 @@ require 'market_bot'
 class AppItem < ActiveRecord::Base
   include MergeAttribute
 
-  has_one :reservation, autosave: true
+  has_one :reservation_information, autosave: true
   has_many :app_items_devices
   has_many :screen_shots     
   has_many :rates, autosave: true
@@ -138,7 +138,8 @@ class AppItem < ActiveRecord::Base
       local_id:          self.local_id,
       website_url:       detail.website_url,
       iap:               false,
-      banner_url:        self.options[:banner_url]
+      banner_url:        self.options[:banner_url],
+      video_url:         detail.video_url
     }
 
     unassignable_attributes =
@@ -150,7 +151,7 @@ class AppItem < ActiveRecord::Base
       ratings:           {},
       category_name:     'Overall',
       device_name:       self.device.name,
-      reservation:       {
+      reservation_information:       {
 	released_on:      DateTime.now, 
 	reserved_num:     detail.current_reserved, 
 	max_reserved_num: detail.max_reserved,
@@ -174,7 +175,7 @@ class AppItem < ActiveRecord::Base
     add_or_update_screenshot_urls unassignable_attributes[:screen_shots_urls]
     new_or_update_publisher unassignable_attributes[:publisher_name]
 
-    add_or_update_reservation unassignable_attributes[:reservation] if unassignable_attributes.has_key? :reservation
+    add_or_update_reservation_information unassignable_attributes[:reservation_information] if unassignable_attributes.has_key? :reservation_information
   end
 
   def assign_category(category_name)
@@ -218,21 +219,25 @@ class AppItem < ActiveRecord::Base
     }
   end
 
-  def add_or_update_reservation(reservation)
-    reserved = reservation[:reserved_num].gsub(/\D/, "")
-    max_reserved = reservation[:max_reserved_num].gsub(/\D/, "")
+  def add_or_update_reservation_information(reservation_information)
+    reserved = reservation_information[:reserved_num].gsub(/\D/, "")
+    max_reserved = reservation_information[:max_reserved_num].gsub(/\D/, "")
 
     params = {
       reserved_num: reserved, 
       max_reserved_num: max_reserved, 
-      released_on: reservation[:released_on], 
-      bonus_id: reservation[:bonus][:id],
+      released_on: reservation_information[:released_on], 
+      bonus_id: reservation_information[:bonus][:id],
       os_type: self.device.os_type.name
     }
 
-    new_reservation = Reservation.new params
-    old_reservation = Reservation.find_by_app_item_id self.id
-    old_reservation.nil? ? self.reservation = new_reservation : (update_valid_attributes old_reservation, new_reservation)
+    new_reservation_information = ReservationInformation.new params
+    if self.reservation_information.nil?
+      self.reservation_information = new_reservation_information
+    else 
+      update_valid_attributes self.reservation_information, new_reservation_information
+      self.reservation_information.update_attributes bonus_id: new_reservation_information.bonus_id, os_type: new_reservation_information.os_type
+    end
   end
 
   def new_or_update_publisher(publisher_name)

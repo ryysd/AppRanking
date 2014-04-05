@@ -6,7 +6,7 @@ class @Ranking
     @$activeContent.addClass 'active'
     ($ "\#tab-#{marketCode}").addClass 'active'
 
-  isRankingPage: () -> @$activeContent?
+  isRankingPage: () -> @$activeContent.length != 0
   isUpdatable: () -> true
 
   loadRankingData: (callback, options) ->
@@ -98,7 +98,7 @@ class @Ranking
     $image.lazyload(effect: 'fadeIn')
 
   generateAppIcon: (app_item) ->
-    $a = $ '<a/>', {href: app_item.website_url}
+    $a = $ '<a/>', {href: (URLHelper.appItemUrl app_item.id)}
     $a.append (@generateAppIconImage app_item)
 
   generateAppTitle: (app_item) -> $title = ($ '<div/>', {class: 'app-title'}).text app_item.name
@@ -126,7 +126,7 @@ class @Ranking
 
   generateBonusInfo: (app_item) ->
     $div = ($ '<div/>', {class: 'app-bonus'})
-    bonus = app_item.reservation.bonus
+    bonus = app_item.reservation_information.bonus
 
     if (Object.keys bonus).length != 0
       $div.addClass 'btn btn-bonus'
@@ -204,10 +204,9 @@ class @Ranking
     @loadRankingData callback
 
 $(document).on 'ready page:load', ->
-  ($ document).scrollTop window.position if window.position?
-  ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
-  if ranking.isRankingPage()
-    # ranking.generateHeader "#{gon.market.name} Apps Ranking"
+  if (URLHelper.isRankingUrl location.href)
+    ($ document).scrollTop window.position if window.position?
+    ranking = new Ranking '.ranking-content', gon.market.code.toLowerCase()
     ranking.generateRanking()
 
 $(document).on 'page:before-change', ->

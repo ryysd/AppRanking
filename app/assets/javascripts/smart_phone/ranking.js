@@ -9,7 +9,7 @@
     }
 
     Ranking.prototype.isRankingPage = function() {
-      return this.$activeContent != null;
+      return this.$activeContent.length !== 0;
     };
 
     Ranking.prototype.isUpdatable = function() {
@@ -90,7 +90,7 @@
     Ranking.prototype.generateAppIcon = function(app_item) {
       var $a;
       $a = $('<a/>', {
-        href: app_item.website_url
+        href: URLHelper.appItemUrl(app_item.id)
       });
       return $a.append(this.generateAppIconImage(app_item));
     };
@@ -145,7 +145,7 @@
       $div = $('<div/>', {
         "class": 'app-bonus'
       });
-      bonus = app_item.reservation.bonus;
+      bonus = app_item.reservation_information.bonus;
       if ((Object.keys(bonus)).length !== 0) {
         $div.addClass('btn btn-bonus');
         return $div.text('予約特典あり');
@@ -269,11 +269,11 @@
 
   $(document).on('ready page:load', function() {
     var ranking;
-    if (window.position != null) {
-      ($(document)).scrollTop(window.position);
-    }
-    ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
-    if (ranking.isRankingPage()) {
+    if (URLHelper.isRankingUrl(location.href)) {
+      if (window.position != null) {
+        ($(document)).scrollTop(window.position);
+      }
+      ranking = new Ranking('.ranking-content', gon.market.code.toLowerCase());
       return ranking.generateRanking();
     }
   });
