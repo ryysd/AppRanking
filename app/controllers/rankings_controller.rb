@@ -13,8 +13,9 @@ class RankingsController < ApplicationController
       # debug
       if params[:format] == 'debug'
 	debug_crowling
-      else
-	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id]
+	redirect_to (country_market_feed_category_device_rankings_url params[:country_id], params[:market_id], params[:feed_id], params[:category_id], params[:device_id])
+      elsif params[:format] == 'json'
+	@rankings = Ranking.get_latest_filtered_rankings country_code: params[:country_id], market_code: params[:market_id], category_code: params[:category_id], feed_code: params[:feed_id]
       end
     else
       @market = Market.find_by_code params[:market_id]
@@ -24,6 +25,8 @@ class RankingsController < ApplicationController
       @categories = @market.categories
       @devices = Device.by_market_id @market.id
       @device = Device.find_by_code params[:device_id]
+      @feeds = Feed.by_market_id @market.id
+      @feed = Feed.find_by_code params[:feed_id]
 
       gon.market = @market.to_json
       gon.country = @country.to_json
@@ -32,6 +35,8 @@ class RankingsController < ApplicationController
       gon.categories = @categories.map{|category| category.to_json}
       gon.devices = @devices.map{|device| device.to_json}
       gon.device = @device.to_json
+      gon.feeds = @feeds.map{|feed| feed.to_json}
+      gon.feed = @feed.to_json
     end
   end
 

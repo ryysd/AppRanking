@@ -55,5 +55,7 @@ module AppRanking
 
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
     config.assets.paths << "#{Rails}/app/assets/fonts"
+
+    config.assets.precompile += %w(application_smart_phone.css application_smart_phone.js)
   end
 end

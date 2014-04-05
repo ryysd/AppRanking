@@ -1,0 +1,15 @@
+// navbar
+.navbar-inverse {
+  background-color: $brand-green !important;
+  .navbar-nav {
+    li {
+      background-color: white !Important;
+      font-weight: 500;
+    }
+  }
+
+  .navbar-brand {
+    color: white !important;
+    font-weight: bold;
+  }
+}

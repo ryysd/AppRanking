@@ -1,0 +1,41 @@
+@import 'dropdown-selector';
+@import 'navbar';
+
+body {
+  padding-top: 45px;
+}
+
+// carousel
+.carousel {
+  .carousel-control {
+    background-image: none !important;
+  }
+  
+  .item {
+    color: white;
+    min-height: 200px;
+    text-align: center;
+  }
+}
+
+// tabs
+.nav-tabs {
+  border-bottom: none !important;
+  background-color: $gray-lighter !important;
+
+  li:not(.active), li:not(.active) > a {
+    background-color: $gray-lighter !important; 
+    color: lighten($gray-dark, 50%) !important; 
+    
+    &:hover {
+      color: $gray-dark !important; 
+    }
+  }
+  .active, .active > a {
+    background-color: white !important; 
+  }
+}
+
+.jumbotron {
+  margin-bottom: 0px !important;
+}

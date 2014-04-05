@@ -39,10 +39,12 @@ class Ranking < ActiveRecord::Base
     raise "There is no such device_name in market. device_name: #{device_name}, market_code: #{market_code}" if self.device.nil?
   end
 
-  def self.get_latest_filtered_rankings(country_code:, market_code:, category_code:)
+  def self.get_latest_filtered_rankings(country_code:, market_code:, category_code:, feed_code:)
     market = Market.find_by_code market_code
     rankings = ((Ranking.by_country_code country_code).by_market_code market_code).order :updated_at
     feed_rankings = Ranking.get_latest_ranking_of_each_feed rankings, (Feed.by_market_code market_code)
+
+    feed_rankings.select!{|feed, ranking| feed.code == feed_code} if feed_code != 'all'
 
     latest_rankings = feed_rankings.map{|feed, ranking|
       unless ranking.nil?

@@ -6,8 +6,8 @@ html lang="en"
     meta content="width=device-width, initial-scale=1" name="viewport" 
     title
       | AppRanking
-    = stylesheet_link_tag    "pc/application", media: "all"
-    = javascript_include_tag "pc/application"
+    = stylesheet_link_tag    "smart_phone/application", media: "all"
+    = javascript_include_tag "smart_phone/application"
     = csrf_meta_tags
 
     script src='//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'
@@ -18,5 +18,5 @@ html lang="en"
       = yield
 
     #footer
-      .container
+      .container-fluid
         | Copyright &copy; 2014 CompanyName All Rights Reserved.

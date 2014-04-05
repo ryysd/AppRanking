@@ -1,0 +1,17 @@
+// navbar
+.navbar-inverse {
+  opacity: 0.85;
+  -moz-opacity:0.85;
+  -khtml-opacity: 0.85;
+  filter:alpha(opacity=85);
+
+  .navbar-nav {
+    li {
+      font-weight: 500;
+    }
+  }
+
+  .navbar-brand {
+    font-weight: bold;
+  }
+}
