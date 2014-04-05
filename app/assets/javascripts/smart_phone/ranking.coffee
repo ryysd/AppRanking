@@ -16,44 +16,60 @@ class @Ranking
     else
       # load data from local strage
 
+  generateSelector: (options) ->
+   $wrapper = $ '<label for="category" class="select-wrap entypo-down-open-mini ranking-selector">'
+   $selector = ($ '<select/>').addClass 'ranking-selector'
+   for option in options
+     $option = ($ '<option/>').text option
+     $selector.append $option
+
+   $caret = ($ 'b').addClass 'caret'
+
+   $wrapper.append $selector
+   $wrapper.append $caret
   generateHeader: (title) ->
-    $header = $ '<div/>', {class: 'ranking-header'}
-    $title = ($ '<div/>', {class: 'ranking-title col-md-5'}).text title
+    #$header = $ '<div/>', {class: 'ranking-header'}
+    #devices = ({name: device.name, opts: {id: device.code}} for device in gon.devices)
+    #countries = ({name: country.name, opts: {id: country.code, href: URLHelper.rankingUrl {country: country.code}}} for country in gon.countries)
+    #categories = ({name: category.name, opts: {id: category.code, href: URLHelper.rankingUrl {category: category.code}}} for category in gon.categories)
 
-    $deviceSelectorContainer   = $ '<div/>', {class: 'col-md-2 selector-container'}
-    $countrySelectorContainer  = $ '<div/>', {class: 'col-md-2 selector-container'}
-    $categorySelectorContainer = $ '<div/>', {class: 'col-md-2 selector-container'}
+    #$header = $ '<div/>', {class: 'ranking-header'}
+    #$title = ($ '<div/>', {class: 'ranking-title col-md-5'}).text title
 
-    $deviceSelectorTitle   = ($ '<div/>', {class: 'selector-title'}).text 'Device (don\'t work)'
-    $countrySelectorTitle  = ($ '<div/>', {class: 'selector-title'}).text 'Country (Japan Only)'
-    $categorySelectorTitle = ($ '<div/>', {class: 'selector-title'}).text 'Category'
+    #$deviceSelectorContainer   = $ '<div/>', {class: 'col-md-2 selector-container'}
+    #$countrySelectorContainer  = $ '<div/>', {class: 'col-md-2 selector-container'}
+    #$categorySelectorContainer = $ '<div/>', {class: 'col-md-2 selector-container'}
 
-    $deviceSelector   = $ '<div/>', {class: '', id: 'device-selector'}
-    $countrySelector  = $ '<div/>', {class: '', id: 'country-selector'}
-    $categorySelector = $ '<div/>', {class: '', id: 'category-selector'}
+    #$deviceSelectorTitle   = ($ '<div/>', {class: 'selector-title'}).text 'Device (don\'t work)'
+    #$countrySelectorTitle  = ($ '<div/>', {class: 'selector-title'}).text 'Country (Japan Only)'
+    #$categorySelectorTitle = ($ '<div/>', {class: 'selector-title'}).text 'Category'
 
-    devices = ({name: device.name, opts: {id: device.code}} for device in gon.devices)
-    countries = ({name: country.name, opts: {id: country.code, href: URLHelper.rankingUrl {country: country.code}}} for country in gon.countries)
-    categories = ({name: category.name, opts: {id: category.code, href: URLHelper.rankingUrl {category: category.code}}} for category in gon.categories)
+    #$deviceSelector   = $ '<div/>', {class: '', id: 'device-selector'}
+    #$countrySelector  = $ '<div/>', {class: '', id: 'country-selector'}
+    #$categorySelector = $ '<div/>', {class: '', id: 'category-selector'}
+
+    #devices = ({name: device.name, opts: {id: device.code}} for device in gon.devices)
+    #countries = ({name: country.name, opts: {id: country.code, href: URLHelper.rankingUrl {country: country.code}}} for country in gon.countries)
+    #categories = ({name: category.name, opts: {id: category.code, href: URLHelper.rankingUrl {category: category.code}}} for category in gon.categories)
  
-    ($countrySelectorContainer.append $countrySelectorTitle).append $countrySelector
-    ($categorySelectorContainer.append $categorySelectorTitle).append $categorySelector
-    ($deviceSelectorContainer.append $deviceSelectorTitle).append $deviceSelector if devices.length > 1
+    #($countrySelectorContainer.append $countrySelectorTitle).append $countrySelector
+    #($categorySelectorContainer.append $categorySelectorTitle).append $categorySelector
+    #($deviceSelectorContainer.append $deviceSelectorTitle).append $deviceSelector if devices.length > 1
 
-    $header.append $title
-    $header.append $deviceSelectorContainer
-    $header.append $categorySelectorContainer
-    $header.append $countrySelectorContainer
+    #$header.append $title
+    #$header.append $deviceSelectorContainer
+    #$header.append $categorySelectorContainer
+    #$header.append $countrySelectorContainer
 
-    @$target.append $header
+    #@$target.append $header
    
-    DropdownSelector.insert '#device-selector', devices
-    DropdownSelector.insert '#country-selector', countries
-    DropdownSelector.insert '#category-selector', categories
+    #DropdownSelector.insert '#device-selector', devices
+    #DropdownSelector.insert '#country-selector', countries
+    #DropdownSelector.insert '#category-selector', categories
 
-    ($ "\##{gon.device.code}").click()
-    ($ "\##{gon.country.code}").click()
-    ($ "\##{gon.category.code}").click()
+    #($ "\##{gon.device.code}").click()
+    #($ "\##{gon.country.code}").click()
+    #($ "\##{gon.category.code}").click()
 
   generateAppIconImage: (app_item) ->
     dummy = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC'
@@ -135,6 +151,7 @@ class @Ranking
       $tbody.append $tbodyTr
 
   generateFeedName: (name, colSize) -> ($ '<th/>', {class: "col-md-#{colSize} feed-name"}).text name
+
   generateRankCol: () -> $ '<th/>', {class: 'col-md-1'}
 
   generateRankingTr: (data) ->

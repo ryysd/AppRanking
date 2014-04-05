@@ -24,112 +24,21 @@
       }
     };
 
-    Ranking.prototype.generateHeader = function(title) {
-      var $categorySelector, $categorySelectorContainer, $categorySelectorTitle, $countrySelector, $countrySelectorContainer, $countrySelectorTitle, $deviceSelector, $deviceSelectorContainer, $deviceSelectorTitle, $header, $title, categories, category, countries, country, device, devices;
-      $header = $('<div/>', {
-        "class": 'ranking-header'
-      });
-      $title = ($('<div/>', {
-        "class": 'ranking-title col-md-5'
-      })).text(title);
-      $deviceSelectorContainer = $('<div/>', {
-        "class": 'col-md-2 selector-container'
-      });
-      $countrySelectorContainer = $('<div/>', {
-        "class": 'col-md-2 selector-container'
-      });
-      $categorySelectorContainer = $('<div/>', {
-        "class": 'col-md-2 selector-container'
-      });
-      $deviceSelectorTitle = ($('<div/>', {
-        "class": 'selector-title'
-      })).text('Device (don\'t work)');
-      $countrySelectorTitle = ($('<div/>', {
-        "class": 'selector-title'
-      })).text('Country (Japan Only)');
-      $categorySelectorTitle = ($('<div/>', {
-        "class": 'selector-title'
-      })).text('Category');
-      $deviceSelector = $('<div/>', {
-        "class": '',
-        id: 'device-selector'
-      });
-      $countrySelector = $('<div/>', {
-        "class": '',
-        id: 'country-selector'
-      });
-      $categorySelector = $('<div/>', {
-        "class": '',
-        id: 'category-selector'
-      });
-      devices = (function() {
-        var _i, _len, _ref, _results;
-        _ref = gon.devices;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          device = _ref[_i];
-          _results.push({
-            name: device.name,
-            opts: {
-              id: device.code
-            }
-          });
-        }
-        return _results;
-      })();
-      countries = (function() {
-        var _i, _len, _ref, _results;
-        _ref = gon.countries;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          country = _ref[_i];
-          _results.push({
-            name: country.name,
-            opts: {
-              id: country.code,
-              href: URLHelper.rankingUrl({
-                country: country.code
-              })
-            }
-          });
-        }
-        return _results;
-      })();
-      categories = (function() {
-        var _i, _len, _ref, _results;
-        _ref = gon.categories;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          category = _ref[_i];
-          _results.push({
-            name: category.name,
-            opts: {
-              id: category.code,
-              href: URLHelper.rankingUrl({
-                category: category.code
-              })
-            }
-          });
-        }
-        return _results;
-      })();
-      ($countrySelectorContainer.append($countrySelectorTitle)).append($countrySelector);
-      ($categorySelectorContainer.append($categorySelectorTitle)).append($categorySelector);
-      if (devices.length > 1) {
-        ($deviceSelectorContainer.append($deviceSelectorTitle)).append($deviceSelector);
+    Ranking.prototype.generateSelector = function(options) {
+      var $caret, $option, $selector, $wrapper, option, _i, _len;
+      $wrapper = $('<label for="category" class="select-wrap entypo-down-open-mini ranking-selector">');
+      $selector = ($('<select/>')).addClass('ranking-selector');
+      for (_i = 0, _len = options.length; _i < _len; _i++) {
+        option = options[_i];
+        $option = ($('<option/>')).text(option);
+        $selector.append($option);
       }
-      $header.append($title);
-      $header.append($deviceSelectorContainer);
-      $header.append($categorySelectorContainer);
-      $header.append($countrySelectorContainer);
-      this.$target.append($header);
-      DropdownSelector.insert('#device-selector', devices);
-      DropdownSelector.insert('#country-selector', countries);
-      DropdownSelector.insert('#category-selector', categories);
-      ($("\#" + gon.device.code)).click();
-      ($("\#" + gon.country.code)).click();
-      return ($("\#" + gon.category.code)).click();
+      $caret = ($('b')).addClass('caret');
+      $wrapper.append($selector);
+      return $wrapper.append($caret);
     };
+
+    Ranking.prototype.generateHeader = function(title) {};
 
     Ranking.prototype.generateAppIconImage = function(app_item) {
       var $image, dummy;
