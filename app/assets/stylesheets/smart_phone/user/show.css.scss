@@ -1,0 +1,25 @@
+.reservation-history {
+  .app-info-column {
+    width: 90%;
+    .app-header {
+      background-color: transparent !important;
+    }
+
+    .app-header-icon-container {
+      width: 35% !important;
+    }
+    .app-info {
+      width: 60%;
+    }
+  }
+
+  .bonus-column {
+    width: 10%;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    .check-reservation-detail-btn {
+      font-size: 12px;
+      @include btn-pink;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+.app-container.app-header
+  .app-header-icon-container
+    img.app-icon src=@app_item.icon
+  .app-info
+    .app-title
+      = @app_item.name
+    .app-publisher
+      = @app_item.publisher.name
+    -unless @app_item.released_on.nil?
+      .app-release
+        = "リリース予定日: #{@app_item.released_on.strftime '%Y年%m月%d日'}"
+    - unless @app_item.reservation_information.nil?
+      .app-reserved
+        = "現在の予約数: #{@app_item.reservation_information.reserved_num} / #{@app_item.reservation_information.max_reserved_num}"

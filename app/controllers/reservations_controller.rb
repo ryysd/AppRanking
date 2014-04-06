@@ -1,5 +1,6 @@
 class ReservationsController < ApplicationController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
+  before_action :check_user_id, only: [:show]
 
   # GET /reservations
   # GET /reservations.json
@@ -10,6 +11,7 @@ class ReservationsController < ApplicationController
   # GET /reservations/1
   # GET /reservations/1.json
   def show
+    @app_item = AppItem.find @reservation.app_item_id
   end
 
   # GET /reservations/new
@@ -72,5 +74,9 @@ class ReservationsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def reservation_params
       params.require(:reservation).permit(:user_id, :app_item_id)
+    end
+
+    def check_user_id
+      redirect_to root_path if @reservation.user_id != session[:user_id]
     end
 end

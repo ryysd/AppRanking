@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :check_user_id, only: [:show]
 
   # GET /users
   # GET /users.json
@@ -70,5 +71,9 @@ class UsersController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
       params[:user]
+    end
+
+    def check_user_id
+      redirect_to root_path if @user.id != session[:user_id]
     end
 end

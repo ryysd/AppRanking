@@ -1,1 +1,11 @@
-| mobile
+table.reservation-history.table.table-striped.table-hover
+  - for reservation in @user.reservations do
+    - @app_item = reservation.app_item
+    tr
+      td.app-info-column = render 'layouts/app_header'
+      td.bonus-column
+        - unless @app_item.reservation_information.bonus.nil?
+          a.btn.btn-default.check-reservation-detail-btn href="/reservations/#{reservation.id}"
+            | 予約特典<br/>
+            | コードを<br/>
+            | 確認<br/>
