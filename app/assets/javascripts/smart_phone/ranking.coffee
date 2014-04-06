@@ -210,4 +210,6 @@ $(document).on 'ready page:load', ->
     ranking.generateRanking()
 
 $(document).on 'page:before-change', ->
-  window.position = ($ document).scrollTop() 
+  window.position = 0
+  if (URLHelper.isRankingUrl location.href)
+    window.position = ($ document).scrollTop() 

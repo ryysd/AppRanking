@@ -279,7 +279,10 @@
   });
 
   $(document).on('page:before-change', function() {
-    return window.position = ($(document)).scrollTop();
+    window.position = 0;
+    if (URLHelper.isRankingUrl(location.href)) {
+      return window.position = ($(document)).scrollTop();
+    }
   });
 
 }).call(this);
