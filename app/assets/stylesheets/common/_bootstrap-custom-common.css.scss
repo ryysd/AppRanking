@@ -1,4 +1,10 @@
-.divider {
-  background-color: $brand-green !important;
-  height: 1px;
+.navbar {
+  #sign-in {
+    cursor:pointer;cursor:hand
+  }
+
+  .divider {
+    background-color: $brand-green !important;
+    height: 1px;
+  }
 }
