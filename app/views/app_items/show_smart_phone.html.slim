@@ -45,3 +45,12 @@
 
 .app-description-container
   == @description.text
+
+script id='tmpl-reservation-form' type='text/x-jquery-tmpl'
+  .reservation-form-wrapper
+    = form_tag '/reservations', class: 'reservation-form' do
+      = hidden_field_tag 'reservation[app_item_id]', @app_item.id
+      = submit_tag "予約する", class: 'btn btn-default btn-reservation'
+    p.notice
+      | ※予約の取り消しはできませんので、
+      | ご注意下さい。

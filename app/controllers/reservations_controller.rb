@@ -25,20 +25,17 @@ class ReservationsController < ApplicationController
   # POST /reservations.json
   def create
     unless session[:user_id].blank?
-      params[:user_id] = session[:user_id]
+      params[:reservation][:user_id] = session[:user_id]
       @reservation = Reservation.new(reservation_params)
 
       respond_to do |format|
-        if @reservation.save
-          format.html { redirect_to @reservation, notice: 'Reservation was successfully created.' }
-          format.json { render action: 'show', status: :created, location: @reservation }
-        else
-          format.html { render action: 'new' }
-          format.json { render json: @reservation.errors, status: :unprocessable_entity }
-        end
+	if @reservation.save
+	  format.html { redirect_to @reservation }
+	else
+	  format.html { render action: 'new' }
+	  format.json { render json: @reservation.errors, status: :unprocessable_entity }
+	end
       end
-    else
-      render json: 'session is timeout.', status: :request_timeout
     end
   end
 

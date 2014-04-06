@@ -40,18 +40,10 @@
     function AppItemShow() {}
 
     AppItemShow.showConfirmReservationDialog = function(success_callback) {
-      var source, title;
+      var title;
       title = ($('.app-title')).text();
-      source = "";
-      source += "<div class='reservation-form-wrapper'>";
-      source += "  <form action='/reservations' class='reservation-form'>";
-      source += "    <input type='hidden' name='app_item_id' value='" + gon.app_item_id + "'>";
-      source += "    <input type='submit' value='予約する' class='btn btn-default btn-reservation'>";
-      source += "  </form>";
-      source += "  <p class='notice'>※予約の取り消しはできませんので、</br>ご注意下さい。<p>";
-      source += "</div>";
       return bootbox.dialog({
-        message: source,
+        message: ($('#tmpl-reservation-form')).html(),
         title: "<b>" + title + "</b> を予約しますか？"
       });
     };
