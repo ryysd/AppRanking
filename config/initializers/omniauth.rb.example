@@ -11,8 +11,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   #  display: 'popup'
 
   provider :google_oauth2,
-    'client id',
-    'secret key',
+    'client_id',
+    'secret_key',
     {
       name: "google",
       scope: "userinfo.email,userinfo.profile",
