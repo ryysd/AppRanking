@@ -9,7 +9,7 @@
       source += "<div class='signin-btn-container'>";
       source += "  <a class='zocial googleplus' href='/auth/google'>Sign in with Google</a>";
       source += "  <a class='zocial facebook' href='/auth/facebook'>Sign in with Facebook</a>";
-      source += "  <a class='zocial twitter' href='/auth/twitter'>Sign in with Twitter</a>";
+      source += "  <a class='zocial twitter btn disabled' href='/auth/twitter'>Sign in with Twitter (disabled)</a>";
       source += "<div/>";
       return bootbox.dialog({
         message: source,

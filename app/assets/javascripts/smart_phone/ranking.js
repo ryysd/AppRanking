@@ -18,7 +18,7 @@
 
     Ranking.prototype.loadRankingData = function(callback, options) {
       if (this.isUpdatable()) {
-        return $.get("" + window.location.href + ".json", callback);
+        return $.get("" + (URLHelper.rankingUrl({})) + ".json", callback);
       } else {
 
       }

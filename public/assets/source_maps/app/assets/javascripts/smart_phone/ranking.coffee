@@ -12,7 +12,7 @@ class @Ranking
   loadRankingData: (callback, options) ->
     if @isUpdatable()
       # fetch data from server
-      $.get "#{window.location.href}.json", callback
+      $.get "#{URLHelper.rankingUrl({})}.json", callback
     else
       # load data from local strage
 
