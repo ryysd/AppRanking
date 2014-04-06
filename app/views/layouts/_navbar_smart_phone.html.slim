@@ -9,27 +9,32 @@
       a.navbar-brand href="#"  Project name
     .navbar-collapse.collapse
       ul.nav.navbar-nav
-        li.active
-          a href=""  Home
         li
-          a href=""  About
-        li
-          a href=""  Contact
-        li.dropdown
-          a.dropdown-toggle data-toggle="dropdown" href="#" 
-            | Dropdown
-            b.caret
-          ul.dropdown-menu
-            li
-              a href=""  Action
-            li
-              a href=""  Another action
-            li
-              a href=""  Something else here
-            li.divider
-            li.dropdown-header Nav header
-            li
-              a href=""  Separated link
-            li
-              a href=""  One more separated link
+          = link_to 'Ranking', country_market_feed_category_device_rankings_url('jp', 'rsv', 'daily', 'overall', 'iphone')
+        li.divider
+        - if signed_in?
+          li
+            a#mypage My Page
+          li
+            = link_to 'Sign Out', '/signout'
+        - else
+          li
+            a#sign-in Sign In
+        /li.dropdown
+        /  a.dropdown-toggle data-toggle="dropdown" href="#" 
+        /    | Dropdown
+        /    b.caret
+        /  ul.dropdown-menu
+        /    li
+        /      a href=""  Action
+        /    li
+        /      a href=""  Another action
+        /    li
+        /      a href=""  Something else here
+        /    li.divider
+        /    li.dropdown-header Nav header
+        /    li
+        /      a href=""  Separated link
+        /    li
+        /      a href=""  One more separated link
 

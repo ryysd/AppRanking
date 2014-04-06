@@ -3,22 +3,10 @@
   this.AppItemShow = (function() {
     function AppItemShow() {}
 
-    AppItemShow.onReservationBtnClicked = function() {
-      var source;
-      source = "";
-      source += "<div class='signin-btn-container'>";
-      source += "  <a class='zocial googleplus' href='/auth/google'>Sign in with Google</a>";
-      source += "  <a class='zocial facebook' href='/auth/facebook'>Sign in with Facebook</a>";
-      source += "  <a class='zocial twitter' href='/auth/twitter'>Sign in with Twitter</a>";
-      source += "<div/>";
-      return bootbox.dialog({
-        message: source,
-        title: 'この機能を利用するにはログインが必要です。'
-      });
-    };
-
     AppItemShow.registerCallback = function() {
-      return ($('.reservation-btn')).click(AppItemShow.onReservationBtnClicked);
+      return ($('.reservation-btn')).click(function() {
+        return AuthDialog.show('この機能を利用するにはログインが必要です。');
+      });
     };
 
     return AppItemShow;

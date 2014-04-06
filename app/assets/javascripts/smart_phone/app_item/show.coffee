@@ -1,18 +1,6 @@
 class @AppItemShow
-  @onReservationBtnClicked: () ->
-    source = ""
-    source += "<div class='signin-btn-container'>"
-    source += "  <a class='zocial googleplus' href='/auth/google'>Sign in with Google</a>"
-    source += "  <a class='zocial facebook' href='/auth/facebook'>Sign in with Facebook</a>"
-    source += "  <a class='zocial twitter' href='/auth/twitter'>Sign in with Twitter</a>"
-    source += "<div/>"
-
-    bootbox.dialog 
-      message: source
-      title: 'この機能を利用するにはログインが必要です。'
-
   @registerCallback: () ->
-    ($ '.reservation-btn').click AppItemShow.onReservationBtnClicked
+    ($ '.reservation-btn').click -> (AuthDialog.show 'この機能を利用するにはログインが必要です。')
 
 $(document).on 'ready page:load', ->
   if (URLHelper.isAppUrl location.href)
