@@ -1,6 +1,46 @@
+class @Reservation
+  @reserve: (app_item_id, options) ->
+   ( $.ajax "/reservations", 
+       type: 'post'
+       data: {reservation: {app_item_id: app_item_id}}
+       statusCode:
+         200: (response) -> Reservation.showSuccessDialog()
+         408: (response) -> AuthDialog.show 'この機能を利用するにはログインが必要です。'
+   )
+
+  @showSuccessDialog: () ->
+    source = ""
+    source += "<div class='reservation-result'>"
+    source += "  <div class='reservation-success-text'>予約が完了しました！</div>"
+    source += "  <a class='btn btn-default check-reservation-btn'>予約の詳細を確認する</div>"
+    source += "</div>"
+
+    bootbox.alert source
+
 class @AppItemShow
+  @showConfirmReservationDialog: (success_callback) ->
+    title = ($ '.app-title').text()
+
+    source = ""
+    source += "<div class='reservation-form-wrapper'>"
+    source += "  <form action='/reservations' class='reservation-form'>"
+    source += "    <input type='hidden' name='app_item_id' value='#{gon.app_item_id}'>"
+    source += "    <input type='submit' value='予約する' class='btn btn-default btn-reservation'>"
+    source += "  </form>"
+    source += "  <p class='notice'>※予約の取り消しはできませんので、</br>ご注意下さい。<p>"
+    source += "</div>"
+    bootbox.dialog
+      message: source
+      title: "<b>#{title}</b> を予約しますか？"
+
   @registerCallback: () ->
-    ($ '.reservation-btn').click -> (AuthDialog.show 'この機能を利用するにはログインが必要です。')
+    callback =  ->
+      if gon.user_id?
+        AppItemShow.showConfirmReservationDialog -> (Reservation.reserve gon.app_item_id)
+      else
+        AuthDialog.show 'この機能を利用するにはログインが必要です。'
+
+    ($ '.reservation-btn').click callback
 
 $(document).on 'ready page:load', ->
   if (URLHelper.isAppUrl location.href)

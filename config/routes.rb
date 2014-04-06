@@ -15,6 +15,7 @@ AppRanking::Application.routes.draw do
     end
   end
 
+  resources :reservations
   resources :app_items
   resources :users
 

@@ -1,5 +1,6 @@
 class AppItemsController < ApplicationController
   before_action :set_app_item, only: [:show, :edit, :update, :destroy]
+  before_action :set_app_item_id, only: [:show]
 
   # GET /app_items
   # GET /app_items.json
@@ -72,5 +73,9 @@ class AppItemsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def app_item_params
       params[:app_item]
+    end
+
+    def set_app_item_id
+      gon.app_item_id = params[:id]
     end
 end
