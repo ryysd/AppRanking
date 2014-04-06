@@ -129,6 +129,11 @@ gem 'yoyakutopten_scraper'
 
 gem 'taps'
 
+gem 'omniauth'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'omniauth-google-oauth2'
+
 group :development do
   # Converter erb => haml
   gem 'erb2haml'

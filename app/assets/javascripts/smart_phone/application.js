@@ -15,6 +15,8 @@
 //= require turbolinks
 //= require ../common/url-helper
 //= require ../common/sly
+//= require ../common/bootbox.min
+//= require ../common/auth-dialog
 //= require_tree .
 
 //= require jquery

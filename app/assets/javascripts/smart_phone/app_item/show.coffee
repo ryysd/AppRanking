@@ -1,5 +1,11 @@
+class @AppItemShow
+  @registerCallback: () ->
+    ($ '.reservation-btn').click -> (AuthDialog.show 'この機能を利用するにはログインが必要です。')
+
 $(document).on 'ready page:load', ->
   if (URLHelper.isAppUrl location.href)
+    AppItemShow.registerCallback()
+
     $frame = $("#effects")
     $wrap = $frame.parent()
     
@@ -22,4 +28,3 @@ $(document).on 'ready page:load', ->
       dragHandle: 1
       dynamicHandle: 1
       clickBar: 1
-

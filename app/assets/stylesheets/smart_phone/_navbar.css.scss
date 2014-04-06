@@ -1,9 +1,13 @@
 // navbar
 .navbar-inverse {
   background-color: $brand-green !important;
+  .navbar-collapse {
+    background-color: white;
+  }
+
   .navbar-nav {
-    li {
-      background-color: white !Important;
+    li:not(.divider) {
+      background-color: white !important;
       font-weight: 500;
     }
   }

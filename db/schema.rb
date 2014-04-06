@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140405150852) do
+ActiveRecord::Schema.define(version: 20140405195545) do
 
   create_table "app_items", force: true do |t|
     t.integer  "category_id",                                 null: false
@@ -195,6 +195,17 @@ ActiveRecord::Schema.define(version: 20140405150852) do
     t.integer "height"
     t.string  "url",         limit: 128, null: false
     t.integer "order"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "name"
+    t.string   "image_url"
+    t.string   "email"
+    t.string   "access_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
