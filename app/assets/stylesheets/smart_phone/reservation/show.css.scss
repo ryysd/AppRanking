@@ -1,0 +1,29 @@
+.app-reservation-detail-container {
+  text-align: center;
+  color: $gray-dark;
+
+  .bonus-code-detail {
+    font-size: 20px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    .bonus-code-text {
+      margin-right: 20px;
+    }
+
+    .bonus-code {
+      font-weight: bold;
+      color: $brand-pink;
+    }
+  }
+
+  .how-to-use {
+    .how-to-use-title {
+      font-weight: bold;
+    }
+    .how-to-use-text {
+      margin-bottom: 20px;
+    }
+  }
+}

@@ -4,7 +4,7 @@
 
   &:hover {
     background-color: darken($brand-pink, 3%);
-    color: white;
+    color: white !important;
   }
 }
 
@@ -81,8 +81,7 @@
 .app-description-container {
   padding: 10px;
   font-size: 10px;
-  background-color: $gray-dark;
-  color: white;
+  background-color: $gray-light;
   overflow: hidden;
   p {
     word-wrap: break-word;
@@ -123,14 +122,14 @@
 }
 
 .reservation-info-container {
-  margin-bottom: 3px;
+  margin-bottom: 16px;
+  text-align: center;
   .reservation-btn {
     @include btn-pink;
-    width: 100%;
-    height: 50px;
-    line-height: 1.9;
+    width: 80%;
+    padding: 20px;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 25px;
   }
 }
 
@@ -152,3 +151,16 @@
     }
   }
 }
+
+.reservation-form-wrapper {
+  text-align: center;
+  color: $brand-pink;
+  font-size: 12px;
+  .btn-reservation {
+    padding: 20px;
+    font-size: 25px;
+    @include btn-pink;
+    width: 80%;
+  }
+}
+

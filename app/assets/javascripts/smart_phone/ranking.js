@@ -24,20 +24,6 @@
       }
     };
 
-    Ranking.prototype.generateSelector = function(options) {
-      var $caret, $option, $selector, $wrapper, option, _i, _len;
-      $wrapper = $('<label for="category" class="select-wrap entypo-down-open-mini ranking-selector">');
-      $selector = ($('<select/>')).addClass('ranking-selector');
-      for (_i = 0, _len = options.length; _i < _len; _i++) {
-        option = options[_i];
-        $option = ($('<option/>')).text(option);
-        $selector.append($option);
-      }
-      $caret = ($('b')).addClass('caret');
-      $wrapper.append($selector);
-      return $wrapper.append($caret);
-    };
-
     Ranking.prototype.generateFeedGroup = function(feeds) {
       var $button, $group, $groupWrapper, feed, url, width, _i, _len;
       $groupWrapper = $('<div/>', {
@@ -67,8 +53,6 @@
     Ranking.prototype.activateFeed = function(feed) {
       return ($("#feed-" + feed.code)).addClass('selected');
     };
-
-    Ranking.prototype.generateHeader = function(title) {};
 
     Ranking.prototype.generateAppIconImage = function(app_item) {
       var $image, dummy;
@@ -103,11 +87,9 @@
     };
 
     Ranking.prototype.generateAppRank = function(rank) {
-      var $div;
-      $div = $('<div/>', {
+      return ($('<div/>', {
         "class": 'app-rank'
-      });
-      return $div.text(rank);
+      })).text(rank);
     };
 
     Ranking.prototype.generateAppInfoHeader = function(app_item, rank) {
@@ -210,10 +192,11 @@
       return _results;
     };
 
-    Ranking.prototype.generateFeedName = function(name, colSize) {
-      return (($('<th/>', {
-        "class": "col-md-" + colSize + " feed-name"
-      })).css('display', 'none')).text(name);
+    Ranking.prototype.generateFeedName = function(name, width) {
+      return (($('<th/>')).css({
+        display: 'none',
+        width: width
+      })).text(name);
     };
 
     Ranking.prototype.generateRankCol = function() {
@@ -223,14 +206,16 @@
     };
 
     Ranking.prototype.generateRankingTr = function(data) {
-      var $th, $theadTr, bootColWidth, colSize, record, _i, _len, _results;
-      bootColWidth = 12;
-      colSize = parseInt((bootColWidth - 1) / data.length);
+      var $th, $theadTr, record, width, _i, _len, _results;
+      width = 100 / data.length;
       $theadTr = $('<tr/>');
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         record = data[_i];
-        $th = this.generateFeedName(record.feed.name, colSize);
+        $th = this.generateFeedName(record.feed.name, width);
+        $th.css({
+          width: width
+        });
         _results.push($theadTr.append($th));
       }
       return _results;
@@ -279,7 +264,10 @@
   });
 
   $(document).on('page:before-change', function() {
-    return window.position = ($(document)).scrollTop();
+    window.position = 0;
+    if (URLHelper.isRankingUrl(location.href)) {
+      return window.position = ($(document)).scrollTop();
+    }
   });
 
 }).call(this);

@@ -3,10 +3,27 @@
   this.AppItemShow = (function() {
     function AppItemShow() {}
 
-    AppItemShow.registerCallback = function() {
-      return ($('.reservation-btn')).click(function() {
-        return AuthDialog.show('この機能を利用するにはログインが必要です。');
+    AppItemShow.showConfirmReservationDialog = function(success_callback) {
+      var title;
+      title = ($('.app-title')).text();
+      return bootbox.dialog({
+        message: ($('#tmpl-reservation-form')).html(),
+        title: "<b>" + title + "</b> を予約しますか？"
       });
+    };
+
+    AppItemShow.registerCallback = function() {
+      var callback;
+      callback = function() {
+        if (gon.user_id != null) {
+          return AppItemShow.showConfirmReservationDialog(function() {
+            return Reservation.reserve(gon.app_item_id);
+          });
+        } else {
+          return AuthDialog.show('この機能を利用するにはログインが必要です。');
+        }
+      };
+      return ($('.reservation-btn')).click(callback);
     };
 
     return AppItemShow;

@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :signed_in?
 
+  before_filter :set_user_id
   before_filter do |controller|
     session[:last_url] = request.url unless request.url =~ %r!/auth/|.json$!
   end
@@ -19,4 +20,8 @@ class ApplicationController < ActionController::Base
   def signed_in?
     !session[:user_id].blank?
   end 
+
+  def set_user_id
+    gon.user_id = current_user.id if signed_in?
+  end
 end

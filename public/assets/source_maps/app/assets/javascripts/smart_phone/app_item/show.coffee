@@ -1,6 +1,19 @@
 class @AppItemShow
+  @showConfirmReservationDialog: (success_callback) ->
+    title = ($ '.app-title').text()
+
+    bootbox.dialog
+      message: ($ '#tmpl-reservation-form').html()
+      title: "<b>#{title}</b> を予約しますか？"
+
   @registerCallback: () ->
-    ($ '.reservation-btn').click -> (AuthDialog.show 'この機能を利用するにはログインが必要です。')
+    callback =  ->
+      if gon.user_id?
+        AppItemShow.showConfirmReservationDialog -> (Reservation.reserve gon.app_item_id)
+      else
+        AuthDialog.show 'この機能を利用するにはログインが必要です。'
+
+    ($ '.reservation-btn').click callback
 
 $(document).on 'ready page:load', ->
   if (URLHelper.isAppUrl location.href)

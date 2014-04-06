@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require ../common/jquery.tmpl.min
 //= require ../common/url-helper
 //= require ../common/sly
 //= require ../common/bootbox.min

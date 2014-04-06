@@ -16,18 +16,6 @@ class @Ranking
     else
       # load data from local strage
 
-  generateSelector: (options) ->
-   $wrapper = $ '<label for="category" class="select-wrap entypo-down-open-mini ranking-selector">'
-   $selector = ($ '<select/>').addClass 'ranking-selector'
-   for option in options
-     $option = ($ '<option/>').text option
-     $selector.append $option
-
-   $caret = ($ 'b').addClass 'caret'
-
-   $wrapper.append $selector
-   $wrapper.append $caret
-
   generateFeedGroup: (feeds) ->
     $groupWrapper = $ '<div/>', {class: 'btn-group btn-group-justified feed-group'}
     width = 100 / feeds.length
@@ -40,52 +28,7 @@ class @Ranking
 
     $groupWrapper
 
-  activateFeed: (feed) ->
-    ($ "#feed-#{feed.code}").addClass 'selected'
-
-  generateHeader: (title) ->
-    #$header = $ '<div/>', {class: 'ranking-header'}
-    #devices = ({name: device.name, opts: {id: device.code}} for device in gon.devices)
-    #countries = ({name: country.name, opts: {id: country.code, href: URLHelper.rankingUrl {country: country.code}}} for country in gon.countries)
-    #categories = ({name: category.name, opts: {id: category.code, href: URLHelper.rankingUrl {category: category.code}}} for category in gon.categories)
-
-    #$header = $ '<div/>', {class: 'ranking-header'}
-    #$title = ($ '<div/>', {class: 'ranking-title col-md-5'}).text title
-
-    #$deviceSelectorContainer   = $ '<div/>', {class: 'col-md-2 selector-container'}
-    #$countrySelectorContainer  = $ '<div/>', {class: 'col-md-2 selector-container'}
-    #$categorySelectorContainer = $ '<div/>', {class: 'col-md-2 selector-container'}
-
-    #$deviceSelectorTitle   = ($ '<div/>', {class: 'selector-title'}).text 'Device (don\'t work)'
-    #$countrySelectorTitle  = ($ '<div/>', {class: 'selector-title'}).text 'Country (Japan Only)'
-    #$categorySelectorTitle = ($ '<div/>', {class: 'selector-title'}).text 'Category'
-
-    #$deviceSelector   = $ '<div/>', {class: '', id: 'device-selector'}
-    #$countrySelector  = $ '<div/>', {class: '', id: 'country-selector'}
-    #$categorySelector = $ '<div/>', {class: '', id: 'category-selector'}
-
-    #devices = ({name: device.name, opts: {id: device.code}} for device in gon.devices)
-    #countries = ({name: country.name, opts: {id: country.code, href: URLHelper.rankingUrl {country: country.code}}} for country in gon.countries)
-    #categories = ({name: category.name, opts: {id: category.code, href: URLHelper.rankingUrl {category: category.code}}} for category in gon.categories)
- 
-    #($countrySelectorContainer.append $countrySelectorTitle).append $countrySelector
-    #($categorySelectorContainer.append $categorySelectorTitle).append $categorySelector
-    #($deviceSelectorContainer.append $deviceSelectorTitle).append $deviceSelector if devices.length > 1
-
-    #$header.append $title
-    #$header.append $deviceSelectorContainer
-    #$header.append $categorySelectorContainer
-    #$header.append $countrySelectorContainer
-
-    #@$target.append $header
-   
-    #DropdownSelector.insert '#device-selector', devices
-    #DropdownSelector.insert '#country-selector', countries
-    #DropdownSelector.insert '#category-selector', categories
-
-    #($ "\##{gon.device.code}").click()
-    #($ "\##{gon.country.code}").click()
-    #($ "\##{gon.category.code}").click()
+  activateFeed: (feed) -> ($ "#feed-#{feed.code}").addClass 'selected'
 
   generateAppIconImage: (app_item) ->
     dummy = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC'
@@ -103,17 +46,14 @@ class @Ranking
 
   generateAppTitle: (app_item) -> $title = ($ '<div/>', {class: 'app-title'}).text app_item.name
 
-  generateAppRank: (rank) ->
-    $div = ($ '<div/>', {class: 'app-rank'})
-    $div.text rank
+  generateAppRank: (rank) -> ($ '<div/>', {class: 'app-rank'}).text rank
 
   generateAppInfoHeader: (app_item, rank) ->
     $div = ($ '<div/>', {class: 'app-info-header'})
     $div.append @generateAppRank rank
     $div.append @generateAppTitle app_item
 
-  generateAppDetail: (app_item) ->
-    @generateAppTitle app_item
+  generateAppDetail: (app_item) -> @generateAppTitle app_item
 
   generateAppInfo: (app_item, rank) ->
     $div = ($ '<div/>', {class: 'app-info'})
@@ -166,17 +106,17 @@ class @Ranking
           $tbodyTr.append (@generateRankingTd app_item, idx)
       $tbody.append $tbodyTr
 
-  generateFeedName: (name, colSize) -> (($ '<th/>', {class: "col-md-#{colSize} feed-name"}).css 'display', 'none').text name
+  generateFeedName: (name, width) -> (($ '<th/>').css display: 'none', width: width).text name
 
   generateRankCol: () -> $ '<th/>', {class: 'col-md-1'}
 
   generateRankingTr: (data) ->
-    bootColWidth = 12
-    colSize = parseInt ((bootColWidth - 1) / data.length)
+    width = 100 / data.length
 
     $theadTr = $ '<tr/>'
     for record in data
-      $th = @generateFeedName record.feed.name, colSize
+      $th = @generateFeedName record.feed.name, width
+      $th.css width: width
       $theadTr.append $th
 
   generateRankingThead: (data) -> ($ '<thead/>').append (@generateRankingTr data)
@@ -210,4 +150,6 @@ $(document).on 'ready page:load', ->
     ranking.generateRanking()
 
 $(document).on 'page:before-change', ->
-  window.position = ($ document).scrollTop() 
+  window.position = 0
+  if (URLHelper.isRankingUrl location.href)
+    window.position = ($ document).scrollTop() 

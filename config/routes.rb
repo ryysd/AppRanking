@@ -15,7 +15,9 @@ AppRanking::Application.routes.draw do
     end
   end
 
+  resources :reservations
   resources :app_items
+  resources :users
 
   get "/auth/:provider/callback" => "sessions#create"
   get "/signout" => "sessions#destroy"

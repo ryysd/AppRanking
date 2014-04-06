@@ -1,5 +1,6 @@
 class AppItemsController < ApplicationController
   before_action :set_app_item, only: [:show, :edit, :update, :destroy]
+  before_action :set_app_item_id, only: [:show]
 
   # GET /app_items
   # GET /app_items.json
@@ -11,6 +12,7 @@ class AppItemsController < ApplicationController
   def show
     # lang = params[:lang_id]
     country = Country.find_by_code 'JP'
+    @reservation = signed_in? ? (Reservation.find_by_user_id_and_app_item_id session[:user_id], params[:id]) : nil
     @description = @app_item.descriptions.find_by_country_id country.id
   end
 
@@ -72,5 +74,9 @@ class AppItemsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def app_item_params
       params[:app_item]
+    end
+
+    def set_app_item_id
+      gon.app_item_id = params[:id]
     end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140405195545) do
+ActiveRecord::Schema.define(version: 20140406064030) do
 
   create_table "app_items", force: true do |t|
     t.integer  "category_id",                                 null: false
@@ -185,6 +185,13 @@ ActiveRecord::Schema.define(version: 20140405195545) do
     t.integer  "reserved_num",     null: false
     t.integer  "max_reserved_num", null: false
     t.integer  "app_item_id",      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "reservations", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "app_item_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
