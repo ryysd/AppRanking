@@ -1,4 +1,4 @@
-class CreateReservations < ActiveRecord::Migration
+class CreateReservationInfos < ActiveRecord::Migration
   def change
     create_table :reservations do |t|
       t.date :released_on, :null => false
