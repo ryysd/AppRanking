@@ -1,22 +1,3 @@
-class @Reservation
-  @reserve: (app_item_id, options) ->
-   ( $.ajax "/reservations", 
-       type: 'post'
-       data: {reservation: {app_item_id: app_item_id}}
-       statusCode:
-         200: (response) -> Reservation.showSuccessDialog()
-         408: (response) -> AuthDialog.show 'この機能を利用するにはログインが必要です。'
-   )
-
-  @showSuccessDialog: () ->
-    source = ""
-    source += "<div class='reservation-result'>"
-    source += "  <div class='reservation-success-text'>予約が完了しました！</div>"
-    source += "  <a class='btn btn-default check-reservation-btn'>予約の詳細を確認する</div>"
-    source += "</div>"
-
-    bootbox.alert source
-
 class @AppItemShow
   @showConfirmReservationDialog: (success_callback) ->
     title = ($ '.app-title').text()
