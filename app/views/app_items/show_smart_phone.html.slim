@@ -8,8 +8,12 @@
           = @app_item.reservation_information.max_reserved_num - @app_item.reservation_information.reserved_num
         .bonus-rest-text
           | 個！
-      a.btn.check-bonus-btn href=@app_item.reservation_information.bonus.image_url
-        | 予約特典を確認
+      - if @reservation.nil?
+        a.btn.check-bonus-btn href=@app_item.reservation_information.bonus.image_url
+          | 予約特典を確認
+      - else
+        a.btn.check-bonus-btn.disabled href=@app_item.reservation_information.bonus.image_url
+          | 予約済み
 
 .wrap.app-ss-wrapper
   #effects.frame.effects style=("overflow: hidden;") 
@@ -23,8 +27,12 @@
 
 - unless @app_item.reservation_information.nil?
   .reservation-info-container
-    .btn.reservation-btn
-      | アプリを予約する
+    - if @reservation.nil?
+      .btn.reservation-btn
+        | アプリを予約する
+    - else
+      .btn.reservation-btn.disabled
+        | 予約済み
 
 - if !@app_item.video_url.nil?
   .app-video-container
