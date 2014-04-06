@@ -12,7 +12,7 @@ rerun.txt
 pickle-email-*.html
 config/secrets.yml
 config/database.yml
-onfig/initializers/omniauth.rb
+config/initializers/omniauth.rb
 
 *.swp
 .DS_Store
