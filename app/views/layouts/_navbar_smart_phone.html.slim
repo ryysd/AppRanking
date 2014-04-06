@@ -14,7 +14,7 @@
         li.divider
         - if signed_in?
           li
-            a#mypage My Page
+            = link_to 'My Page', (user_path current_user.id)
           li
             = link_to 'Sign Out', '/signout'
         - else
