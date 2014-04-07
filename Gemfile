@@ -129,6 +129,7 @@ gem 'yoyakutopten_scraper'
 
 gem 'taps'
 
+gem 'devise'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'

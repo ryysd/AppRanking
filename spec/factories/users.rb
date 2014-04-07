@@ -2,11 +2,5 @@
 
 FactoryGirl.define do
   factory :user do
-    provider "MyString"
-    uid "MyString"
-    name "MyString"
-    image_url "MyString"
-    email "MyString"
-    access_token "MyString"
   end
 end
