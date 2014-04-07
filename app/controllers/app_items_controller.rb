@@ -12,7 +12,7 @@ class AppItemsController < ApplicationController
   def show
     # lang = params[:lang_id]
     country = Country.find_by_code 'JP'
-    @reservation = signed_in? ? (Reservation.find_by_user_id_and_app_item_id session[:user_id], params[:id]) : nil
+    @reservation = signed_in? ? (Reservation.find_by_user_id_and_app_item_id current_user.id, params[:id]) : nil
     @description = @app_item.descriptions.find_by_country_id country.id
   end
 

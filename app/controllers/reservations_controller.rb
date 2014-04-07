@@ -26,8 +26,8 @@ class ReservationsController < ApplicationController
   # POST /reservations
   # POST /reservations.json
   def create
-    unless session[:user_id].blank?
-      params[:reservation][:user_id] = session[:user_id]
+    if user_signed_in?
+      params[:reservation][:user_id] = current_user.id
       @reservation = Reservation.new(reservation_params)
 
       respond_to do |format|
@@ -77,6 +77,6 @@ class ReservationsController < ApplicationController
     end
 
     def check_user_id
-      redirect_to root_path if @reservation.user_id != session[:user_id]
+      redirect_to root_path if @reservation.user_id != current_user.id
     end
 end

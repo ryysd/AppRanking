@@ -1,7 +1,14 @@
 AppRanking::Application.routes.draw do
-  devise_for :users
-  get "sessions/create"
-  get "sessions/destroy"
+  devise_for :users, :controllers => {
+    #:sessions      => "users/sessions",
+    :registrations => "users/registrations",
+    #:passwords     => "users/passwords",
+    :omniauth_callbacks => "users/omniauth_callbacks" 
+  }
+
+  #devise_for :users
+  # get "sessions/create"
+  # get "sessions/destroy"
   resources :rankings
 
   resources :countries do
@@ -20,8 +27,8 @@ AppRanking::Application.routes.draw do
   resources :app_items
   resources :users
 
-  get "/auth/:provider/callback" => "sessions#create"
-  get "/signout" => "sessions#destroy"
+  # get "/auth/:provider/callback" => "sessions#create"
+  # get "/signout" => "sessions#destroy"
 
   root :to => 'rankings#index'
 

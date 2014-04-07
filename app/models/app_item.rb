@@ -46,9 +46,6 @@ class AppItem < ActiveRecord::Base
     add_or_update_attributes detail
   end
 
-  def set_reservation_data
-  end
-
   def load_app_detail
       case market.code
       when 'GP' then load_app_detail_google_play

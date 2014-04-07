@@ -74,6 +74,6 @@ class UsersController < ApplicationController
     end
 
     def check_user_id
-      redirect_to root_path if @user.id != session[:user_id]
+      redirect_to root_path if !current_user || @user.id != current_user.id
     end
 end

@@ -13,15 +13,15 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
-  end
+  #def current_user
+  #  @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  #end
 
-  def signed_in?
-    !session[:user_id].blank?
-  end 
+  #def signed_in?
+  #  !session[:user_id].blank?
+  #end 
 
   def set_user_id
-    gon.user_id = current_user.id if signed_in?
+    gon.user_id = current_user.id if user_signed_in?
   end
 end
